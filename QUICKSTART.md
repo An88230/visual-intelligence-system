@@ -1,25 +1,23 @@
-# Quick Start — visual-intelligence-system
+# Quick Start
 
-## الأسرع: قاموس الشيفرات البصرية
+## Fastest: Visual Codes Dictionary
 
 ```bash
-git clone https://github.com/An88230/visual-intelligence-system.git
+git clone https://github.com/An88230/visual-intelligence-system
 cd visual-intelligence-system/01-visual-codes-dictionary
 ```
 
-افتح `visual-codes-dictionary.jsx` في أي React environment أو في [CodeSandbox](https://codesandbox.io).
+Open `visual-codes-dictionary.jsx` in any React environment or [CodeSandbox](https://codesandbox.io).
 
 ---
 
-## VISUAL AI PROMPT BIBLE
-
-افتح الملف مباشرة:
+## Visual AI Prompt Bible
 
 ```bash
 cat 03-visual-ai-prompt-bible/VISUAL_AI_PROMPT_BIBLE.md
 ```
 
-انسخ الـ **Master Prompt Formula** من القسم `02` وضعه في:
+Copy the **Master Prompt Formula** from section `02` and paste it into:
 - Midjourney
 - DALL-E 3
 - Adobe Firefly
@@ -27,27 +25,27 @@ cat 03-visual-ai-prompt-bible/VISUAL_AI_PROMPT_BIBLE.md
 
 ---
 
-## المصفوفة الغنائية
+## Lyrical Matrix
 
 ```bash
 cat 04-lyrical-matrix/lyrical-matrix.md
 ```
 
-اتبع الـ 10 parameters لبناء نص غنائي نجدي من الصفر.
+Follow the 10 parameters to build a Najdi Arabic lyric from scratch.
 
 ---
 
-## الفلسفة — العقدة الأم
+## Philosophy — The Mother Node
 
 ```bash
 cat 05-philosophy/mother-node.md
 ```
 
-ابدأ من **العقدة ١: الاسم الأصلي** — وسترى كيف تتفرع كل شيء.
+Start from **Node 1: The Original Name** — and watch how everything branches from it.
 
 ---
 
-## القاعدة الواحدة
+## The One Rule
 
-> لا تحاول فهم النظام كاملاً قبل البدء.  
-> خذ شيفرة واحدة. طبّقها. الباقي يأتي.
+> Don't try to understand the full system before starting.  
+> Take one code. Apply it. The rest follows.

@@ -1,16 +1,21 @@
-# VISUAL AI PROMPT BIBLE
-### Mirror Authority System — نظام سلطة المرآة
+# Visual AI Prompt Bible
+### Mirror Authority System
 
-نظام توليد صور بالذكاء الاصطناعي مبني على فلسفة:
+An AI image generation system built on one philosophy:
 
-> المنتج لا يُعرض. المنتج يسمح.
+> The product is not displayed. The product permits.
 
-## المعادلة المركزية
+## The Central Chain
 
 ```
-نقص داخلي → سطح عاكس → إذن نفسي → نسخة أعلى من الذات → أثر صامت
+Inner lack → Reflective surface → Psychological permission → Higher self → Silent impact
 ```
 
-## يعمل مع
+## Works with
 
 Midjourney · DALL-E 3 · Adobe Firefly · Stable Diffusion · Flux
+
+## What makes this different
+
+Most prompt systems describe what an image should look like.  
+This system defines what an image should **do** to the person who sees it.

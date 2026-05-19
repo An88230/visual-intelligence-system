@@ -1,19 +1,17 @@
-# قاموس الشيفرات البصرية
-### Visual Codes Dictionary
+# Visual Codes Dictionary
+### قاموس الشيفرات البصرية
 
-**٤٠ شيفرة · ١٣ تصنيفاً**
+**40 codes · 13 categories**
 
-قاموس تفاعلي يترجم المفاهيم البصرية والإنسانية إلى شيفرات قابلة للتطبيق في الإعلان والتصوير والإخراج الإبداعي.
+An interactive dictionary that translates visual and human concepts into applicable codes for advertising, photography, and creative direction.
 
-## الاستخدام
+## Usage
 
-```bash
-# افتح في React environment أو CodeSandbox
-visual-codes-dictionary.jsx
-```
+Open `visual-codes-dictionary.jsx` in any React environment or [CodeSandbox](https://codesandbox.io).
 
-## التصنيفات
+## Categories
 
-البيع الحقيقي · الصدق الصوتي · الذاكرة البصرية · الأصالة  
-قراءة الناس · قوة الكلمة · المنهج · الطفولة · لغة الوجود  
-الإعلان الصادق · نظام الحالة · معادلات الأثر · قانون الصعلوك المحترف
+True Selling · Sonic Honesty · Visual Memory · Authenticity  
+Reading People · Power of Word · Methodology · Childhood  
+Language of Being · Honest Advertising · State System  
+Impact Equations · The Pro Maverick · Modern Human Map

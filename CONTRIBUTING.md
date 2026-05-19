@@ -1,45 +1,45 @@
-# المساهمة في visual-intelligence-system
+# Contributing to visual-intelligence-system
 
-## القاعدة الوحيدة
+## The One Rule
 
-**لا تضف محتوى يشرح. أضف محتوى يفتح.**
-
----
-
-## أنواع المساهمات المقبولة
-
-**شيفرات بصرية جديدة** — إذا اكتشفت شيفرة لم تُسمَّ بعد  
-**prompts مختبرة** — أضف للـ Prompt Bible ما جربته وأثّر  
-**أرشيتايب جديد** — نموذج إعلاني لم يُغطَّ في القاموس البصري  
-**ترجمات** — ترجمة الملفات لأي لغة مع الحفاظ على الروح
+**Don't add content that explains. Add content that opens.**
 
 ---
 
-## طريقة المساهمة
+## What contributions are accepted
+
+**New visual codes** — if you discover a code that hasn't been named yet  
+**Tested prompts** — add to the Prompt Bible what you've tried and proven  
+**New archetypes** — an advertising archetype not yet covered  
+**Translations** — translate any file into any language while preserving the spirit
+
+---
+
+## How to contribute
 
 ```bash
-# Fork الـ repo
+# Fork the repo
 git checkout -b add/your-contribution-name
 
-# أضف تعديلاتك
-# تأكد أن كل إضافة تحمل:
-# - اسم واضح
-# - سياق (لماذا هذا مهم؟)
-# - مثال تطبيقي
+# Add your changes
+# Every addition must carry:
+# - A clear name
+# - Context (why does this matter?)
+# - A practical example
 
-git commit -m "add: [وصف قصير]"
+git commit -m "add: [short description]"
 git push origin add/your-contribution-name
-# افتح Pull Request
+# Open a Pull Request
 ```
 
 ---
 
-## ما لا يُقبل
+## What is not accepted
 
-- محتوى مقتبس بدون مصدر
-- أدوات تقنية بدون فلسفة خلفها
-- تعقيد يخدم الأداة لا الإنسان
+- Content copied without source
+- Technical tools without philosophy behind them
+- Complexity that serves the tool, not the human
 
 ---
 
-*"الخطوة الأولى ليست افعل — الخطوة الأولى افهم."*
+*"The first step is not to act — the first step is to understand."*

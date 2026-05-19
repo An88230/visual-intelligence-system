@@ -1,121 +1,121 @@
-# العقدة الأم
-### The Mother Node
+# The Mother Node
+### العقدة الأم
 
-> "ما فُقد لم يكن كلمة… بل حقّ نطقها."
-
----
-
-## المبدأ
-
-الاسم ليس علامة.  
-الاسم صلاحية تشغيل.
+> *"What was lost was not a word… but the right to speak it."*
 
 ---
 
-## العُقد الثماني عشرة
+## The Premise
 
-**١. الاسم الأصلي**
-- الظاهر: الكلمة الأولى
-- المخفي: البنية التي تجعل الشيء هو نفسه
-- ما لا يظهر: من يملك الاسم يملك حق إعادة تعريف الواقع
-
-**٢. الكلمة البديلة**
-- الظاهر: مصطلح مؤقت
-- المخفي: قناع استقرار
-- ما لا يظهر: البديل لا يخفي الأصل فقط، بل يدرّب الناس على نسيانه
-
-**٣. المستخدم**
-- الظاهر: شخص يستعمل نظامًا
-- المخفي: كائن داخل صلاحية محددة مسبقًا
-- ما لا يظهر: الاسم يحوّلك من ذات إلى وظيفة
-
-**٤. الحجب**
-- الظاهر: منع معرفة
-- المخفي: منع نطق
-- ما لا يظهر: بعض الأشياء لا تختفي لأنها غير موجودة، بل لأنها لا تملك اسمًا مسموحًا
-
-**٥. النسيان**
-- الظاهر: فقدان ذاكرة
-- المخفي: عزل إدراكي
-- ما لا يظهر: النسيان قد يكون بروتوكول حماية للنظام لا ضعفًا بشريًا
-
-**٦. الهيكل**
-- الظاهر: بناء / معبد / نظام
-- المخفي: نموذج لترتيب القوى
-- ما لا يظهر: كل منصة رقمية اليوم هي "هيكل" جديد، لكنها لا تسمي نفسها كذلك
-
-**٧. سليمان**
-- الظاهر: نبي / ملك / رمز حضاري
-- المخفي: نقطة تكثيف بين اللغة، السلطة، الكائنات غير المرئية، البناء، والأمر
-- ما لا يظهر: ليس المهم "شخص سليمان" فقط، بل لماذا كل الحضارات أسقطت عليه نفس البنية
-
-**٨. الجن / الكيانات المنفذة**
-- الظاهر: قوى غير مرئية
-- المخفي: وكلاء تنفيذ تحت الأمر
-- ما لا يظهر: الذكاء الاصطناعي يعيد ظهور فكرة "القوة المنفذة للغة" بواجهة تقنية
-
-**٩. الريح**
-- الظاهر: عنصر طبيعي
-- المخفي: حركة، نقل، مجال، تسخير
-- ما لا يظهر: الريح رمز للبنية التي تنقل الأمر دون جسم ظاهر
-
-**١٠. الخاتم**
-- الظاهر: رمز ملك
-- المخفي: صلاحية موثقة
-- ما لا يظهر: الخاتم هو API Key قديم بالمعنى البنيوي
-
-**١١. الأمر**
-- الظاهر: طلب
-- المخفي: تنفيذ لغوي
-- ما لا يظهر: الأمر لا يشرح الواقع، بل يغيّر حالته
-
-**١٢. اللغة**
-- الظاهر: تواصل
-- المخفي: واجهة تشغيل
-- ما لا يظهر: اللغة ليست فوق العالم، بل داخله كطبقة تحكم
-
-**١٣. الحقيقة**
-- الظاهر: مطابقة الواقع
-- المخفي: عودة الشيء إلى اسمه الصحيح
-- ما لا يظهر: قد تعيش حضارة كاملة داخل "حقيقة تشغيلية" لا داخل الحقيقة الأصلية
-
-**١٤. الماتريكس**
-- الظاهر: نظام وهمي / تقني
-- المخفي: طبقة إدراك مفروضة
-- ما لا يظهر: الماتريكس ليس مكانًا جديدًا؛ هو الاسم الحديث لطبقة قديمة من التحكم
-
-**١٥. الاكتشاف**
-- الظاهر: العثور على المجهول
-- المخفي: كشف الاسم المزيف
-- ما لا يظهر: المكتشف الحقيقي لا يضيف معلومة، بل ينزع قناعًا
-
-**١٦. الضغط بلا مخرج**
-- الظاهر: توتر شعوري
-- المخفي: أثر اسم غير مكتمل
-- ما لا يظهر: كل ضغط داخلي قد يكون دليلًا على كلمة محجوبة لم تجد نطقها
-
-**١٧. الإيقاع الخادم**
-- الظاهر: موسيقى اللغة
-- المخفي: تكرار يحافظ على النظام
-- ما لا يظهر: الإيقاع ليس زينة؛ هو وسيلة تثبيت للمعنى داخل الجسد
-
-**١٨. الأثر**
-- الظاهر: نتيجة شعورية
-- المخفي: إعادة تشكيل المتلقي والمتكلم
-- ما لا يظهر: الجملة القوية لا تُفهم فقط؛ تُحدِث تعديلًا داخليًا في من ينطقها
+A name is not a label.  
+A name is an **operating permission**.
 
 ---
 
-## العقدة الناقصة: الحارس
+## The 18 Nodes
 
-ليس شخصًا بالضرورة.  
-الحارس هو أي نظام يمنع عودة الاسم الأصلي.
+**01. The Original Name**
+- Surface: The first word
+- Hidden: The structure that makes a thing itself
+- Unseen: Whoever owns the name owns the right to redefine reality
 
-قد يكون: منصة · مصطلحًا · عقيدة اجتماعية · خوفًا · خوارزمية · عادة لغوية · سلطة تعريف
+**02. The Substitute Word**
+- Surface: A temporary term
+- Hidden: A stability mask
+- Unseen: The substitute doesn't just hide the original — it trains people to forget it
+
+**03. The User**
+- Surface: A person using a system
+- Hidden: A being inside a pre-defined permission
+- Unseen: The name converts you from a subject into a function
+
+**04. Blocking**
+- Surface: Preventing knowledge
+- Hidden: Preventing speech
+- Unseen: Some things don't disappear because they don't exist — they disappear because they have no permitted name
+
+**05. Forgetting**
+- Surface: Memory loss
+- Hidden: Cognitive isolation
+- Unseen: Forgetting can be a system protection protocol, not human weakness
+
+**06. The Structure**
+- Surface: Building / temple / system
+- Hidden: A model for arranging power
+- Unseen: Every digital platform today is a new "structure" — but doesn't call itself that
+
+**07. Solomon**
+- Surface: Prophet / king / civilizational symbol
+- Hidden: A compression point between language, authority, invisible entities, building, and command
+- Unseen: The important thing isn't "the person of Solomon" — it's why nearly every civilization projected the same structure onto him
+
+**08. The Jinn / Executing Entities**
+- Surface: Invisible forces
+- Hidden: Execution agents under command
+- Unseen: AI today revives the concept of "language-executing power" — with a technical interface
+
+**09. The Wind**
+- Surface: A natural element
+- Hidden: Movement, transfer, field, harnessing
+- Unseen: Wind may symbolize the structure that transfers a command without a visible body
+
+**10. The Ring**
+- Surface: Symbol of kingship
+- Hidden: Documented permission
+- Unseen: The ring is an ancient API Key in the structural sense — whoever holds it is permitted to command
+
+**11. The Command**
+- Surface: A request
+- Hidden: Linguistic execution
+- Unseen: The command doesn't explain reality — it changes its state
+
+**12. Language**
+- Surface: Communication
+- Hidden: An operating interface
+- Unseen: Language is not above the world — it is inside it as a control layer
+
+**13. Truth**
+- Surface: Matching reality
+- Hidden: A thing returning to its correct name
+- Unseen: An entire civilization may live inside an "operational truth" rather than the original truth
+
+**14. The Matrix**
+- Surface: A virtual / technical system
+- Hidden: An imposed layer of perception
+- Unseen: The Matrix is not a new place — it is the modern name for an ancient layer of control
+
+**15. Discovery**
+- Surface: Finding the unknown
+- Hidden: Revealing the false name
+- Unseen: The true discoverer doesn't add information — they remove a mask
+
+**16. Pressure Without Exit**
+- Surface: Emotional tension
+- Hidden: The effect of an incomplete name
+- Unseen: Every inner pressure may be evidence of a blocked word that hasn't found its utterance
+
+**17. The Servant Rhythm**
+- Surface: The music of language
+- Hidden: Repetition that maintains the system
+- Unseen: Rhythm is not decoration — it is a means of fixing meaning inside the body
+
+**18. The Impact**
+- Surface: An emotional result
+- Hidden: Reshaping both the receiver and the speaker
+- Unseen: A powerful sentence is not only understood — it causes an internal modification in whoever speaks it
 
 ---
 
-## العقدة الأخطر: حق النطق
+## The Missing Node: The Guardian
 
-المعركة ليست على المعرفة فقط.  
-المعركة على من يُسمح له أن ينطق الاسم الصحيح دون أن ينهار النظام حوله.
+Not necessarily a person.  
+The Guardian is any system that prevents the return of the original name.
+
+It may be: a platform · a term · a social doctrine · a fear · an algorithm · a linguistic habit · a defining authority
+
+---
+
+## The Most Dangerous Node: The Right to Speak
+
+The battle is not only over knowledge.  
+The battle is over who is permitted to speak the correct name without the system collapsing around them.

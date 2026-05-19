@@ -1,48 +1,47 @@
 # visual-intelligence-system
-### نظام الذكاء البصري — قاموس الشيفرات الإبداعية
+### A Creative Visual Intelligence Framework
 
-> *"لا تكشف جهل الناس. افتح لهم باباً يرون من خلاله ما كانوا يشعرون به قبل أن يعرفوا اسمه."*
-
----
-
-## ما هذا؟
-
-هذا ليس مجموعة أدوات.  
-هذا **نظام تفكير بصري** بُني على مدى سنوات من العمل الميداني في الإخراج الإعلاني والتصوير التجاري والاستراتيجية الإبداعية.
-
-يضم هذا النظام:
-
-- **قاموس الشيفرات البصرية** — 40 شيفرة، 13 تصنيفاً
-- **قاموس اللغة البصرية** — 10 نماذج أرشيتايب للإعلان العربي
-- **VISUAL AI PROMPT BIBLE** — نظام توليد الصور بالذكاء الاصطناعي (Mirror Authority System)
-- **المصفوفة الغنائية الشعرية** — نظام توليد النصوص الغنائية النجدية
-- **العقدة الأم** — فلسفة اللغة والسلطة والاسم
+> *"Don't expose people's ignorance. Open a door through which they can see what they were already feeling — before they knew its name."*
 
 ---
 
-## لمن هذا؟
+## What is this?
 
-- **مخرجون إبداعيون** يبحثون عن لغة بصرية أعمق
-- **مصورون تجاريون** يريدون الانتقال من التقنية إلى الأثر
-- **صانعو محتوى** في السوق الخليجي والعربي
-- **مستخدمو الذكاء الاصطناعي** الذين يريدون prompts تحمل فلسفة لا مجرد وصف
+This is not a collection of tools.  
+This is a **visual thinking system** built over years of hands-on work in advertising direction, commercial photography, and creative strategy.
+
+It contains:
+
+- **Visual Codes Dictionary** — 40 codes across 13 categories
+- **Visual AI Prompt Bible** — AI image generation system (Mirror Authority System)
+- **Lyrical Matrix** — Najdi Arabic poetic generation system
+- **The Mother Node** — Philosophy of language, power, and naming
 
 ---
 
-## المبدأ الأساسي
+## Who is this for?
+
+- **Creative directors** looking for a deeper visual language
+- **Commercial photographers** wanting to move from technique to impact
+- **Content creators** in the Gulf and Arab market
+- **AI users** who want prompts that carry philosophy — not just description
+
+---
+
+## Core Principle
 
 ```
-الإنسان أولاً — ثم المنتج
-الإحساس أولاً — ثم الصورة
-السؤال أولاً — ثم الإجابة
+Human first    — then product
+Feeling first  — then image
+Question first — then answer
 ```
 
-الفرق بين إعلان يُشاهَد وإعلان يُعاش:  
-**المبدع يختفي — والمتلقي يكتشف.**
+The difference between an ad that is **watched** and an ad that is **lived**:  
+The creator disappears — the audience discovers.
 
 ---
 
-## هيكل النظام
+## Structure
 
 ```
 visual-intelligence-system/
@@ -51,79 +50,65 @@ visual-intelligence-system/
 │   ├── README.md
 │   └── visual-codes-dictionary.jsx    ← React component (40 codes)
 │
-├── 02-visual-language-dictionary/
-│   ├── README.md
-│   └── visual-language-dictionary.jsx ← 10 advertising archetypes
-│
 ├── 03-visual-ai-prompt-bible/
 │   ├── README.md
 │   └── VISUAL_AI_PROMPT_BIBLE.md      ← Mirror Authority System
 │
 ├── 04-lyrical-matrix/
-│   ├── README.md
 │   └── lyrical-matrix.md              ← Najdi poetic generation system
 │
 └── 05-philosophy/
-    ├── README.md
-    └── mother-node.md                 ← العقدة الأم
+    └── mother-node.md                 ← The Mother Node
 ```
 
 ---
 
-## البداية السريعة
+## Quick Start
 
-### قاموس الشيفرات البصرية
 ```bash
-git clone https://github.com/nabil88/visual-intelligence-system
-cd visual-intelligence-system/01-visual-codes-dictionary
-# افتح visual-codes-dictionary.jsx في أي React environment
+git clone https://github.com/An88230/visual-intelligence-system
 ```
 
-### VISUAL AI PROMPT BIBLE
-```bash
-# استخدم الـ Master Prompt Formula مباشرة في:
-# Midjourney / DALL-E / Firefly / Stable Diffusion
-cat 03-visual-ai-prompt-bible/VISUAL_AI_PROMPT_BIBLE.md
-```
+**Visual Codes Dictionary** → open `01-visual-codes-dictionary/visual-codes-dictionary.jsx` in any React environment or CodeSandbox.
+
+**Visual AI Prompt Bible** → copy the Master Prompt Formula from `03-visual-ai-prompt-bible/VISUAL_AI_PROMPT_BIBLE.md` into Midjourney / DALL-E / Firefly / Stable Diffusion.
 
 ---
 
-## المعادلة المركزية
+## The Central Equation
 
 ```
-الفجوة الزمنية = الاهتمام × الحالة × الزمن × الوسيط × الحداثة
+Impact Gap = Attention × State × Time × Medium × Novelty
 ```
 
-> أي عنصر بصفر يُصفّر الكل.
+> Any element at zero collapses the entire result.
 
 ---
 
-## من بنى هذا؟
+## About
 
-**نبيل — مخرج أنظمة إبداعية**  
-مخرج إعلاني ومصور تجاري من السعودية.  
-يعمل عند تقاطع الإخراج الإبداعي، التصوير الإعلاني، وأنظمة الذكاء الاصطناعي.
+**Nabil — Creative Systems Director**  
+Advertising director and commercial photographer from Saudi Arabia.  
+Working at the intersection of creative direction, advertising photography, and AI production systems.
 
 🌐 [nabil88.art](https://nabil88.art)
 
 ---
 
-## الترخيص
+## License
 
-MIT License — مفتوح للاستخدام والتطوير مع الإشارة للمصدر.
-
----
-
-## المساهمة
-
-هذا النظام حي — يتطور.  
-إذا أضفت شيفرة جديدة، نموذج جديد، أو prompt اختبرته وأثّر — افتح Pull Request.
-
-القاعدة الوحيدة للمساهمة:  
-**لا تضف محتوى يشرح. أضف محتوى يفتح.**
+MIT — open for use and development with attribution.
 
 ---
 
-*"ما فُقد لم يكن كلمة… بل حقّ نطقها."*
+## Contributing
 
-**— العقدة الأم، نبيل ٨٨**
+This system is alive — it evolves.  
+If you add a new code, a new archetype, or a prompt you've tested and proven — open a Pull Request.
+
+The only rule: **Don't add content that explains. Add content that opens.**
+
+---
+
+*"What was lost was not a word… but the right to speak it."*  
+**— The Mother Node, nabil88**

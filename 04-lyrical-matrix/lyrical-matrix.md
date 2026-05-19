@@ -1,95 +1,85 @@
-# المصفوفة الغنائية الشعرية
-### Najdi Lyrical Generation Matrix
+# Lyrical Generation Matrix
+### Najdi Arabic Poetic System
 
-نظام توليد النصوص الغنائية بنَفَس نجدي حديث.
-
----
-
-## المعادلة الغنائية
-
-```
-حالة صادقة
-+ لغة نجدية حديثة
-+ وزن قصير ثقيل (5-7 كلمات)
-+ صورة من الحياة
-+ صمت محسوب
-+ بحة ووقار
-+ لازمة تُحفظ
-= نص غنائي شعري له أصل وأثر
-```
+A system for generating lyrical texts with a modern Najdi voice.
 
 ---
 
-## الـ 10 Parameters
-
-**[1] الجذر الشعوري**
-حالة صادقة من الحياة: مجلس / طريق / غياب / فخر / صمت / قرار  
-↓ إحساس غير مُسمّى ↓ نمنحه اسماً جديداً
-
-**[2] النبرة**
-هدوء واثق · لا استعطاف · لا شكوى مكشوفة  
-الصوت يعرف قيمته — يقول ولا يترجّى
-
-**[3] اللغة**
-نجدي حديث · قريب من السمع · ثقيل في المعنى · نظيف في الصورة  
-كلمة يومية تتحول إلى بيت يُحفظ
-
-**[4] الوزن الداخلي**
-جملة قصيرة 5-7 كلمات · تُقال ببطء  
-آخرها حرف حاسم: د / ق / ن / م  
-↓ إحساس قرار — مو إحساس تزيين
-
-**[5] الإيقاع**
-خطى هادئة · هجيني داخلي · نبض صدر  
-الصمت يدخل بين الكلمات — الكلمة تصير ضربة
-
-**[6] الصورة الشعرية**
-شيء محسوس: طريق / قهوة / ظل / باب / ليل / رمل / وجه  
-↓ معنى خفي ↓ حكمة غير مباشرة
-
-**[7] الطبقة الثانية**
-المعنى الظاهر: قصة بسيطة  
-المعنى الخفي: كرامة / أصل / فقد / ثبات / عزلة / نضج  
-السامع يفهم الآن — ويتأخر الأثر داخله
-
-**[8] اللازمة**
-جملة قصيرة · ثقيلة · تصلح كـ Hook  
-قاعدة اللازمة: لا تشرح — اضرب المعنى
-
-**[9] الأداء الصوتي**
-بحة خفيفة · نَفَس نجدي · هدوء فيه هيبة  
-الصوت لا يستعرض — الصوت يثبت
-
-**[10] الخاتمة**
-بيت أخير لا يغلق فقط — بل يترك أثر  
-اختبار الختم: هل تُقال في مجلس؟ هل تُغرد وحدها؟ هل تبقى بعد الصمت؟
-
----
-
-## قانون البيت النجدي الحديث
+## The Core Equation
 
 ```
-لا تكتب شعراً يشرح — اكتب بيتاً يعرف
-لا ترفع الصوت — ثقّل المعنى
-لا تطارد الإعجاب — خلّ البيت يوقف لحاله
+Honest emotional state
++ Modern Najdi language
++ Short heavy meter (5-7 words)
++ Image from real life
++ Calculated silence
++ Gravitas
++ A hook that sticks
+= A lyric with origin and impact
 ```
 
 ---
 
-## Prompt جاهز للتوليد
+## The 10 Parameters
+
+**[1] Emotional Root**
+An honest state from life: gathering / road / absence / pride / silence / decision  
+↓ An unnamed feeling ↓ We give it a new name
+
+**[2] Tone**
+Quiet confidence · No pleading · No open complaint  
+The voice knows its worth — it speaks, it does not beg
+
+**[3] Language**
+Modern Najdi · Close to the ear · Heavy in meaning · Clean in image  
+An everyday word that becomes a line worth memorizing
+
+**[4] Internal Meter**
+Short sentence, 5-7 words · Spoken slowly  
+Last word carries a decisive consonant: d / q / n / m  
+↓ The feeling of decision — not decoration
+
+**[5] Rhythm**
+Quiet steps · Internal Hujayni · Chest pulse  
+Silence enters between words — the word becomes a strike
+
+**[6] Poetic Image**
+Something tangible: road / coffee / shadow / door / night / sand / face  
+↓ Hidden meaning ↓ Indirect wisdom
+
+**[7] Second Layer**
+Surface meaning: a simple story  
+Hidden meaning: dignity / origin / loss / steadiness / solitude / maturity  
+The listener understands now — the impact comes later
+
+**[8] The Hook**
+A short repeatable line · Heavy · Works as a hook  
+Rule: Don't explain — strike the meaning
+
+**[9] Vocal Performance**
+Slight rasp · Najdi breath · Calm with weight  
+The voice does not perform — the voice holds ground
+
+**[10] The Closing Line**
+The final line doesn't only close — it leaves a mark  
+Test: Can it be said in a gathering? Can it stand alone? Does it stay after the silence?
+
+---
+
+## Generation Prompt
 
 ```
-اكتب نصاً غنائياً شعرياً بنَفَس نجدي حديث.
-اجعل الجمل قصيرة وثقيلة، من 5 إلى 7 كلمات.
-استخدم صوراً من الحياة اليومية: طريق، قهوة، ليل، مجلس، باب، رمل، ظل.
-اكتب بصوت هادئ، واثق، لا يستعطف.
-اجعل المعنى الظاهر بسيطاً، والمعنى الخفي عميقاً.
-استخدم إيقاعاً داخلياً قريباً من الهجيني.
-أدخل الصمت كجزء من الوزن.
-اصنع لازمة قصيرة قابلة للترديد.
-اختم بجملة تنحفر في الذاكرة.
+Write a poetic lyrical text with a modern Najdi voice.
+Keep sentences short and heavy, 5 to 7 words.
+Use images from daily life: road, coffee, night, gathering, door, sand, shadow.
+Write with a quiet, confident voice — no pleading.
+Surface meaning simple, hidden meaning deep.
+Use internal rhythm close to Hujayni camel walking.
+Let silence be part of the meter.
+Build a short repeatable hook.
+Close with a line that carves itself into memory.
 ```
 
 ---
 
-*"الكلمة من نجد. الصوت من الصدر. المعنى من الطريق. والأثر… ما ينقال كله."*
+*"The word is from Najd. The voice is from the chest. The meaning is from the road. And the impact… cannot be fully said."*
