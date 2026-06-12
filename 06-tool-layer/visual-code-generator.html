@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visual Code Generator | Nabil88</title>
+  <style>
+    :root {
+      --bg: #0b0b0c;
+      --panel: #151517;
+      --panel-2: #1f1f22;
+      --text: #f4f1ea;
+      --muted: #aaa59a;
+      --line: #333237;
+      --accent: #d7b46a;
+      --danger: #9b3b35;
+      --input: #101012;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top left, #252014 0, #0b0b0c 34%, #050505 100%);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    .wrap {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 48px 0;
+    }
+
+    header {
+      margin-bottom: 28px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 24px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 68px);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+    }
+
+    .subtitle {
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 17px;
+      margin-top: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015));
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.34);
+    }
+
+    .panel h2 {
+      margin: 0 0 16px;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin: 14px 0 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--input);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 12px 13px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    textarea {
+      min-height: 86px;
+      resize: vertical;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(215,180,106,0.12);
+    }
+
+    .two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .primary { background: var(--accent); color: #12100b; }
+    .secondary { background: var(--panel-2); color: var(--text); border: 1px solid var(--line); }
+    .ghost { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+
+    .output {
+      min-height: 680px;
+      white-space: pre-wrap;
+      background: #080809;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      color: #eee8dc;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 13.5px;
+      overflow: auto;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 14px;
+    }
+
+    footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+      .output { min-height: 420px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="eyebrow">Visual Intelligence System · Tool Layer</div>
+      <h1>Visual Code Generator</h1>
+      <p class="subtitle">A local single-file tool that translates one visual code into campaign structure, AI image prompt, or voice-over draft. No external scripts. No backend. No API key.</p>
+    </header>
+
+    <section class="grid">
+      <div class="panel">
+        <h2>Input</h2>
+
+        <label for="outputType">Output Type</label>
+        <select id="outputType">
+          <option value="campaign">Campaign Structure</option>
+          <option value="prompt">AI Image Prompt</option>
+          <option value="vo">Voice Over</option>
+        </select>
+
+        <div class="two">
+          <div>
+            <label for="codeNumber">Code Number</label>
+            <input id="codeNumber" placeholder="48" value="48" />
+          </div>
+          <div>
+            <label for="aspectRatio">Aspect Ratio</label>
+            <input id="aspectRatio" placeholder="9:16" value="9:16" />
+          </div>
+        </div>
+
+        <label for="codeName">Code Name</label>
+        <input id="codeName" placeholder="The Law of Inevitable Recognition" value="The Law of Inevitable Recognition" />
+
+        <label for="subject">Subject</label>
+        <input id="subject" placeholder="a person standing near a reflective product" />
+
+        <label for="product">Product / Object</label>
+        <input id="product" placeholder="premium fragrance bottle, watch, tourism experience, warning poster" />
+
+        <label for="audience">Audience</label>
+        <input id="audience" placeholder="young Saudi professionals, creators, premium buyers" />
+
+        <label for="emotion">Emotion / Human State</label>
+        <textarea id="emotion" placeholder="an unnamed internal lack, quiet authority, fatigue from artificial noise"></textarea>
+
+        <label for="platform">Platform</label>
+        <input id="platform" placeholder="Instagram Reels, campaign key visual, poster, landing page" />
+
+        <label for="avoid">Avoid</label>
+        <textarea id="avoid" placeholder="generic luxury, smiling influencer, hard selling, fake happiness, cheap cyberpunk"></textarea>
+
+        <div class="actions">
+          <button class="primary" onclick="generateOutput()">Generate</button>
+          <button class="secondary" onclick="copyOutput()">Copy</button>
+          <button class="ghost" onclick="resetFields()">Reset</button>
+        </div>
+
+        <p class="note">Use the output as a first structured pass. Return to the original code before final execution.</p>
+      </div>
+
+      <div class="panel">
+        <h2>Output</h2>
+        <div id="output" class="output">Choose an output type, fill the fields, then generate.</div>
+      </div>
+    </section>
+
+    <footer>© 2025 Nabil88 | nabil88.art</footer>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    function val(id, fallback = "") {
+      const value = $(id).value.trim();
+      return value || fallback;
+    }
+
+    function collectInput() {
+      return {
+        outputType: val("outputType", "campaign"),
+        codeNumber: val("codeNumber", "[code number]"),
+        codeName: val("codeName", "[code name]"),
+        subject: val("subject", "[subject]"),
+        product: val("product", "[product / object]"),
+        audience: val("audience", "[audience]"),
+        emotion: val("emotion", "[unnamed human state]"),
+        platform: val("platform", "[platform]"),
+        aspectRatio: val("aspectRatio", "[aspect ratio]"),
+        avoid: val("avoid", "generic output, surface beauty, hard selling, weak symbolism")
+      };
+    }
+
+    function campaignTemplate(d) {
+      return `# Campaign Structure
+
+Code: ${d.codeNumber} — ${d.codeName}
+Project / Subject: ${d.subject}
+Product / Object: ${d.product}
+Audience: ${d.audience}
+Platform: ${d.platform}
+
+---
+
+## 1. Human State
+
+${d.emotion}
+
+The audience is not only looking at ${d.product}.
+They are looking for a version of themselves that has not fully appeared yet.
+
+---
+
+## 2. Inner Tension
+
+The audience is between their current visible state and an unspoken desired self.
+
+Current self:
+A person carrying pressure that has not found a clean form.
+
+Desired self:
+A more composed, clearer, and more sovereign version of the same person.
+
+---
+
+## 3. Campaign Law
+
+Because Code ${d.codeNumber} says: ${d.codeName},
+the campaign must make recognition happen before explanation.
+
+The product should not appear as a sales object.
+It should appear as a threshold, witness, permission object, or evidence.
+
+---
+
+## 4. One-Line Idea
+
+This does not sell ${d.product}.
+It reveals what the audience was already trying to become.
+
+---
+
+## 5. Visual Direction
+
+World:
+A restrained cinematic environment built around silence, texture, and controlled contrast.
+
+Camera:
+Observe first, then move closer to the recognition point.
+
+Lighting:
+Controlled side light, shadow discipline, selective warmth on the human presence.
+
+Texture:
+Real material, no fake depth, no decorative excess.
+
+---
+
+## 6. Copy Direction
+
+Hook:
+Some things do not change you. They let you recognize yourself.
+
+Body:
+The image should reveal the human state without explaining it.
+
+Closing:
+When the outside world names what was silent inside, action becomes natural.
+
+---
+
+## 7. Shot Logic
+
+Shot 01 — The human state before recognition.
+Shot 02 — The product / object as threshold.
+Shot 03 — A material detail carrying the code.
+Shot 04 — The recognition moment.
+Shot 05 — Silence after recognition.
+
+---
+
+## 8. 6 Law Filter
+
+Image — does the form carry meaning without explanation?
+Sound — does the rhythm stabilize the feeling?
+Word — does language reveal the core or cover weakness?
+Motion — is movement necessary or decorative?
+Matter — does texture serve truth or imitate depth?
+Silence — does silence protect the meaning or hide fear?
+
+---
+
+## 9. Avoid
+
+${d.avoid}
+
+---
+
+## Final Impact
+
+The audience should not say: I like this.
+They should feel: this explains something in me.`;
+    }
+
+    function promptTemplate(d) {
+      return `# AI Image Prompt
+
+Code: ${d.codeNumber} — ${d.codeName}
+Subject: ${d.subject}
+Product / Object: ${d.product}
+Usage: ${d.platform}
+Aspect Ratio: ${d.aspectRatio}
+
+---
+
+## Prompt
+
+A cinematic advertising image of ${d.subject} in a state of ${d.emotion}, where ${d.product} behaves as a psychological threshold and not as a direct product hero. The image follows the logic of ${d.codeName}: recognition must happen before explanation. The product or object should reveal a more composed, clearer, more sovereign version of the human presence, either through reflection, proximity, contrast, or symbolic tension. The visual world is restrained, premium, and psychologically charged, with controlled shadows, selective human warmth, high contrast, real texture, and silent authority. The composition should feel like an internal event becoming visible, not like a commercial pose. Designed for ${d.platform}, aspect ratio ${d.aspectRatio}.
+
+The signature “© 2025 Nabil88 | nabil88.art” appears subtly as fragmented light metadata reflected across the surface, not as a flat watermark.
+
+---
+
+## Negative Prompt
+
+No smiling influencer, no obvious product placement, no direct sales mood, no exaggerated luxury clichés, no shopping behavior, no fake happiness, no aggressive branding, no busy background, no cartoon look, no plastic skin, no cheap neon cyberpunk, no overexplained symbolism, no motivational poster feeling, no flat watermark, no text-heavy layout, ${d.avoid}.
+
+---
+
+## Output Test
+
+The image must not simply look beautiful.
+It must make the viewer feel that something silent inside them has taken form.`;
+    }
+
+    function voTemplate(d) {
+      return `# Voice Over Draft
+
+Code: ${d.codeNumber} — ${d.codeName}
+Project / Subject: ${d.subject}
+Product / Object: ${d.product}
+Audience: ${d.audience}
+Platform: ${d.platform}
+
+---
+
+## Tone
+
+Calm authority.
+No begging.
+No hard selling.
+The voice witnesses more than it explains.
+
+---
+
+## VO Text
+
+Some things do not arrive to impress you.
+
+They arrive quietly...
+
+To reveal what was already waiting inside.
+
+You do not choose ${d.product} because it is more visible.
+
+You choose it
+when it gives form
+
+to something you could feel...
+
+but could not name.
+
+That is where recognition begins.
+
+---
+
+## Performance Notes
+
+Read slowly.
+Let silence carry part of the meaning.
+Do not perform excitement.
+Do not soften the authority.
+The voice should feel certain without trying to prove itself.
+
+---
+
+## Sound Design
+
+Low restrained pulse.
+Minimal texture.
+Soft room tone.
+Controlled breath.
+No excessive cinematic swell.
+
+---
+
+## Silence Points
+
+After: "inside"
+After: "more visible"
+Before: "That is where recognition begins"
+
+---
+
+## Avoid
+
+${d.avoid}
+
+---
+
+## Final Impact
+
+The listener should not feel instructed.
+They should feel recognized.`;
+    }
+
+    function generateOutput() {
+      const data = collectInput();
+      let result = "";
+
+      if (data.outputType === "campaign") result = campaignTemplate(data);
+      if (data.outputType === "prompt") result = promptTemplate(data);
+      if (data.outputType === "vo") result = voTemplate(data);
+
+      $("output").textContent = result;
+    }
+
+    async function copyOutput() {
+      const text = $("output").textContent;
+      try {
+        await navigator.clipboard.writeText(text);
+        $("output").textContent = text + "\n\n[Copied to clipboard]";
+      } catch (err) {
+        alert("Copy failed. Select the output manually and copy it.");
+      }
+    }
+
+    function resetFields() {
+      $("outputType").value = "campaign";
+      $("codeNumber").value = "48";
+      $("codeName").value = "The Law of Inevitable Recognition";
+      $("subject").value = "";
+      $("product").value = "";
+      $("audience").value = "";
+      $("emotion").value = "";
+      $("platform").value = "";
+      $("aspectRatio").value = "9:16";
+      $("avoid").value = "";
+      $("output").textContent = "Choose an output type, fill the fields, then generate.";
+    }
+  </script>
+</body>
+</html>
