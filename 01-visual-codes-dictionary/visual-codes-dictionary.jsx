@@ -4,7 +4,7 @@ const CODES = [
   { id: 1, category: "البيع الحقيقي", categoryEn: "True Selling", text: "الأشياء البسيطة لا تُباع — الإحساس الذي بداخلها هو الذي يُباع." },
   { id: 2, category: "الصدق الصوتي", categoryEn: "Sonic Honesty", text: "الصوت الصادق الواحد يخترق الزمن والمسافة والنسيان. الضجيج لا يخترق شيئاً." },
   { id: 3, category: "الذاكرة البصرية", categoryEn: "Visual Memory", text: "الذاكرة لا تحفظ الحدث — تحفظ الإحساس الذي لم يُقل." },
-  { id: 4, category: "الأصالة", categoryEn: "Authenticity", text: "الذين مجانين لا يشبهون المجانين — مجانين لا يشبهون إلا أنفسهم." },
+  { id: 4, category: "الأصالة", categoryEn: "Authenticity", text: "إلا مجانين لا يشبهون المجانين — مجانين لا يشبهون إلا أنفسهم." },
   { id: 5, category: "قراءة الناس", categoryEn: "Reading People", text: "بين المنطوق والمقصود — يظهر ما كان يجب أن لا يظهر. القيم تجمع، والمصالح تفرق." },
   { id: 6, category: "قوة الكلمة", categoryEn: "Power of Word", text: "الكلمة لها حياة وتردد كوني — تُكتب مرة وتُسمع إلى الأبد." },
   { id: 7, category: "المنهج", categoryEn: "Methodology", text: "السؤال الذي يفتح الشيفرة: ما الذي كان يشعر به الناس — وليس ما كانوا يفعلونه؟" },

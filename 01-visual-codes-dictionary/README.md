@@ -1,13 +1,15 @@
 # Visual Codes Dictionary
 ### قاموس الشيفرات البصرية
 
-**40 codes · 13 categories**
+**49 codes · The living archive**
 
 An interactive dictionary that translates visual and human concepts into applicable codes for advertising, photography, and creative direction.
 
 ## Usage
 
-Open `visual-codes-dictionary.jsx` in any React environment or [CodeSandbox](https://codesandbox.io).
+**Master file:** `visual-codes-dictionary.md` — the single source of truth (49/49, bilingual, with sources and dates).
+
+**Interactive view:** open `visual-codes-dictionary.jsx` in any React environment or [CodeSandbox](https://codesandbox.io). *(Display layer — the MD file is the master.)*
 
 ## Categories
 

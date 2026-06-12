@@ -12,7 +12,7 @@ This is a **visual thinking system** built over years of hands-on work in advert
 
 It contains:
 
-- **Visual Codes Dictionary** — 40 codes across 13 categories
+- **Visual Codes Dictionary** — 49 codes · a living archive
 - **Visual AI Prompt Bible** — AI image generation system (Mirror Authority System)
 - **Lyrical Matrix** — Najdi Arabic poetic generation system
 - **The Mother Node** — Philosophy of language, power, and naming
@@ -48,16 +48,17 @@ visual-intelligence-system/
 │
 ├── 01-visual-codes-dictionary/
 │   ├── README.md
-│   └── visual-codes-dictionary.jsx    ← React component (40 codes)
+│   ├── visual-codes-dictionary.md     ← MASTER FILE (49 codes, bilingual)
+│   └── visual-codes-dictionary.jsx    ← Interactive React view
 │
-├── 03-visual-ai-prompt-bible/
+├── 02-visual-ai-prompt-bible/
 │   ├── README.md
 │   └── VISUAL_AI_PROMPT_BIBLE.md      ← Mirror Authority System
 │
-├── 04-lyrical-matrix/
+├── 03-lyrical-matrix/
 │   └── lyrical-matrix.md              ← Najdi poetic generation system
 │
-└── 05-philosophy/
+└── 04-philosophy/
     └── mother-node.md                 ← The Mother Node
 ```
 
@@ -69,9 +70,9 @@ visual-intelligence-system/
 git clone https://github.com/An88230/visual-intelligence-system
 ```
 
-**Visual Codes Dictionary** → open `01-visual-codes-dictionary/visual-codes-dictionary.jsx` in any React environment or CodeSandbox.
+**Visual Codes Dictionary** → read `01-visual-codes-dictionary/visual-codes-dictionary.md` (master file) or open the `.jsx` for the interactive view.
 
-**Visual AI Prompt Bible** → copy the Master Prompt Formula from `03-visual-ai-prompt-bible/VISUAL_AI_PROMPT_BIBLE.md` into Midjourney / DALL-E / Firefly / Stable Diffusion.
+**Visual AI Prompt Bible** → copy the Master Prompt Formula from `02-visual-ai-prompt-bible/VISUAL_AI_PROMPT_BIBLE.md` into Midjourney / DALL-E / Firefly / Stable Diffusion.
 
 ---
 
@@ -88,7 +89,7 @@ Impact Gap = Attention × State × Time × Medium × Novelty
 ## About
 
 **Nabil — Creative Systems Director**  
-Advertising director and commercial photographer from Saudi Arabia.  
+Advertising director and commercial photographer based in Saudi Arabia.  
 Working at the intersection of creative direction, advertising photography, and AI production systems.
 
 🌐 [nabil88.art](https://nabil88.art)
