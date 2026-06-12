@@ -13,7 +13,6 @@
       --muted: #aaa59a;
       --line: #333237;
       --accent: #d7b46a;
-      --danger: #9b3b35;
       --input: #101012;
     }
 
@@ -23,8 +22,12 @@
       margin: 0;
       background: radial-gradient(circle at top left, #252014 0, #0b0b0c 34%, #050505 100%);
       color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif;
       line-height: 1.5;
+    }
+
+    html[dir="rtl"] body {
+      font-family: Tahoma, Arial, ui-sans-serif, system-ui, sans-serif;
     }
 
     .wrap {
@@ -37,6 +40,15 @@
       margin-bottom: 28px;
       border-bottom: 1px solid var(--line);
       padding-bottom: 24px;
+      position: relative;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 14px;
     }
 
     .eyebrow {
@@ -44,8 +56,9 @@
       letter-spacing: 0.12em;
       text-transform: uppercase;
       font-size: 12px;
-      margin-bottom: 10px;
     }
+
+    html[dir="rtl"] .eyebrow { letter-spacing: 0; }
 
     h1 {
       margin: 0;
@@ -54,8 +67,10 @@
       letter-spacing: -0.05em;
     }
 
+    html[dir="rtl"] h1 { letter-spacing: -0.03em; }
+
     .subtitle {
-      max-width: 760px;
+      max-width: 780px;
       color: var(--muted);
       font-size: 17px;
       margin-top: 18px;
@@ -91,6 +106,12 @@
       letter-spacing: 0.06em;
     }
 
+    html[dir="rtl"] label {
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 13px;
+    }
+
     input, select, textarea {
       width: 100%;
       border: 1px solid var(--line);
@@ -100,6 +121,7 @@
       padding: 12px 13px;
       outline: none;
       font-size: 14px;
+      font-family: inherit;
     }
 
     textarea {
@@ -132,11 +154,24 @@
       cursor: pointer;
       font-weight: 700;
       letter-spacing: -0.01em;
+      font-family: inherit;
     }
 
     .primary { background: var(--accent); color: #12100b; }
     .secondary { background: var(--panel-2); color: var(--text); border: 1px solid var(--line); }
     .ghost { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+
+    .lang {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--panel-2);
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 9px 13px;
+      font-size: 13px;
+    }
 
     .output {
       min-height: 680px;
@@ -146,9 +181,16 @@
       border-radius: 16px;
       padding: 20px;
       color: #eee8dc;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", Tahoma, monospace;
       font-size: 13.5px;
       overflow: auto;
+      direction: inherit;
+    }
+
+    html[dir="rtl"] .output {
+      font-family: Tahoma, Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.75;
     }
 
     .note {
@@ -168,71 +210,75 @@
     @media (max-width: 900px) {
       .grid { grid-template-columns: 1fr; }
       .output { min-height: 420px; }
+      .topbar { align-items: flex-start; }
     }
   </style>
 </head>
 <body>
   <main class="wrap">
     <header>
-      <div class="eyebrow">Visual Intelligence System · Tool Layer</div>
-      <h1>Visual Code Generator</h1>
-      <p class="subtitle">A local single-file tool that translates one visual code into campaign structure, AI image prompt, or voice-over draft. No external scripts. No backend. No API key.</p>
+      <div class="topbar">
+        <div class="eyebrow" data-i18n="eyebrow">Visual Intelligence System · Tool Layer</div>
+        <button class="lang" onclick="toggleLanguage()" id="langButton">AR / عربي</button>
+      </div>
+      <h1 data-i18n="title">Visual Code Generator</h1>
+      <p class="subtitle" data-i18n="subtitle">A local single-file tool that translates one visual code into campaign structure, AI image prompt, or voice-over draft. No external scripts. No backend. No API key.</p>
     </header>
 
     <section class="grid">
       <div class="panel">
-        <h2>Input</h2>
+        <h2 data-i18n="inputTitle">Input</h2>
 
-        <label for="outputType">Output Type</label>
+        <label for="outputType" data-i18n="outputTypeLabel">Output Type</label>
         <select id="outputType">
-          <option value="campaign">Campaign Structure</option>
-          <option value="prompt">AI Image Prompt</option>
-          <option value="vo">Voice Over</option>
+          <option value="campaign" data-i18n="campaignOption">Campaign Structure</option>
+          <option value="prompt" data-i18n="promptOption">AI Image Prompt</option>
+          <option value="vo" data-i18n="voOption">Voice Over</option>
         </select>
 
         <div class="two">
           <div>
-            <label for="codeNumber">Code Number</label>
+            <label for="codeNumber" data-i18n="codeNumberLabel">Code Number</label>
             <input id="codeNumber" placeholder="48" value="48" />
           </div>
           <div>
-            <label for="aspectRatio">Aspect Ratio</label>
+            <label for="aspectRatio" data-i18n="aspectRatioLabel">Aspect Ratio</label>
             <input id="aspectRatio" placeholder="9:16" value="9:16" />
           </div>
         </div>
 
-        <label for="codeName">Code Name</label>
+        <label for="codeName" data-i18n="codeNameLabel">Code Name</label>
         <input id="codeName" placeholder="The Law of Inevitable Recognition" value="The Law of Inevitable Recognition" />
 
-        <label for="subject">Subject</label>
+        <label for="subject" data-i18n="subjectLabel">Subject</label>
         <input id="subject" placeholder="a person standing near a reflective product" />
 
-        <label for="product">Product / Object</label>
+        <label for="product" data-i18n="productLabel">Product / Object</label>
         <input id="product" placeholder="premium fragrance bottle, watch, tourism experience, warning poster" />
 
-        <label for="audience">Audience</label>
+        <label for="audience" data-i18n="audienceLabel">Audience</label>
         <input id="audience" placeholder="young Saudi professionals, creators, premium buyers" />
 
-        <label for="emotion">Emotion / Human State</label>
+        <label for="emotion" data-i18n="emotionLabel">Emotion / Human State</label>
         <textarea id="emotion" placeholder="an unnamed internal lack, quiet authority, fatigue from artificial noise"></textarea>
 
-        <label for="platform">Platform</label>
+        <label for="platform" data-i18n="platformLabel">Platform</label>
         <input id="platform" placeholder="Instagram Reels, campaign key visual, poster, landing page" />
 
-        <label for="avoid">Avoid</label>
+        <label for="avoid" data-i18n="avoidLabel">Avoid</label>
         <textarea id="avoid" placeholder="generic luxury, smiling influencer, hard selling, fake happiness, cheap cyberpunk"></textarea>
 
         <div class="actions">
-          <button class="primary" onclick="generateOutput()">Generate</button>
-          <button class="secondary" onclick="copyOutput()">Copy</button>
-          <button class="ghost" onclick="resetFields()">Reset</button>
+          <button class="primary" onclick="generateOutput()" data-i18n="generateButton">Generate</button>
+          <button class="secondary" onclick="copyOutput()" data-i18n="copyButton">Copy</button>
+          <button class="ghost" onclick="resetFields()" data-i18n="resetButton">Reset</button>
         </div>
 
-        <p class="note">Use the output as a first structured pass. Return to the original code before final execution.</p>
+        <p class="note" data-i18n="note">Use the output as a first structured pass. Return to the original code before final execution.</p>
       </div>
 
       <div class="panel">
-        <h2>Output</h2>
+        <h2 data-i18n="outputTitle">Output</h2>
         <div id="output" class="output">Choose an output type, fill the fields, then generate.</div>
       </div>
     </section>
@@ -241,7 +287,119 @@
   </main>
 
   <script>
+    let currentLang = "en";
+
     const $ = (id) => document.getElementById(id);
+
+    const ui = {
+      en: {
+        dir: "ltr",
+        lang: "en",
+        langButton: "AR / عربي",
+        eyebrow: "Visual Intelligence System · Tool Layer",
+        title: "Visual Code Generator",
+        subtitle: "A local single-file tool that translates one visual code into campaign structure, AI image prompt, or voice-over draft. No external scripts. No backend. No API key.",
+        inputTitle: "Input",
+        outputTypeLabel: "Output Type",
+        campaignOption: "Campaign Structure",
+        promptOption: "AI Image Prompt",
+        voOption: "Voice Over",
+        codeNumberLabel: "Code Number",
+        aspectRatioLabel: "Aspect Ratio",
+        codeNameLabel: "Code Name",
+        subjectLabel: "Subject",
+        productLabel: "Product / Object",
+        audienceLabel: "Audience",
+        emotionLabel: "Emotion / Human State",
+        platformLabel: "Platform",
+        avoidLabel: "Avoid",
+        generateButton: "Generate",
+        copyButton: "Copy",
+        resetButton: "Reset",
+        note: "Use the output as a first structured pass. Return to the original code before final execution.",
+        outputTitle: "Output",
+        emptyOutput: "Choose an output type, fill the fields, then generate.",
+        copied: "Copied to clipboard",
+        copyFailed: "Copy failed. Select the output manually and copy it.",
+        placeholders: {
+          codeName: "The Law of Inevitable Recognition",
+          subject: "a person standing near a reflective product",
+          product: "premium fragrance bottle, watch, tourism experience, warning poster",
+          audience: "young Saudi professionals, creators, premium buyers",
+          emotion: "an unnamed internal lack, quiet authority, fatigue from artificial noise",
+          platform: "Instagram Reels, campaign key visual, poster, landing page",
+          avoid: "generic luxury, smiling influencer, hard selling, fake happiness, cheap cyberpunk"
+        }
+      },
+      ar: {
+        dir: "rtl",
+        lang: "ar",
+        langButton: "EN / English",
+        eyebrow: "نظام الذكاء البصري · طبقة الأدوات",
+        title: "مولّد الشيفرة البصرية",
+        subtitle: "أداة محلية من ملف HTML واحد، تحوّل الشيفرة البصرية إلى هيكل حملة، برومبت صورة، أو نص تعليق صوتي. بلا ملفات خارجية، بلا خلفية تشغيل، بلا مفاتيح API.",
+        inputTitle: "الإدخال",
+        outputTypeLabel: "نوع المخرج",
+        campaignOption: "هيكل حملة",
+        promptOption: "برومبت صورة AI",
+        voOption: "تعليق صوتي VO",
+        codeNumberLabel: "رقم الشيفرة",
+        aspectRatioLabel: "نسبة العرض",
+        codeNameLabel: "اسم الشيفرة",
+        subjectLabel: "الموضوع",
+        productLabel: "المنتج / الشيء",
+        audienceLabel: "الجمهور",
+        emotionLabel: "الحالة الشعورية / الحالة الإنسانية",
+        platformLabel: "المنصة",
+        avoidLabel: "تجنّب",
+        generateButton: "توليد",
+        copyButton: "نسخ",
+        resetButton: "إعادة ضبط",
+        note: "استخدم الناتج كمسودة منظمة أولى. ارجع للشيفرة الأصلية قبل التنفيذ النهائي.",
+        outputTitle: "المخرج",
+        emptyOutput: "اختر نوع المخرج، املأ الحقول، ثم اضغط توليد.",
+        copied: "تم النسخ إلى الحافظة",
+        copyFailed: "فشل النسخ. حدّد النص يدويًا وانسخه.",
+        placeholders: {
+          codeName: "قانون التعرّف الحتمي",
+          subject: "شخص يقف قرب منتج عاكس",
+          product: "زجاجة عطر فاخرة، ساعة، تجربة سياحية، بوستر تحذيري",
+          audience: "محترفون سعوديون شباب، صناع محتوى، مشترون فئة فاخرة",
+          emotion: "نقص داخلي بلا اسم، سلطة هادئة، إرهاق من الضجيج الاصطناعي",
+          platform: "Instagram Reels، صورة حملة، بوستر، صفحة هبوط",
+          avoid: "الفخامة العامة، المؤثر المبتسم، البيع المباشر، السعادة المزيفة، السايبربانك الرخيص"
+        }
+      }
+    };
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      const t = ui[lang];
+      document.documentElement.lang = t.lang;
+      document.documentElement.dir = t.dir;
+
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (t[key]) el.textContent = t[key];
+      });
+
+      $("langButton").textContent = t.langButton;
+      $("codeName").placeholder = t.placeholders.codeName;
+      $("subject").placeholder = t.placeholders.subject;
+      $("product").placeholder = t.placeholders.product;
+      $("audience").placeholder = t.placeholders.audience;
+      $("emotion").placeholder = t.placeholders.emotion;
+      $("platform").placeholder = t.placeholders.platform;
+      $("avoid").placeholder = t.placeholders.avoid;
+
+      if ($("output").textContent === ui.en.emptyOutput || $("output").textContent === ui.ar.emptyOutput) {
+        $("output").textContent = t.emptyOutput;
+      }
+    }
+
+    function toggleLanguage() {
+      setLanguage(currentLang === "en" ? "ar" : "en");
+    }
 
     function val(id, fallback = "") {
       const value = $(id).value.trim();
@@ -249,250 +407,53 @@
     }
 
     function collectInput() {
+      const ar = currentLang === "ar";
       return {
         outputType: val("outputType", "campaign"),
-        codeNumber: val("codeNumber", "[code number]"),
-        codeName: val("codeName", "[code name]"),
-        subject: val("subject", "[subject]"),
-        product: val("product", "[product / object]"),
-        audience: val("audience", "[audience]"),
-        emotion: val("emotion", "[unnamed human state]"),
-        platform: val("platform", "[platform]"),
-        aspectRatio: val("aspectRatio", "[aspect ratio]"),
-        avoid: val("avoid", "generic output, surface beauty, hard selling, weak symbolism")
+        codeNumber: val("codeNumber", ar ? "[رقم الشيفرة]" : "[code number]"),
+        codeName: val("codeName", ar ? "[اسم الشيفرة]" : "[code name]"),
+        subject: val("subject", ar ? "[الموضوع]" : "[subject]"),
+        product: val("product", ar ? "[المنتج / الشيء]" : "[product / object]"),
+        audience: val("audience", ar ? "[الجمهور]" : "[audience]"),
+        emotion: val("emotion", ar ? "[حالة إنسانية غير مسماة]" : "[unnamed human state]"),
+        platform: val("platform", ar ? "[المنصة]" : "[platform]"),
+        aspectRatio: val("aspectRatio", ar ? "[نسبة العرض]" : "[aspect ratio]"),
+        avoid: val("avoid", ar ? "المخرج العام، الزينة السطحية، البيع المباشر، الرمزية الضعيفة" : "generic output, surface beauty, hard selling, weak symbolism")
       };
     }
 
-    function campaignTemplate(d) {
-      return `# Campaign Structure
-
-Code: ${d.codeNumber} — ${d.codeName}
-Project / Subject: ${d.subject}
-Product / Object: ${d.product}
-Audience: ${d.audience}
-Platform: ${d.platform}
-
----
-
-## 1. Human State
-
-${d.emotion}
-
-The audience is not only looking at ${d.product}.
-They are looking for a version of themselves that has not fully appeared yet.
-
----
-
-## 2. Inner Tension
-
-The audience is between their current visible state and an unspoken desired self.
-
-Current self:
-A person carrying pressure that has not found a clean form.
-
-Desired self:
-A more composed, clearer, and more sovereign version of the same person.
-
----
-
-## 3. Campaign Law
-
-Because Code ${d.codeNumber} says: ${d.codeName},
-the campaign must make recognition happen before explanation.
-
-The product should not appear as a sales object.
-It should appear as a threshold, witness, permission object, or evidence.
-
----
-
-## 4. One-Line Idea
-
-This does not sell ${d.product}.
-It reveals what the audience was already trying to become.
-
----
-
-## 5. Visual Direction
-
-World:
-A restrained cinematic environment built around silence, texture, and controlled contrast.
-
-Camera:
-Observe first, then move closer to the recognition point.
-
-Lighting:
-Controlled side light, shadow discipline, selective warmth on the human presence.
-
-Texture:
-Real material, no fake depth, no decorative excess.
-
----
-
-## 6. Copy Direction
-
-Hook:
-Some things do not change you. They let you recognize yourself.
-
-Body:
-The image should reveal the human state without explaining it.
-
-Closing:
-When the outside world names what was silent inside, action becomes natural.
-
----
-
-## 7. Shot Logic
-
-Shot 01 — The human state before recognition.
-Shot 02 — The product / object as threshold.
-Shot 03 — A material detail carrying the code.
-Shot 04 — The recognition moment.
-Shot 05 — Silence after recognition.
-
----
-
-## 8. 6 Law Filter
-
-Image — does the form carry meaning without explanation?
-Sound — does the rhythm stabilize the feeling?
-Word — does language reveal the core or cover weakness?
-Motion — is movement necessary or decorative?
-Matter — does texture serve truth or imitate depth?
-Silence — does silence protect the meaning or hide fear?
-
----
-
-## 9. Avoid
-
-${d.avoid}
-
----
-
-## Final Impact
-
-The audience should not say: I like this.
-They should feel: this explains something in me.`;
+    function campaignTemplateEn(d) {
+      return `# Campaign Structure\n\nCode: ${d.codeNumber} — ${d.codeName}\nProject / Subject: ${d.subject}\nProduct / Object: ${d.product}\nAudience: ${d.audience}\nPlatform: ${d.platform}\n\n---\n\n## 1. Human State\n\n${d.emotion}\n\nThe audience is not only looking at ${d.product}.\nThey are looking for a version of themselves that has not fully appeared yet.\n\n---\n\n## 2. Inner Tension\n\nThe audience is between their current visible state and an unspoken desired self.\n\nCurrent self:\nA person carrying pressure that has not found a clean form.\n\nDesired self:\nA more composed, clearer, and more sovereign version of the same person.\n\n---\n\n## 3. Campaign Law\n\nBecause Code ${d.codeNumber} says: ${d.codeName},\nthe campaign must make recognition happen before explanation.\n\nThe product should not appear as a sales object.\nIt should appear as a threshold, witness, permission object, or evidence.\n\n---\n\n## 4. One-Line Idea\n\nThis does not sell ${d.product}.\nIt reveals what the audience was already trying to become.\n\n---\n\n## 5. Visual Direction\n\nWorld:\nA restrained cinematic environment built around silence, texture, and controlled contrast.\n\nCamera:\nObserve first, then move closer to the recognition point.\n\nLighting:\nControlled side light, shadow discipline, selective warmth on the human presence.\n\nTexture:\nReal material, no fake depth, no decorative excess.\n\n---\n\n## 6. Copy Direction\n\nHook:\nSome things do not change you. They let you recognize yourself.\n\nBody:\nThe image should reveal the human state without explaining it.\n\nClosing:\nWhen the outside world names what was silent inside, action becomes natural.\n\n---\n\n## 7. Shot Logic\n\nShot 01 — The human state before recognition.\nShot 02 — The product / object as threshold.\nShot 03 — A material detail carrying the code.\nShot 04 — The recognition moment.\nShot 05 — Silence after recognition.\n\n---\n\n## 8. 6 Law Filter\n\nImage — does the form carry meaning without explanation?\nSound — does the rhythm stabilize the feeling?\nWord — does language reveal the core or cover weakness?\nMotion — is movement necessary or decorative?\nMatter — does texture serve truth or imitate depth?\nSilence — does silence protect the meaning or hide fear?\n\n---\n\n## 9. Avoid\n\n${d.avoid}\n\n---\n\n## Final Impact\n\nThe audience should not say: I like this.\nThey should feel: this explains something in me.`;
     }
 
-    function promptTemplate(d) {
-      return `# AI Image Prompt
-
-Code: ${d.codeNumber} — ${d.codeName}
-Subject: ${d.subject}
-Product / Object: ${d.product}
-Usage: ${d.platform}
-Aspect Ratio: ${d.aspectRatio}
-
----
-
-## Prompt
-
-A cinematic advertising image of ${d.subject} in a state of ${d.emotion}, where ${d.product} behaves as a psychological threshold and not as a direct product hero. The image follows the logic of ${d.codeName}: recognition must happen before explanation. The product or object should reveal a more composed, clearer, more sovereign version of the human presence, either through reflection, proximity, contrast, or symbolic tension. The visual world is restrained, premium, and psychologically charged, with controlled shadows, selective human warmth, high contrast, real texture, and silent authority. The composition should feel like an internal event becoming visible, not like a commercial pose. Designed for ${d.platform}, aspect ratio ${d.aspectRatio}.
-
-The signature “© 2025 Nabil88 | nabil88.art” appears subtly as fragmented light metadata reflected across the surface, not as a flat watermark.
-
----
-
-## Negative Prompt
-
-No smiling influencer, no obvious product placement, no direct sales mood, no exaggerated luxury clichés, no shopping behavior, no fake happiness, no aggressive branding, no busy background, no cartoon look, no plastic skin, no cheap neon cyberpunk, no overexplained symbolism, no motivational poster feeling, no flat watermark, no text-heavy layout, ${d.avoid}.
-
----
-
-## Output Test
-
-The image must not simply look beautiful.
-It must make the viewer feel that something silent inside them has taken form.`;
+    function campaignTemplateAr(d) {
+      return `# هيكل حملة\n\nالشيفرة: ${d.codeNumber} — ${d.codeName}\nالمشروع / الموضوع: ${d.subject}\nالمنتج / الشيء: ${d.product}\nالجمهور: ${d.audience}\nالمنصة: ${d.platform}\n\n---\n\n## 1. الحالة الإنسانية\n\n${d.emotion}\n\nالجمهور لا ينظر إلى ${d.product} فقط.\nهو يبحث عن نسخة من نفسه لم تظهر بشكل كامل بعد.\n\n---\n\n## 2. التوتر الداخلي\n\nالجمهور عالق بين حالته الظاهرة الآن، ونسخة داخلية يريد الوصول إليها دون أن يصرّح بذلك.\n\nالذات الحالية:\nإنسان يحمل ضغطًا لم يجد شكله النظيف بعد.\n\nالذات المرغوبة:\nنسخة أهدأ، أوضح، وأكثر سيادة من نفس الإنسان.\n\n---\n\n## 3. قانون الحملة\n\nلأن الشيفرة ${d.codeNumber} تقول: ${d.codeName}\nيجب أن تجعل الحملة التعرّف يحدث قبل الشرح.\n\nلا يظهر المنتج كشيء للبيع.\nيظهر كعتبة، شاهد، إذن نفسي، أو دليل.\n\n---\n\n## 4. الفكرة في سطر واحد\n\nهذا لا يبيع ${d.product}.\nهذا يكشف ما كان الجمهور يحاول أن يصير إليه.\n\n---\n\n## 5. الاتجاه البصري\n\nالعالم:\nبيئة سينمائية مضبوطة مبنية على الصمت، الخامة، والتباين المحكوم.\n\nالكاميرا:\nتراقب أولًا، ثم تقترب من لحظة التعرّف.\n\nالإضاءة:\nضوء جانبي مضبوط، انضباط في الظل، ودفء إنساني محدود.\n\nالخامة:\nمادة حقيقية، بلا عمق مزيف، بلا زينة فائضة.\n\n---\n\n## 6. اتجاه النص\n\nالافتتاحية:\nبعض الأشياء لا تغيّرك. هي تجعلك تتعرّف على نفسك.\n\nالمتن:\nالصورة يجب أن تكشف الحالة الإنسانية دون شرح مباشر.\n\nالقفلة:\nحين يسمّي العالم الخارجي ما كان صامتًا في الداخل، يصبح الفعل طبيعيًا.\n\n---\n\n## 7. منطق اللقطات\n\nلقطة 01 — الحالة الإنسانية قبل التعرّف.\nلقطة 02 — المنتج / الشيء كعتبة.\nلقطة 03 — تفصيلة خامة تحمل الشيفرة.\nلقطة 04 — لحظة التعرّف.\nلقطة 05 — الصمت بعد التعرّف.\n\n---\n\n## 8. فلتر قانون ٦\n\nالصورة — هل الشكل يحمل المعنى دون شرح؟\nالصوت — هل الإيقاع يثبت الشعور؟\nالكلمة — هل اللغة تكشف الجوهر أم تغطي الضعف؟\nالحركة — هل الحركة ضرورية أم زينة؟\nالخامة — هل الملمس يخدم الحقيقة أم يقلّد العمق؟\nالصمت — هل الصمت يحمي المعنى أم يخفي الخوف؟\n\n---\n\n## 9. تجنّب\n\n${d.avoid}\n\n---\n\n## الأثر النهائي\n\nلا يجب أن يقول الجمهور: أعجبني هذا.\nيجب أن يشعر: هذا يفسّر شيئًا فيّ.`;
     }
 
-    function voTemplate(d) {
-      return `# Voice Over Draft
+    function promptTemplateEn(d) {
+      return `# AI Image Prompt\n\nCode: ${d.codeNumber} — ${d.codeName}\nSubject: ${d.subject}\nProduct / Object: ${d.product}\nUsage: ${d.platform}\nAspect Ratio: ${d.aspectRatio}\n\n---\n\n## Prompt\n\nA cinematic advertising image of ${d.subject} in a state of ${d.emotion}, where ${d.product} behaves as a psychological threshold and not as a direct product hero. The image follows the logic of ${d.codeName}: recognition must happen before explanation. The product or object should reveal a more composed, clearer, more sovereign version of the human presence, either through reflection, proximity, contrast, or symbolic tension. The visual world is restrained, premium, and psychologically charged, with controlled shadows, selective human warmth, high contrast, real texture, and silent authority. The composition should feel like an internal event becoming visible, not like a commercial pose. Designed for ${d.platform}, aspect ratio ${d.aspectRatio}.\n\nThe signature “© 2025 Nabil88 | nabil88.art” appears subtly as fragmented light metadata reflected across the surface, not as a flat watermark.\n\n---\n\n## Negative Prompt\n\nNo smiling influencer, no obvious product placement, no direct sales mood, no exaggerated luxury clichés, no shopping behavior, no fake happiness, no aggressive branding, no busy background, no cartoon look, no plastic skin, no cheap neon cyberpunk, no overexplained symbolism, no motivational poster feeling, no flat watermark, no text-heavy layout, ${d.avoid}.\n\n---\n\n## Output Test\n\nThe image must not simply look beautiful.\nIt must make the viewer feel that something silent inside them has taken form.`;
+    }
 
-Code: ${d.codeNumber} — ${d.codeName}
-Project / Subject: ${d.subject}
-Product / Object: ${d.product}
-Audience: ${d.audience}
-Platform: ${d.platform}
+    function promptTemplateAr(d) {
+      return `# برومبت صورة AI\n\nالشيفرة: ${d.codeNumber} — ${d.codeName}\nالموضوع: ${d.subject}\nالمنتج / الشيء: ${d.product}\nالاستخدام: ${d.platform}\nنسبة العرض: ${d.aspectRatio}\n\n---\n\n## البرومبت\n\nصورة إعلانية سينمائية لـ ${d.subject} داخل حالة ${d.emotion}، حيث يتصرف ${d.product} كعتبة نفسية لا كبطل منتج مباشر. تتبع الصورة منطق ${d.codeName}: يجب أن يحدث التعرّف قبل الشرح. يجب أن يكشف المنتج أو الشيء نسخة أكثر هدوءًا، أوضح، وأكثر سيادة من الحضور الإنساني، عبر انعكاس أو قرب أو تباين أو توتر رمزي. العالم البصري منضبط، فاخر بلا استعراض، ومشحون نفسيًا، مع ظلال محكومة، دفء إنساني محدود، تباين عالٍ، خامة حقيقية، وسلطة صامتة. يجب أن يبدو التكوين كحدث داخلي صار مرئيًا، لا كوضعية تجارية. مصمم لـ ${d.platform}، بنسبة ${d.aspectRatio}.\n\nيظهر التوقيع “© 2025 Nabil88 | nabil88.art” بشكل خافت كبيانات ضوئية متكسرة منعكسة على السطح، وليس كعلامة مائية مسطحة.\n\n---\n\n## Negative Prompt\n\nلا مؤثر مبتسم، لا وضع منتج مباشر، لا مزاج بيع واضح، لا كليشيهات فخامة مبالغ فيها، لا سلوك تسوق، لا سعادة مزيفة، لا براندينغ هجومي، لا خلفية مزدحمة، لا شكل كرتوني، لا جلد بلاستيكي، لا سايبربانك نيون رخيص، لا رمزية مشروحة زيادة، لا إحساس بوستر تحفيزي، لا علامة مائية مسطحة، لا تصميم مزدحم بالنصوص، ${d.avoid}.\n\n---\n\n## اختبار الناتج\n\nالصورة لا يجب أن تبدو جميلة فقط.\nيجب أن تجعل المتلقي يشعر أن شيئًا صامتًا داخله أخذ شكلًا.`;
+    }
 
----
+    function voTemplateEn(d) {
+      return `# Voice Over Draft\n\nCode: ${d.codeNumber} — ${d.codeName}\nProject / Subject: ${d.subject}\nProduct / Object: ${d.product}\nAudience: ${d.audience}\nPlatform: ${d.platform}\n\n---\n\n## Tone\n\nCalm authority.\nNo begging.\nNo hard selling.\nThe voice witnesses more than it explains.\n\n---\n\n## VO Text\n\nSome things do not arrive to impress you.\n\nThey arrive quietly...\n\nTo reveal what was already waiting inside.\n\nYou do not choose ${d.product} because it is more visible.\n\nYou choose it\nwhen it gives form\n\nto something you could feel...\n\nbut could not name.\n\nThat is where recognition begins.\n\n---\n\n## Performance Notes\n\nRead slowly.\nLet silence carry part of the meaning.\nDo not perform excitement.\nDo not soften the authority.\nThe voice should feel certain without trying to prove itself.\n\n---\n\n## Sound Design\n\nLow restrained pulse.\nMinimal texture.\nSoft room tone.\nControlled breath.\nNo excessive cinematic swell.\n\n---\n\n## Silence Points\n\nAfter: "inside"\nAfter: "more visible"\nBefore: "That is where recognition begins"\n\n---\n\n## Avoid\n\n${d.avoid}\n\n---\n\n## Final Impact\n\nThe listener should not feel instructed.\nThey should feel recognized.`;
+    }
 
-## Tone
-
-Calm authority.
-No begging.
-No hard selling.
-The voice witnesses more than it explains.
-
----
-
-## VO Text
-
-Some things do not arrive to impress you.
-
-They arrive quietly...
-
-To reveal what was already waiting inside.
-
-You do not choose ${d.product} because it is more visible.
-
-You choose it
-when it gives form
-
-to something you could feel...
-
-but could not name.
-
-That is where recognition begins.
-
----
-
-## Performance Notes
-
-Read slowly.
-Let silence carry part of the meaning.
-Do not perform excitement.
-Do not soften the authority.
-The voice should feel certain without trying to prove itself.
-
----
-
-## Sound Design
-
-Low restrained pulse.
-Minimal texture.
-Soft room tone.
-Controlled breath.
-No excessive cinematic swell.
-
----
-
-## Silence Points
-
-After: "inside"
-After: "more visible"
-Before: "That is where recognition begins"
-
----
-
-## Avoid
-
-${d.avoid}
-
----
-
-## Final Impact
-
-The listener should not feel instructed.
-They should feel recognized.`;
+    function voTemplateAr(d) {
+      return `# مسودة تعليق صوتي\n\nالشيفرة: ${d.codeNumber} — ${d.codeName}\nالمشروع / الموضوع: ${d.subject}\nالمنتج / الشيء: ${d.product}\nالجمهور: ${d.audience}\nالمنصة: ${d.platform}\n\n---\n\n## النبرة\n\nسلطة هادئة.\nلا استعطاف.\nلا بيع مباشر.\nالصوت يشهد أكثر مما يشرح.\n\n---\n\n## نص التعليق الصوتي\n\nبعض الأشياء لا تأتي لتبهرك.\n\nتأتي بهدوء...\n\nلتكشف ما كان ينتظر داخلك.\n\nأنت لا تختار ${d.product}\nلأنه أوضح من غيره.\n\nتختاره\nحين يعطي شكلًا\n\nلشيء كنت تشعر به...\n\nلكن لم تكن تعرف اسمه.\n\nهنا يبدأ التعرّف.\n\n---\n\n## ملاحظات الأداء\n\nاقرأ ببطء.\nاترك الصمت يحمل جزءًا من المعنى.\nلا تؤدِّ الحماس.\nلا تليّن السلطة.\nالصوت يجب أن يبدو واثقًا دون أن يحاول إثبات نفسه.\n\n---\n\n## التصميم الصوتي\n\nنبض منخفض ومنضبط.\nخامة بسيطة.\nهواء غرفة خفيف.\nنَفَس محكوم.\nبلا تصعيد سينمائي زائد.\n\n---\n\n## نقاط الصمت\n\nبعد: "داخلك"\nبعد: "أوضح من غيره"\nقبل: "هنا يبدأ التعرّف"\n\n---\n\n## تجنّب\n\n${d.avoid}\n\n---\n\n## الأثر النهائي\n\nالمستمع لا يجب أن يشعر أنه تلقّى أمرًا.\nيجب أن يشعر أنه تم التعرّف عليه.`;
     }
 
     function generateOutput() {
       const data = collectInput();
+      const ar = currentLang === "ar";
       let result = "";
 
-      if (data.outputType === "campaign") result = campaignTemplate(data);
-      if (data.outputType === "prompt") result = promptTemplate(data);
-      if (data.outputType === "vo") result = voTemplate(data);
+      if (data.outputType === "campaign") result = ar ? campaignTemplateAr(data) : campaignTemplateEn(data);
+      if (data.outputType === "prompt") result = ar ? promptTemplateAr(data) : promptTemplateEn(data);
+      if (data.outputType === "vo") result = ar ? voTemplateAr(data) : voTemplateEn(data);
 
       $("output").textContent = result;
     }
@@ -501,16 +462,16 @@ They should feel recognized.`;
       const text = $("output").textContent;
       try {
         await navigator.clipboard.writeText(text);
-        $("output").textContent = text + "\n\n[Copied to clipboard]";
+        $("output").textContent = text + "\n\n[" + ui[currentLang].copied + "]";
       } catch (err) {
-        alert("Copy failed. Select the output manually and copy it.");
+        alert(ui[currentLang].copyFailed);
       }
     }
 
     function resetFields() {
       $("outputType").value = "campaign";
       $("codeNumber").value = "48";
-      $("codeName").value = "The Law of Inevitable Recognition";
+      $("codeName").value = currentLang === "ar" ? "قانون التعرّف الحتمي" : "The Law of Inevitable Recognition";
       $("subject").value = "";
       $("product").value = "";
       $("audience").value = "";
@@ -518,8 +479,10 @@ They should feel recognized.`;
       $("platform").value = "";
       $("aspectRatio").value = "9:16";
       $("avoid").value = "";
-      $("output").textContent = "Choose an output type, fill the fields, then generate.";
+      $("output").textContent = ui[currentLang].emptyOutput;
     }
+
+    setLanguage("en");
   </script>
 </body>
 </html>
