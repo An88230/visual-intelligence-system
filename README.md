@@ -16,6 +16,7 @@ It contains:
 - **Visual Codes Dictionary** — 49 codes · a living archive
 - **System Map** — the operating logic of the full repository
 - **Execution Layer** — translation templates from code to campaign, prompt, and VO
+- **Tool Layer** — local HTML tool for generating structured outputs
 - **Visual AI Prompt Bible** — AI image generation system / Mirror Authority System
 - **Lyrical Matrix** — Najdi Arabic poetic generation system
 - **The Mother Node** — philosophy of language, power, and naming
@@ -69,12 +70,17 @@ visual-intelligence-system/
 ├── 04-philosophy/
 │   └── mother-node.md                ← The Mother Node
 │
-└── 05-execution-layer/
-    ├── README.md                     ← Translation layer overview
-    ├── CODE-TO-CAMPAIGN.md           ← Code to campaign structure
-    ├── CODE-TO-PROMPT.md             ← Code to AI prompt structure
-    ├── CODE-TO-VO.md                 ← Code to voice-over structure
-    └── EXAMPLES.md                   ← Applied execution examples
+├── 05-execution-layer/
+│   ├── README.md                     ← Translation layer overview
+│   ├── CODE-TO-CAMPAIGN.md           ← Code to campaign structure
+│   ├── CODE-TO-PROMPT.md             ← Code to AI prompt structure
+│   ├── CODE-TO-VO.md                 ← Code to voice-over structure
+│   └── EXAMPLES.md                   ← Applied execution examples
+│
+└── 06-tool-layer/
+    ├── README.md                     ← Tool layer overview
+    ├── tool-spec.md                  ← Tool specification
+    └── visual-code-generator.html    ← Single-file local generator
 ```
 
 ---
@@ -95,6 +101,7 @@ QUICKSTART.md → SYSTEM-MAP.md → 01-visual-codes-dictionary/visual-codes-dict
 Then choose the execution path:
 
 ```text
+Local generator    → 06-tool-layer/visual-code-generator.html
 Campaign structure → 05-execution-layer/CODE-TO-CAMPAIGN.md
 AI visual prompt   → 05-execution-layer/CODE-TO-PROMPT.md
 Voice-over / VO    → 05-execution-layer/CODE-TO-VO.md
