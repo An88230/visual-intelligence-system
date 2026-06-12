@@ -88,11 +88,23 @@ Impact Gap = Attention × State × Time × Medium × Novelty
 
 ## About
 
-**Nabil — Creative Systems Director**  
-Advertising director and commercial photographer based in Saudi Arabia.  
-Working at the intersection of creative direction, advertising photography, and AI production systems.
+**Ahmed Nabil — known as NABIL**  
+**Creative Systems Director · nabil88.art**
 
-🌐 [nabil88.art](https://nabil88.art)
+Creative director and advertising photographer working at the intersection of Arabic poetics, visual philosophy, and AI production systems.
+
+Not a tools maker — a systems thinker. Everything in this repository was extracted from life before it was written: street sounds, memory, honest moments that carried complete worlds inside them.
+
+> *"Don't expose people's ignorance. Open a door through which they see what they were already feeling — before they knew its name."*
+
+**The work:** visual frameworks for advertising that treat feeling as the real product, AI prompt systems that carry philosophy instead of description, and a living dictionary that grows with its owner.
+
+## Find me
+
+🌐 Website — [nabil88.art](https://nabil88.art)  
+🎬 Vimeo — [vimeo.com/nabil88](https://vimeo.com/nabil88)  
+▶️ YouTube — [@Nobe-88](https://www.youtube.com/@Nobe-88)  
+💼 LinkedIn — [ahmed-nabil](https://www.linkedin.com/in/ahmed-nabil-089196207)
 
 ---
 
