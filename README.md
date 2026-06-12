@@ -104,7 +104,8 @@ Not a tools maker — a systems thinker. Everything in this repository was extra
 🌐 Website — [nabil88.art](https://nabil88.art)  
 🎬 Vimeo — [vimeo.com/nabil88](https://vimeo.com/nabil88)  
 ▶️ YouTube — [@Nobe-88](https://www.youtube.com/@Nobe-88)  
-💼 LinkedIn — [ahmed-nabil](https://www.linkedin.com/in/ahmed-nabil-089196207)
+💼 LinkedIn — [ahmed-nabil](https://www.linkedin.com/in/ahmed-nabil-089196207)  
+📸 Instagram — [nabil88523](https://www.instagram.com/nabil88523?igsh=MTV0aHVxa3BuN282aw%3D%3D&utm_source=qr)
 
 ---
 
