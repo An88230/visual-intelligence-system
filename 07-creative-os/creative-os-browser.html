@@ -6,661 +6,525 @@
 <title>RAIZ Creative OS — Neural Expressive UI</title>
 <style>
 :root{
-  --bg:#0d0d0e; --bg-deep:#070708; --panel:#141416; --panel-glass:rgba(18,19,22,.62);
-  --text:#e5e5eb; --dim:#8a8a93; --faint:#55565d;
-  --amber:#e2b867; --amber-soft:rgba(226,184,103,.14);
-  --cold:#1a1d24; --cold-line:#2a2e38; --border:#1e1f24;
-  --red:#e63946; --ice:#7fb0d6;
-  --space:clamp(.8rem,2vw,1.4rem);
+  --bg:#04060c; --bg2:#070b14; --ink:#0a1120;
+  --ice:#8fc4ff; --ice-dim:#3f6ea8; --ice-deep:#16273f;
+  --grid:rgba(96,150,225,.085);
+  --amber:#e2b867; --amber-dim:rgba(226,184,103,.6);
+  --red:#ff5a5a;
+  --text:#cfe0f7; --dim:#5f7ba4; --faint:#3c5274;
+  --line:rgba(120,170,235,.22); --line-soft:rgba(120,170,235,.10);
+  --panel:rgba(8,14,26,.45);
+  --space:clamp(.6rem,1.5vw,1.15rem);
+  --mono:"SF Mono",ui-monospace,"Roboto Mono","Menlo",monospace;
 }
-*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif}
-html,body{height:100%}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
 body{
+  background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+/* full-viewport living background */
+#bg{position:fixed;inset:0;z-index:0;display:block}
+/* faint scanline + vignette over the bg */
+.veil{position:fixed;inset:0;z-index:1;pointer-events:none;
   background:
-    radial-gradient(1200px 700px at 50% -10%, #1a1d24 0, transparent 60%),
-    radial-gradient(900px 900px at 85% 110%, #14161c 0, transparent 55%),
-    radial-gradient(circle at 50% 40%, #0f1013 0, var(--bg) 45%, var(--bg-deep) 100%);
-  color:var(--text); overflow:hidden;
-}
-/* faint star/grid field behind everything */
-body::before{
-  content:""; position:fixed; inset:0; pointer-events:none; opacity:.5; z-index:0;
-  background-image:
-    radial-gradient(1px 1px at 20% 30%, rgba(229,229,235,.20) 50%, transparent),
-    radial-gradient(1px 1px at 70% 65%, rgba(229,229,235,.14) 50%, transparent),
-    radial-gradient(1px 1px at 40% 80%, rgba(229,229,235,.10) 50%, transparent),
-    radial-gradient(1px 1px at 85% 20%, rgba(229,229,235,.16) 50%, transparent),
-    linear-gradient(rgba(42,46,56,.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(42,46,56,.05) 1px, transparent 1px);
-  background-size:auto,auto,auto,auto,60px 60px,60px 60px;
-}
+    radial-gradient(120% 120% at 50% 40%, transparent 55%, rgba(2,4,9,.7) 100%),
+    repeating-linear-gradient(0deg, rgba(0,0,0,0) 0 2px, rgba(8,16,30,.16) 2px 3px);
+  mix-blend-mode:multiply;}
 
-/* ===== Spatial grid: top / [left · stage · right] / bottom ===== */
-.os{
-  position:relative; z-index:1; height:100vh; width:100%;
-  display:grid; gap:var(--space); padding:var(--space);
-  grid-template-columns:300px 1fr 300px;
-  grid-template-rows:auto 1fr auto;
-  grid-template-areas:
-    "top    top    top"
-    "left   stage  right"
-    "bottom bottom bottom";
-  transition:.5s ease;
-}
+.mono{font-family:var(--mono)}
 
-/* ----- TOP BAR ----- */
-.top{
-  grid-area:top; display:flex; align-items:center; justify-content:space-between;
-  gap:1rem; padding:.5rem .2rem; border-bottom:1px solid var(--border);
-}
-.brand{display:flex;align-items:baseline;gap:.7rem}
-.brand b{font-size:.82rem;letter-spacing:2px;text-transform:uppercase;font-weight:800}
-.brand span{font-size:.66rem;letter-spacing:1.5px;color:var(--faint);text-transform:uppercase}
-.top-mid{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;justify-content:center}
-.chip{
-  font-size:.66rem;letter-spacing:1px;text-transform:uppercase;color:var(--dim);
-  border:1px solid var(--cold-line); background:rgba(26,29,36,.5);
-  padding:.42rem .8rem; border-radius:999px; cursor:pointer; transition:.25s; white-space:nowrap;
-}
-.chip:hover{border-color:var(--amber);color:var(--text)}
-.chip.on{border-color:var(--amber);color:#0d0d0e;background:var(--amber);font-weight:700}
-.chip .k{color:var(--faint)}
-.chip.on .k{color:rgba(13,13,14,.6)}
-.status{display:flex;align-items:center;gap:.55rem;font-size:.7rem;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 10px var(--amber);animation:pulse 2.4s infinite}
-@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+/* ===== spatial grid ===== */
+.os{position:relative;z-index:2;height:100vh;width:100%;display:grid;gap:var(--space);
+  padding:var(--space);
+  grid-template-columns:280px 1fr 280px;grid-template-rows:auto 1fr auto;
+  grid-template-areas:"top top top" "left stage right" "bottom bottom bottom";
+  transition:.6s cubic-bezier(.4,0,.2,1);}
 
-/* ----- SIDE PANELS (must not dominate the orb) ----- */
-.side{
-  display:flex; flex-direction:column; gap:.8rem; min-height:0;
-  background:var(--panel-glass); border:1px solid var(--border); border-radius:16px;
-  padding:1.1rem; backdrop-filter:blur(7px);
-}
-.side.left{grid-area:left}
-.side.right{grid-area:right}
-.side h3{
-  font-size:.64rem;letter-spacing:2px;text-transform:uppercase;color:var(--amber);
-  font-weight:700;display:flex;align-items:center;gap:.5rem;
-}
-.side h3::before{content:"";width:14px;height:1px;background:var(--amber);opacity:.6}
-.field{display:flex;flex-direction:column;gap:.3rem}
-.field label{font-size:.6rem;letter-spacing:1px;text-transform:uppercase;color:var(--faint)}
-input,textarea,select{
-  background:rgba(8,8,9,.7); border:1px solid var(--cold-line); color:var(--text);
-  padding:.6rem .75rem; border-radius:9px; font-size:.8rem; outline:none; width:100%;
-  transition:.2s;
-}
-textarea{resize:none}
-input:focus,textarea:focus,select:focus{border-color:var(--amber);background:rgba(8,8,9,.95)}
-.ctx-scroll{overflow-y:auto;display:flex;flex-direction:column;gap:.7rem;padding-left:.2rem}
+/* HUD panel frame with corner brackets */
+.hud{position:relative;background:var(--panel);backdrop-filter:blur(3px);
+  border:1px solid var(--line-soft);padding:.9rem;min-height:0;
+  clip-path:polygon(0 10px,10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px));}
+.hud::before,.hud::after{content:"";position:absolute;width:14px;height:14px;border:1px solid var(--ice-dim);opacity:.7}
+.hud::before{top:5px;left:5px;border-right:0;border-bottom:0}
+.hud::after{bottom:5px;right:5px;border-left:0;border-top:0}
+.hud-title{font-family:var(--mono);font-size:.6rem;letter-spacing:3px;text-transform:uppercase;
+  color:var(--ice);display:flex;align-items:center;gap:.5rem;margin-bottom:.7rem;opacity:.85}
+.hud-title::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--ice-dim),transparent)}
+.hud-title .i{width:5px;height:5px;background:var(--ice);box-shadow:0 0 8px var(--ice);transform:rotate(45deg)}
 
-/* RIGHT — markdown decision panel */
-.right .md-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
-.md-actions{display:flex;gap:.4rem}
-.icon-btn{
-  font-size:.6rem;letter-spacing:1px;text-transform:uppercase;color:var(--dim);
-  background:transparent;border:1px solid var(--cold-line);padding:.35rem .55rem;
-  border-radius:7px;cursor:pointer;transition:.2s;
-}
-.icon-btn:hover{border-color:var(--amber);color:var(--text)}
-.markdown{
-  flex:1; min-height:0; overflow-y:auto; font-size:.82rem; line-height:1.85;
-  color:var(--text); padding-left:.3rem;
-}
-.markdown:empty::after{
-  content:"بانتظار أول قرار. تحدّث إلى RAIZ أو اكتب أمرًا — سيظهر القرار هنا بصيغة Markdown.";
-  color:var(--faint); font-size:.76rem; line-height:1.9; display:block;
-}
-.markdown h1,.markdown h2,.markdown h3{color:var(--amber);font-weight:700;margin:1rem 0 .4rem;line-height:1.4}
-.markdown h1{font-size:1.05rem} .markdown h2{font-size:.95rem} .markdown h3{font-size:.85rem;color:#d8c79c}
-.markdown p{margin:.5rem 0}
-.markdown ul,.markdown ol{margin:.5rem 1.2rem .5rem 0;padding:0}
-.markdown li{margin:.25rem 0}
-.markdown code{background:rgba(127,176,214,.12);color:var(--ice);padding:.1rem .35rem;border-radius:5px;font-size:.78rem}
-.markdown pre{background:rgba(8,8,9,.8);border:1px solid var(--cold-line);border-radius:9px;padding:.8rem;overflow-x:auto;margin:.6rem 0}
-.markdown pre code{background:none;color:var(--text)}
-.markdown strong{color:#f0e6cf}
-.markdown hr{border:0;border-top:1px solid var(--border);margin:.9rem 0}
-.markdown blockquote{border-right:2px solid var(--amber);padding-right:.8rem;color:var(--dim);margin:.6rem 0}
+/* ---- TOP BAR ---- */
+.top{grid-area:top;display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  font-family:var(--mono)}
+.brand{display:flex;align-items:baseline;gap:.6rem}
+.brand b{font-size:.9rem;letter-spacing:4px;color:var(--text);font-weight:700}
+.brand b span{color:var(--amber)}
+.brand i{font-style:normal;font-size:.56rem;letter-spacing:2px;color:var(--dim);text-transform:uppercase}
+.chips{display:flex;gap:.45rem;align-items:center;flex-wrap:wrap;justify-content:center}
+.chip{font-size:.56rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);
+  border:1px solid var(--line);padding:.4rem .7rem;cursor:pointer;transition:.25s;white-space:nowrap;
+  background:rgba(10,17,32,.4);clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px)}
+.chip:hover{color:var(--text);border-color:var(--ice);box-shadow:0 0 14px rgba(120,170,235,.2) inset}
+.chip.on{color:var(--bg);background:var(--amber);border-color:var(--amber);font-weight:700;box-shadow:0 0 16px rgba(226,184,103,.35)}
+.chip .led{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--ice);box-shadow:0 0 7px var(--ice);margin-inline-start:.35rem}
+.chip .led.off{background:var(--faint);box-shadow:none}
+.clock{text-align:left;font-size:.62rem;letter-spacing:2px;color:var(--ice);line-height:1.7}
+.clock b{font-size:.96rem;letter-spacing:3px;font-weight:600}
+.clock small{color:var(--dim);font-size:.5rem;letter-spacing:1.5px;display:block}
 
-/* ----- CENTER STAGE / ORB ----- */
-.stage{grid-area:stage;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0}
-.orb-wrap{position:relative;flex:1;width:100%;display:flex;align-items:center;justify-content:center;min-height:0}
-canvas#orb{position:relative;width:min(62vh,560px);height:min(62vh,560px);max-width:100%}
-.orb-status{
-  position:absolute;bottom:6%;left:50%;transform:translateX(-50%);text-align:center;
-  pointer-events:none;width:90%;
-}
-.orb-status .label{font-size:.72rem;letter-spacing:4px;text-transform:uppercase;color:var(--dim)}
-.orb-status .msg{margin-top:.7rem;font-size:.86rem;color:var(--dim);max-width:520px;margin-inline:auto;line-height:1.8}
+/* ---- LEFT : vitals + project ---- */
+.left{grid-area:left;display:flex;flex-direction:column}
+.vitals{display:flex;flex-direction:column;gap:.5rem;font-family:var(--mono)}
+.vital{display:grid;grid-template-columns:74px 1fr 30px;align-items:center;gap:.5rem;font-size:.54rem;letter-spacing:1px;color:var(--dim);text-transform:uppercase}
+.bar{height:4px;background:rgba(120,170,235,.10);position:relative;overflow:hidden}
+.bar i{position:absolute;inset:0 auto 0 0;width:50%;background:linear-gradient(90deg,var(--ice-dim),var(--ice));box-shadow:0 0 10px var(--ice);transition:width .4s}
+.vital b{color:var(--ice);text-align:left;font-weight:500}
+.ctx{margin-top:.9rem;display:flex;flex-direction:column;gap:.55rem;overflow-y:auto}
+.f{display:flex;flex-direction:column;gap:.2rem}
+.f label{font-family:var(--mono);font-size:.5rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--faint)}
+input,textarea{font-family:var(--mono);background:rgba(4,8,16,.6);border:1px solid var(--line-soft);
+  color:var(--text);padding:.45rem .6rem;font-size:.72rem;outline:none;width:100%;transition:.2s;
+  clip-path:polygon(5px 0,100% 0,100% calc(100% - 5px),calc(100% - 5px) 100%,0 100%,0 5px)}
+textarea{resize:none;line-height:1.6}
+input:focus,textarea:focus{border-color:var(--ice);background:rgba(4,8,16,.9);box-shadow:0 0 12px rgba(120,170,235,.15)}
 
-/* ----- BOTTOM RAIL ----- */
-.bottom{
-  grid-area:bottom; display:flex; flex-direction:column; gap:.75rem;
-  border-top:1px solid var(--border); padding-top:.85rem;
-}
-.modes{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center}
-.mode-btn{
-  font-size:.66rem;letter-spacing:.5px;color:var(--dim);background:rgba(26,29,36,.45);
-  border:1px solid var(--cold-line);padding:.5rem .9rem;border-radius:999px;cursor:pointer;transition:.22s;
-}
-.mode-btn:hover{color:var(--text);border-color:var(--amber)}
-.mode-btn.on{color:var(--amber);border-color:var(--amber);background:var(--amber-soft);font-weight:700}
-.deck{display:flex;gap:.7rem;align-items:stretch}
-.deck textarea{flex:1;min-height:52px;max-height:120px;height:52px}
-.deck-btns{display:flex;gap:.5rem}
-button.act{
-  background:var(--text);color:var(--bg);border:0;padding:0 1.3rem;border-radius:10px;
-  font-size:.78rem;font-weight:700;cursor:pointer;transition:.25s;letter-spacing:.5px;white-space:nowrap;
-}
-button.act:hover{background:var(--amber);box-shadow:0 0 18px rgba(226,184,103,.3)}
-button.act.mic{background:transparent;color:var(--text);border:1px solid var(--cold-line)}
-button.act.mic:hover{border-color:var(--amber);background:transparent;box-shadow:none}
-button.act.mic.live{background:var(--red);color:#fff;border-color:var(--red);animation:pulse 1.3s infinite}
-button.act:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
-.keys-row{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;justify-content:center;font-size:.62rem;color:var(--faint)}
-.keys-row .keystat{display:flex;align-items:center;gap:.35rem;letter-spacing:1px;text-transform:uppercase}
-.keys-row .kdot{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 6px var(--red)}
-.keys-row .kdot.ok{background:#5fae6a;box-shadow:0 0 6px #5fae6a}
+/* ---- STAGE / ORB ---- */
+.stage{grid-area:stage;position:relative;display:flex;align-items:center;justify-content:center;min-height:0}
+#orb{position:relative;width:min(64vh,620px);height:min(64vh,620px);max-width:100%}
+.orb-hud{position:absolute;left:50%;bottom:4%;transform:translateX(-50%);text-align:center;pointer-events:none;width:90%}
+.orb-hud .state{font-family:var(--mono);font-size:.66rem;letter-spacing:6px;text-transform:uppercase;color:var(--ice);
+  text-shadow:0 0 14px rgba(120,170,235,.5)}
+.orb-hud .sub{margin-top:.5rem;font-size:.74rem;color:var(--dim);letter-spacing:1px}
 
-/* persistent brand credit (preserved across both modes) */
-.credit{
-  position:fixed; bottom:.55rem; left:1rem; z-index:6;
-  font-size:.6rem; letter-spacing:1.5px; color:var(--faint); pointer-events:auto;
-}
-.credit a{color:var(--faint);text-decoration:none}
-.credit a:hover{color:var(--amber)}
+/* ---- RIGHT : decision + radar + waveform ---- */
+.right{grid-area:right;display:flex;flex-direction:column;gap:var(--space)}
+.right .panel-dec{flex:1;display:flex;flex-direction:column;min-height:0}
+.dec-head{display:flex;align-items:center;justify-content:space-between;gap:.4rem;margin-bottom:.5rem}
+.dec-head .hud-title{margin:0}
+.dec-actions{display:flex;gap:.3rem}
+.mini{font-family:var(--mono);font-size:.5rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);
+  background:transparent;border:1px solid var(--line);padding:.3rem .5rem;cursor:pointer;transition:.2s;
+  clip-path:polygon(4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%,0 4px)}
+.mini:hover{color:var(--text);border-color:var(--ice)}
+.md{flex:1;min-height:0;overflow-y:auto;font-size:.78rem;line-height:1.8;color:var(--text);padding-inline-end:.3rem}
+.md:empty::after{content:"بانتظار التوجيه. تحدّث أو اكتب — يظهر القرار هنا.";color:var(--faint);font-size:.7rem;font-family:var(--mono)}
+.md h1,.md h2,.md h3{color:var(--ice);font-weight:700;margin:.85rem 0 .35rem;line-height:1.4}
+.md h1{font-size:1rem}.md h2{font-size:.9rem}.md h3{font-size:.8rem;color:var(--amber)}
+.md p{margin:.45rem 0}.md ul,.md ol{margin:.45rem 1.1rem .45rem 0}.md li{margin:.22rem 0}
+.md code{background:rgba(120,170,235,.12);color:var(--ice);padding:.08rem .32rem;font-size:.74rem;font-family:var(--mono)}
+.md pre{background:rgba(4,8,16,.75);border:1px solid var(--line-soft);padding:.7rem;overflow-x:auto;margin:.5rem 0}
+.md pre code{background:none;color:var(--text)}
+.md strong{color:var(--amber)}.md hr{border:0;border-top:1px solid var(--line-soft);margin:.8rem 0}
+.md blockquote{border-inline-start:2px solid var(--ice-dim);padding-inline-start:.7rem;color:var(--dim);margin:.5rem 0}
+.sense{display:flex;gap:var(--space)}
+.sense .hud{flex:1;padding:.6rem}
+.sense canvas{width:100%;height:62px;display:block}
+.sense .lbl{font-family:var(--mono);font-size:.5rem;letter-spacing:2px;text-transform:uppercase;color:var(--faint);margin-bottom:.35rem}
 
-/* ===== SHOW MODE — cinematic, technical controls hidden ===== */
-body.show .os{grid-template-columns:0 1fr 0;grid-template-rows:auto 1fr auto}
-body.show .side.left,
-body.show .deck,
-body.show .keys-row,
-body.show .modes,
-body.show #eng-gemini,
-body.show #eng-gpt,
-body.show #keys-chip{display:none}
-body.show .side.right{
-  position:fixed; top:50%; left:var(--space); transform:translateY(-50%);
-  width:min(340px,32vw); max-height:74vh; z-index:5;
-  box-shadow:0 30px 80px rgba(0,0,0,.6);
-}
-body.show .side.right:has(.markdown:empty){display:none}
-body.show .bottom{border-top:0;align-items:center}
-body.show .bottom::after{
-  content:"اضغط مفتاح المسافة للتحدث إلى RAIZ"; color:var(--faint);
-  font-size:.66rem;letter-spacing:2px;text-transform:uppercase;
-}
-body.show canvas#orb{width:min(72vh,720px);height:min(72vh,720px)}
+/* ---- BOTTOM : modes + command console ---- */
+.bottom{grid-area:bottom;display:flex;flex-direction:column;gap:.6rem}
+.modes{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center}
+.mode{font-family:var(--mono);font-size:.55rem;letter-spacing:1px;text-transform:uppercase;color:var(--dim);
+  background:rgba(10,17,32,.4);border:1px solid var(--line-soft);padding:.42rem .8rem;cursor:pointer;transition:.22s;
+  clip-path:polygon(5px 0,100% 0,100% calc(100% - 5px),calc(100% - 5px) 100%,0 100%,0 5px)}
+.mode:hover{color:var(--text);border-color:var(--ice)}
+.mode.on{color:var(--amber);border-color:var(--amber);box-shadow:0 0 14px rgba(226,184,103,.2) inset}
+.console{display:flex;gap:.6rem;align-items:stretch;max-width:1080px;width:100%;margin:0 auto}
+.console textarea{flex:1;min-height:46px;height:46px;max-height:120px;font-size:.8rem}
+.send{font-family:var(--mono);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--ice);
+  background:rgba(10,17,32,.5);border:1px solid var(--ice-dim);padding:0 1.4rem;cursor:pointer;transition:.25s;white-space:nowrap;
+  clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px)}
+.send:hover{color:var(--bg);background:var(--ice);box-shadow:0 0 20px rgba(120,170,235,.5)}
+/* mic = pulsing HUD node, never a plain button */
+.mic{position:relative;width:46px;height:46px;border-radius:50%;border:1px solid var(--ice-dim);
+  background:radial-gradient(circle,rgba(120,170,235,.16),transparent 70%);cursor:pointer;transition:.25s;
+  display:flex;align-items:center;justify-content:center;color:var(--ice);flex:0 0 auto}
+.mic::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid var(--ice-dim);opacity:.4;animation:ring 2.6s ease-out infinite}
+.mic:hover{border-color:var(--ice);box-shadow:0 0 18px rgba(120,170,235,.4)}
+.mic.live{border-color:var(--red);color:var(--red);background:radial-gradient(circle,rgba(255,90,90,.25),transparent 70%)}
+.mic.live::after{border-color:var(--red);animation-duration:1.2s}
+.mic svg{width:18px;height:18px}
+@keyframes ring{0%{transform:scale(1);opacity:.5}100%{transform:scale(1.5);opacity:0}}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+
 .show-mic{display:none}
-body.show .show-mic{display:flex;align-items:center;justify-content:center;gap:.6rem;margin:0 auto}
 
-/* settings overlay (keys) */
-.overlay{
-  position:fixed;inset:0;z-index:40;background:rgba(5,5,6,.78);backdrop-filter:blur(6px);
-  display:none;align-items:center;justify-content:center;
-}
+/* persistent brand credit */
+.credit{position:fixed;bottom:.5rem;inset-inline-start:1rem;z-index:5;font-family:var(--mono);
+  font-size:.55rem;letter-spacing:2px;color:var(--faint)}
+.credit a{color:var(--faint);text-decoration:none}.credit a:hover{color:var(--amber)}
+
+/* ===== SHOW MODE ===== */
+body.show .os{grid-template-columns:0 1fr 0}
+body.show .left,body.show .modes,body.show .console,
+body.show #eng-gemini,body.show #eng-gpt,body.show #keys-chip{display:none}
+body.show .right{position:fixed;inset-inline-start:var(--space);top:50%;transform:translateY(-50%);
+  width:min(340px,30vw);max-height:80vh;z-index:4}
+body.show .right:has(.md:empty) .panel-dec{display:none}
+body.show .sense{display:none}
+body.show #orb{width:min(78vh,860px);height:min(78vh,860px)}
+body.show .show-mic{display:flex;margin:.2rem auto 0}
+
+/* keys overlay */
+.overlay{position:fixed;inset:0;z-index:30;background:rgba(2,4,9,.82);backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center}
 .overlay.open{display:flex}
-.modal{
-  width:min(440px,92vw);background:var(--panel);border:1px solid var(--cold-line);
-  border-radius:18px;padding:1.6rem;display:flex;flex-direction:column;gap:1rem;
-}
-.modal h3{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--amber)}
-.modal .note{font-size:.68rem;color:var(--faint);line-height:1.7}
+.modal{width:min(440px,92vw);background:var(--ink);border:1px solid var(--ice-dim);padding:1.6rem;
+  display:flex;flex-direction:column;gap:1rem;
+  clip-path:polygon(0 14px,14px 0,calc(100% - 14px) 0,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0 calc(100% - 14px))}
+.modal .note{font-size:.62rem;color:var(--faint);line-height:1.7;font-family:var(--mono)}
 .modal .row{display:flex;gap:.6rem;justify-content:flex-end}
 
 @media(max-width:900px){
-  body{overflow:auto}
+  html,body{overflow:auto}
   .os{grid-template-columns:1fr;grid-template-rows:auto auto auto auto auto;
-      grid-template-areas:"top" "stage" "right" "left" "bottom";height:auto;min-height:100vh}
-  canvas#orb{width:min(70vw,360px);height:min(70vw,360px)}
-  .side{max-height:none}
+    grid-template-areas:"top" "stage" "right" "left" "bottom";height:auto;min-height:100vh}
+  #orb{width:min(74vw,360px);height:min(74vw,360px)}
   .credit{position:static;margin:.6rem auto 0;text-align:center}
 }
 </style>
 </head>
-<body class="">
+<body>
+<canvas id="bg"></canvas>
+<div class="veil"></div>
+
 <div class="os">
 
-  <!-- TOP : project · engine · status -->
+  <!-- TOP -->
   <header class="top">
-    <div class="brand"><b>RAIZ</b><span>Creative OS // Neural Expressive UI</span></div>
-    <div class="top-mid">
-      <div class="chip" id="proj-chip" title="المشروع الحالي">PROJECT — <span id="proj-name">بدون مشروع</span></div>
-      <div class="chip on" id="eng-gemini" onclick="selectEngine('gemini')">GEMINI <span class="k">يسمع</span></div>
-      <div class="chip" id="eng-gpt" onclick="selectEngine('gpt')">GPT <span class="k">يكتب</span></div>
-      <div class="chip" id="show-toggle" onclick="toggleDisplay()">SHOW MODE</div>
-      <div class="chip" id="keys-chip" onclick="openSettings()">⚙ KEYS</div>
+    <div class="brand"><b>R<span>A</span>IZ</b><i>Creative OS // Neural Expressive UI</i></div>
+    <div class="chips">
+      <div class="chip" id="proj-chip"><span id="proj-name">UNNAMED DIRECTIVE</span></div>
+      <div class="chip on" id="eng-gemini" onclick="selectEngine('gemini')">GEMINI · يسمع</div>
+      <div class="chip" id="eng-gpt" onclick="selectEngine('gpt')">GPT · يكتب</div>
+      <div class="chip" id="show-toggle" onclick="toggleDisplay()">SHOW</div>
+      <div class="chip" id="keys-chip" onclick="openSettings()">◇ KEYS<span class="led off" id="led-keys"></span></div>
     </div>
-    <div class="status"><span class="dot" id="dot"></span><span id="status-label">STANDING BY</span></div>
+    <div class="clock"><b id="clk-time">00:00:00</b><small id="clk-meta">RAIZ · NEURAL CORE · SYNC</small></div>
   </header>
 
-  <!-- LEFT : project context (local memory) -->
-  <aside class="side left">
-    <h3>Project Context</h3>
-    <div class="ctx-scroll">
-      <div class="field"><label>اسم المشروع</label><input id="ctx-name" placeholder="مثال: إطلاق عطر فاخر"></div>
-      <div class="field"><label>العميل</label><input id="ctx-client" placeholder="الجهة / البراند"></div>
-      <div class="field"><label>الهدف</label><textarea id="ctx-objective" rows="2" placeholder="ما القرار الذي نريد الوصول إليه؟"></textarea></div>
-      <div class="field"><label>الشيفرة البصرية</label><input id="ctx-code" placeholder="مثال: شيفرة 48 — الانطفاء اللامع"></div>
-      <div class="field"><label>النبرة</label><input id="ctx-tone" placeholder="هدوء ثابت / سلطة صامتة"></div>
-      <div class="field"><label>المنصّة</label><input id="ctx-platform" placeholder="Instagram / TVC / OOH"></div>
+  <!-- LEFT -->
+  <aside class="hud left">
+    <div class="hud-title"><span class="i"></span>System Vitals</div>
+    <div class="vitals" id="vitals"></div>
+    <div class="hud-title" style="margin-top:1rem"><span class="i"></span>Project Context</div>
+    <div class="ctx">
+      <div class="f"><label>المشروع</label><input id="ctx-name" placeholder="إطلاق عطر فاخر"></div>
+      <div class="f"><label>العميل</label><input id="ctx-client" placeholder="البراند"></div>
+      <div class="f"><label>الهدف</label><textarea id="ctx-objective" rows="2" placeholder="القرار المطلوب"></textarea></div>
+      <div class="f"><label>الشيفرة البصرية</label><input id="ctx-code" placeholder="شيفرة 48"></div>
+      <div class="f"><label>النبرة</label><input id="ctx-tone" placeholder="الهدوء الثابت"></div>
+      <div class="f"><label>المنصّة</label><input id="ctx-platform" placeholder="Instagram / TVC"></div>
     </div>
   </aside>
 
-  <!-- CENTER : the orb -->
+  <!-- STAGE -->
   <main class="stage">
-    <div class="orb-wrap"><canvas id="orb"></canvas></div>
-    <div class="orb-status">
-      <div class="label" id="orb-state">STANDING BY</div>
-      <div class="msg" id="orb-msg">النظام جاهز. احفظ مفاتيح Gemini و GPT محليًا، اختر المحرك، ثم تحدّث أو اكتب.</div>
+    <canvas id="orb"></canvas>
+    <div class="orb-hud">
+      <div class="state" id="orb-state">STANDING BY</div>
+      <div class="sub" id="orb-sub">النظام حيّ. تحدّث.</div>
     </div>
   </main>
 
-  <!-- RIGHT : markdown decision (source of truth) -->
-  <aside class="side right">
-    <div class="md-head">
-      <h3>Markdown Decision</h3>
-      <div class="md-actions">
-        <button class="icon-btn" onclick="copyMarkdown()">Copy</button>
-        <button class="icon-btn" onclick="exportMarkdown()">.md</button>
-        <button class="icon-btn" onclick="clearOutput()">Clear</button>
+  <!-- RIGHT -->
+  <aside class="right">
+    <div class="hud panel-dec">
+      <div class="dec-head">
+        <div class="hud-title"><span class="i"></span>Markdown Decision</div>
+        <div class="dec-actions">
+          <button class="mini" onclick="copyMarkdown()">Copy</button>
+          <button class="mini" onclick="exportMarkdown()">.md</button>
+          <button class="mini" onclick="clearOutput()">Clear</button>
+        </div>
       </div>
+      <div class="md" id="md-out"></div>
     </div>
-    <div class="markdown" id="md-out"></div>
+    <div class="sense">
+      <div class="hud"><div class="lbl">Audio I/O</div><canvas id="wave"></canvas></div>
+      <div class="hud"><div class="lbl">Proximity</div><canvas id="radar"></canvas></div>
+    </div>
   </aside>
 
-  <!-- BOTTOM : creative modes · command deck · memory -->
+  <!-- BOTTOM -->
   <footer class="bottom">
     <div class="modes" id="modes"></div>
-    <div class="deck">
-      <textarea id="command" placeholder="اكتب أمرًا إبداعيًا: حوّل الشيفرة 48 إلى اتجاه حملة لعطر فاخر بنبرة الهدوء الثابت..."></textarea>
-      <div class="deck-btns">
-        <button class="act" id="send-btn" onclick="sendText()">إرسال</button>
-        <button class="act mic" id="mic-btn" onclick="toggleMic()">🎙 تحدّث</button>
-      </div>
+    <div class="console">
+      <button class="mic" id="mic-btn" onclick="toggleMic()" title="تحدّث">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4"/></svg>
+      </button>
+      <textarea id="command" placeholder="وجّه RAIZ: حوّل الشيفرة 48 إلى اتجاه حملة لعطر فاخر بنبرة الهدوء الثابت..."></textarea>
+      <button class="send" id="send-btn" onclick="sendText()">إرسال</button>
     </div>
-    <button class="act mic show-mic" id="show-mic-btn" onclick="toggleMic()">🎙 تحدّث إلى RAIZ</button>
-    <div class="keys-row">
-      <span class="keystat"><span class="kdot" id="kd-gemini"></span> Gemini</span>
-      <span class="keystat"><span class="kdot" id="kd-gpt"></span> GPT</span>
-      <span class="keystat" onclick="toggleVoice()" style="cursor:pointer"><span class="kdot ok" id="kd-voice"></span> الصوت <span id="voice-state">مُفعّل</span></span>
-      <span>المفاتيح محلية في هذا المتصفح فقط — لا تُرفع ولا تُحفظ في المستودع.</span>
-    </div>
+    <button class="mic show-mic" id="show-mic-btn" onclick="toggleMic()" title="تحدّث">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4"/></svg>
+    </button>
   </footer>
 </div>
 
-<!-- KEYS overlay -->
+<!-- KEYS -->
 <div class="overlay" id="settings">
   <div class="modal">
-    <h3>API Keys — محلية فقط</h3>
-    <div class="field"><label>Gemini API Key</label><input type="password" id="gemini-key" placeholder="يُحفظ في localStorage على هذا المتصفح"></div>
-    <div class="field"><label>GPT / OpenAI API Key</label><input type="password" id="gpt-key" placeholder="يُحفظ في localStorage على هذا المتصفح"></div>
-    <div class="note">مفاتيحك تبقى داخل هذا المتصفح فقط. لا backend، لا قاعدة بيانات، ولا مشاركة. يمكنك رؤيتها في أدوات المطوّر — هذا تصميم متعمّد للنسخة المتصفّحية.</div>
-    <div class="row">
-      <button class="act mic" onclick="closeSettings()">إغلاق</button>
-      <button class="act" onclick="saveKeys()">حفظ المفاتيح</button>
-    </div>
+    <div class="hud-title"><span class="i"></span>Access Keys — Local Only</div>
+    <div class="f"><label>Gemini API Key</label><input type="password" id="gemini-key" placeholder="يُحفظ في هذا المتصفح فقط"></div>
+    <div class="f"><label>GPT / OpenAI API Key</label><input type="password" id="gpt-key" placeholder="يُحفظ في هذا المتصفح فقط"></div>
+    <div class="note">المفاتيح تبقى داخل هذا المتصفح فقط. تُدخَل مرة واحدة وتبقى محفوظة — لا backend، لا مشاركة، لا رفع.</div>
+    <div class="row"><button class="mini" onclick="closeSettings()">إغلاق</button><button class="send" style="padding:.5rem 1.2rem" onclick="saveKeys()">تفعيل النظام</button></div>
   </div>
 </div>
 
-<!-- Nabil88 footer (preserved) -->
 <footer class="credit">© 2025 Nabil88 | <a href="https://nabil88.art" target="_blank" rel="noopener">nabil88.art</a></footer>
 
 <script>
 /* ============================================================
-   RAIZ Creative OS v0.1 — single-file, browser-only
+   RAIZ Creative OS — Living Command Room
    Gemini hears · GPT writes · RAIZ routes
    ============================================================ */
-const RAIZ = {
-  mode:'idle',            // idle | listening | processing | speaking | error
-  engine:'gemini',
-  creativeMode:'campaign',
-  displayMode:'director', // director | show
-  voiceEnabled:true,
-  lastMarkdown:'',
-  orb:{ phase:0, freq:0, target:14 }
+const RAIZ={mode:'idle',engine:'gemini',creativeMode:'campaign',displayMode:'director',
+  voiceEnabled:true,lastMarkdown:'',orb:{freq:0,target:14,rot:0}};
+const MODES={
+  campaign:{label:'Campaign Director',prompt:'بصفتك مخرج حملات: حوّل الأمر إلى اتجاه حملة متكامل — الفكرة المركزية، الزاوية العاطفية، الشيفرة البصرية، والمخرجات. أعطِ قرارًا قابلًا للتنفيذ.'},
+  prompt:{label:'Prompt Architect',prompt:'بصفتك مهندس برومبت: حوّل الأمر إلى برومبت بصري دقيق متعدد العوالم، جاهز للنسخ، مع وصف الإضاءة والعدسة والمزاج واللون.'},
+  vo:{label:'VO Director',prompt:'بصفتك مخرج تعليق صوتي: اكتب نص VO قصيرًا مؤثرًا بنبرة الهدوء الثابت، مع توجيه الأداء والإيقاع والوقفات.'},
+  visual:{label:'Visual Code Analyst',prompt:'بصفتك محلل شيفرات بصرية: فكّك الأمر إلى شيفراته البصرية، اربطه بقاموس الشيفرات، واشرح لماذا يعمل بصريًا وعاطفيًا.'},
+  production:{label:'Production Planner',prompt:'بصفتك مخطط إنتاج: حوّل الأمر إلى خطة إنتاج عملية — اللقطات، المعدات، خطوات المونتاج، والأصول المطلوبة بترتيب تنفيذي.'},
+  diagnosis:{label:'Performance Diagnoser',prompt:'بصفتك مشخّص أداء: اقرأ الأمر كحالة أداء محتوى، شخّص نقاط القوة والضعف الإبداعية، واقترح قرار الحملة القادمة.'}
 };
-
-/* ---- Creative Modes : each rewrites the system prompt ---- */
-const MODES = {
-  campaign:{ label:'Campaign Director', prompt:'بصفتك مخرج حملات: حوّل الأمر إلى اتجاه حملة متكامل — الفكرة المركزية، الزاوية العاطفية، الشيفرة البصرية، والمخرجات. أعطِ قرارًا قابلًا للتنفيذ.' },
-  prompt:{ label:'Prompt Architect', prompt:'بصفتك مهندس برومبت: حوّل الأمر إلى برومبت بصري دقيق متعدد العوالم، جاهز للنسخ، مع وصف الإضاءة والعدسة والمزاج واللون.' },
-  vo:{ label:'VO Director', prompt:'بصفتك مخرج تعليق صوتي: اكتب نص VO قصيرًا مؤثرًا بنبرة الهدوء الثابت، مع توجيه الأداء والإيقاع والوقفات.' },
-  visual:{ label:'Visual Code Analyst', prompt:'بصفتك محلل شيفرات بصرية: فكّك الأمر إلى شيفراته البصرية، اربطه بقاموس الشيفرات، واشرح لماذا يعمل بصريًا وعاطفيًا.' },
-  production:{ label:'Production Planner', prompt:'بصفتك مخطط إنتاج: حوّل الأمر إلى خطة إنتاج عملية — اللقطات، المعدات، خطوات المونتاج، والأصول المطلوبة بترتيب تنفيذي.' },
-  diagnosis:{ label:'Performance Diagnoser', prompt:'بصفتك مشخّص أداء: اقرأ الأمر كحالة أداء محتوى، شخّص نقاط القوة والضعف الإبداعية، واقترح قرار الحملة القادمة.' }
-};
-
-/* ---- DOM refs ---- */
-const canvas=document.getElementById('orb'), ctx=canvas.getContext('2d');
 const $=id=>document.getElementById(id);
 let audioCtx,analyser,dataArray,stream,recorder,chunks=[],recording=false;
+const mouse={x:.5,y:.5,tx:.5,ty:.5};
 
-/* =================== BOOT =================== */
+/* =============== BOOT =============== */
 window.addEventListener('load',()=>{
-  loadKeys(); loadProject(); buildModes();
-  RAIZ.voiceEnabled = localStorage.getItem('raiz_voice')!=='off';
-  reflectVoice();
-  ['ctx-name','ctx-client','ctx-objective','ctx-code','ctx-tone','ctx-platform']
-    .forEach(id=>$(id).addEventListener('input',saveProject));
-  resize(); orbLoop();
+  loadKeys();loadProject();buildModes();buildVitals();
+  RAIZ.voiceEnabled=localStorage.getItem('raiz_voice')!=='off';
+  ['ctx-name','ctx-client','ctx-objective','ctx-code','ctx-tone','ctx-platform'].forEach(id=>$(id).addEventListener('input',saveProject));
+  fitAll();frame(0);clockTick();setInterval(clockTick,1000);setInterval(stepVitals,1400);setInterval(stepLog,1300);
+  // first run only: prompt for keys, then never again
+  if(!localStorage.getItem('raiz_gemini_key') && !localStorage.getItem('raiz_gpt_key'))openSettings();
 });
-window.addEventListener('resize',resize);
+window.addEventListener('resize',fitAll);
+window.addEventListener('pointermove',e=>{mouse.tx=e.clientX/innerWidth;mouse.ty=e.clientY/innerHeight});
 window.addEventListener('keydown',e=>{
-  if(e.code==='Space' && RAIZ.displayMode==='show' && document.activeElement.tagName!=='TEXTAREA' && document.activeElement.tagName!=='INPUT'){
-    e.preventDefault(); toggleMic();
-  }
+  if(e.code==='Space'&&RAIZ.displayMode==='show'&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){e.preventDefault();toggleMic();}
 });
 
-/* =================== KEYS =================== */
+/* =============== KEYS =============== */
 function openSettings(){$('settings').classList.add('open')}
 function closeSettings(){$('settings').classList.remove('open')}
 function saveKeys(){
-  const g=$('gemini-key').value.trim(), o=$('gpt-key').value.trim();
+  const g=$('gemini-key').value.trim(),o=$('gpt-key').value.trim();
   if(g)localStorage.setItem('raiz_gemini_key',g);
   if(o)localStorage.setItem('raiz_gpt_key',o);
-  reflectKeys(); closeSettings();
-  setState('idle','STANDING BY','تم حفظ المفاتيح محليًا داخل هذا المتصفح فقط.');
+  reflectKeys();closeSettings();setState('idle','SYSTEM LIVE','النظام جاهز. تحدّث.');
 }
-function loadKeys(){
-  $('gemini-key').value=localStorage.getItem('raiz_gemini_key')||'';
-  $('gpt-key').value=localStorage.getItem('raiz_gpt_key')||'';
-  reflectKeys();
-}
-function reflectKeys(){
-  $('kd-gemini').classList.toggle('ok',!!localStorage.getItem('raiz_gemini_key'));
-  $('kd-gpt').classList.toggle('ok',!!localStorage.getItem('raiz_gpt_key'));
-}
+function loadKeys(){$('gemini-key').value=localStorage.getItem('raiz_gemini_key')||'';$('gpt-key').value=localStorage.getItem('raiz_gpt_key')||'';reflectKeys()}
+function reflectKeys(){const ok=!!(localStorage.getItem('raiz_gemini_key')||localStorage.getItem('raiz_gpt_key'));$('led-keys').classList.toggle('off',!ok)}
 
-/* =================== PROJECT CONTEXT =================== */
+/* =============== PROJECT =============== */
 function saveProject(){
-  const p={name:$('ctx-name').value,client:$('ctx-client').value,objective:$('ctx-objective').value,
-           code:$('ctx-code').value,tone:$('ctx-tone').value,platform:$('ctx-platform').value};
+  const p={name:$('ctx-name').value,client:$('ctx-client').value,objective:$('ctx-objective').value,code:$('ctx-code').value,tone:$('ctx-tone').value,platform:$('ctx-platform').value};
   localStorage.setItem('raiz_project',JSON.stringify(p));
-  $('proj-name').textContent=p.name?p.name:'بدون مشروع';
+  $('proj-name').textContent=p.name?p.name.toUpperCase():'UNNAMED DIRECTIVE';
 }
-function loadProject(){
-  let p={}; try{p=JSON.parse(localStorage.getItem('raiz_project')||'{}')}catch(e){}
-  $('ctx-name').value=p.name||''; $('ctx-client').value=p.client||'';
-  $('ctx-objective').value=p.objective||''; $('ctx-code').value=p.code||'';
-  $('ctx-tone').value=p.tone||''; $('ctx-platform').value=p.platform||'';
-  $('proj-name').textContent=p.name?p.name:'بدون مشروع';
-}
+function loadProject(){let p={};try{p=JSON.parse(localStorage.getItem('raiz_project')||'{}')}catch(e){}
+  $('ctx-name').value=p.name||'';$('ctx-client').value=p.client||'';$('ctx-objective').value=p.objective||'';
+  $('ctx-code').value=p.code||'';$('ctx-tone').value=p.tone||'';$('ctx-platform').value=p.platform||'';
+  $('proj-name').textContent=p.name?p.name.toUpperCase():'UNNAMED DIRECTIVE';}
 function projectBlock(){
-  const p=[['المشروع',$('ctx-name').value],['العميل',$('ctx-client').value],['الهدف',$('ctx-objective').value],
-           ['الشيفرة البصرية',$('ctx-code').value],['النبرة',$('ctx-tone').value],['المنصّة',$('ctx-platform').value]]
+  const p=[['المشروع',$('ctx-name').value],['العميل',$('ctx-client').value],['الهدف',$('ctx-objective').value],['الشيفرة البصرية',$('ctx-code').value],['النبرة',$('ctx-tone').value],['المنصّة',$('ctx-platform').value]]
     .filter(x=>x[1].trim()).map(x=>`- ${x[0]}: ${x[1]}`).join('\n');
-  return p?`\n\nسياق المشروع الحالي:\n${p}`:'';
-}
+  return p?`\n\nسياق المشروع الحالي:\n${p}`:'';}
 
-/* =================== ENGINE + MODES =================== */
-function selectEngine(e){
-  RAIZ.engine=e;
-  $('eng-gemini').classList.toggle('on',e==='gemini');
-  $('eng-gpt').classList.toggle('on',e==='gpt');
-}
-function buildModes(){
-  const wrap=$('modes'); wrap.innerHTML='';
-  Object.entries(MODES).forEach(([k,v])=>{
-    const b=document.createElement('button');
-    b.className='mode-btn'+(k===RAIZ.creativeMode?' on':'');
-    b.textContent=v.label; b.onclick=()=>selectMode(k);
-    wrap.appendChild(b);
-  });
-}
-function selectMode(k){
-  RAIZ.creativeMode=k;
-  [...$('modes').children].forEach((b,i)=>b.classList.toggle('on',Object.keys(MODES)[i]===k));
-}
-function systemPrompt(){
-  const base='أنت RAIZ Creative OS، وكيل إبداعي للمخرج نبيل Nabil88. تعمل بأسلوب الهدوء الثابت، تفهم قاموس الشيفرات البصرية، وتحوّل الفوضى إلى اتجاه بصري واضح. كن موجزًا، دقيقًا، بصريًا، ولا تستخدم لغة إعلانية رخيصة. أخرِج دائمًا بصيغة Markdown منظمة بعناوين ونقاط.';
-  return base+'\n\n'+MODES[RAIZ.creativeMode].prompt+projectBlock();
-}
+/* =============== ENGINE + MODES =============== */
+function selectEngine(e){RAIZ.engine=e;$('eng-gemini').classList.toggle('on',e==='gemini');$('eng-gpt').classList.toggle('on',e==='gpt')}
+function buildModes(){const w=$('modes');w.innerHTML='';Object.entries(MODES).forEach(([k,v])=>{const b=document.createElement('button');b.className='mode'+(k===RAIZ.creativeMode?' on':'');b.textContent=v.label;b.onclick=()=>selectMode(k);w.appendChild(b)})}
+function selectMode(k){RAIZ.creativeMode=k;[...$('modes').children].forEach((b,i)=>b.classList.toggle('on',Object.keys(MODES)[i]===k))}
+function systemPrompt(){return 'أنت RAIZ Creative OS، وكيل إبداعي للمخرج نبيل Nabil88. تعمل بأسلوب الهدوء الثابت، تفهم قاموس الشيفرات البصرية، وتحوّل الفوضى إلى اتجاه بصري واضح. كن موجزًا، دقيقًا، بصريًا، ولا تستخدم لغة إعلانية رخيصة. أخرِج دائمًا بصيغة Markdown منظمة.'+'\n\n'+MODES[RAIZ.creativeMode].prompt+projectBlock()}
 
-/* =================== DISPLAY MODE =================== */
-function toggleDisplay(){
-  RAIZ.displayMode = RAIZ.displayMode==='show'?'director':'show';
+/* =============== DISPLAY MODE =============== */
+function toggleDisplay(){RAIZ.displayMode=RAIZ.displayMode==='show'?'director':'show';
   document.body.classList.toggle('show',RAIZ.displayMode==='show');
   $('show-toggle').classList.toggle('on',RAIZ.displayMode==='show');
-  $('show-toggle').textContent = RAIZ.displayMode==='show'?'DIRECTOR MODE':'SHOW MODE';
-}
+  $('show-toggle').textContent=RAIZ.displayMode==='show'?'DIRECTOR':'SHOW';
+  setTimeout(fitAll,650);}
 
-/* =================== COMMAND ROUTING =================== */
-async function sendText(){
-  const text=$('command').value.trim();
-  if(!text){setState('idle','STANDING BY','اكتب أمرًا أولًا.');return}
-  setState('processing','PROCESSING','جاري معالجة الأمر عبر '+(RAIZ.engine==='gemini'?'Gemini':'GPT')+'...');
-  try{
-    const out = RAIZ.engine==='gemini' ? await callGemini(text) : await callGPT(text);
-    deliver(out);
-  }catch(e){ fail(e); }
-}
-/* Markdown is memory, Voice is presence — every response goes through deliver() */
-function deliver(md){
-  RAIZ.lastMarkdown=md;
-  renderMarkdown(md);
-  setState('speaking','SPEAKING','RAIZ يرد. القرار محفوظ على اليمين بصيغة Markdown.');
-  speak(md, ()=>setState('idle','STANDING BY','جاهز للأمر التالي.'));
-}
-function fail(e){
-  console.error(e);
-  renderMarkdown('**انكسرت الموجة.** راجع المفتاح، صلاحيات المتصفح، أو جرّب محركًا آخر.\n\n`'+(e&&e.message||e)+'`');
-  setState('error','SIGNAL LOST','تعذّر الاتصال بالمحرك. راجع المفاتيح أو الشبكة.');
-  setTimeout(()=>setState('idle','STANDING BY','جاهز للمحاولة من جديد.'),2600);
-}
+/* =============== ROUTING =============== */
+async function sendText(){const t=$('command').value.trim();if(!t){setState('idle','SYSTEM LIVE','اكتب أمرًا أولًا.');return}
+  setState('processing','PROCESSING','RAIZ يعالج عبر '+(RAIZ.engine==='gemini'?'Gemini':'GPT')+'...');
+  try{const out=RAIZ.engine==='gemini'?await callGemini(t):await callGPT(t);deliver(out)}catch(e){fail(e)}}
+function deliver(md){RAIZ.lastMarkdown=md;renderMarkdown(md);setState('speaking','SPEAKING','RAIZ يرد. القرار محفوظ.');speak(md,()=>setState('idle','SYSTEM LIVE','جاهز للتوجيه التالي.'))}
+function fail(e){console.error('[RAIZ]',e&&e.message||e);renderMarkdown('**انكسرت الموجة.** راجع المفتاح أو الشبكة.\n\n`'+(e&&e.message||e)+'`');setState('error','SIGNAL LOST','تعذّر الاتصال. راجع المفاتيح.');setTimeout(()=>setState('idle','SYSTEM LIVE','جاهز للمحاولة.'),2600)}
 
-/* =================== API CALLS =================== */
-async function callGemini(text){
-  const key=localStorage.getItem('raiz_gemini_key');
-  if(!key)throw new Error('Missing Gemini key');
+async function callGemini(text){const key=localStorage.getItem('raiz_gemini_key');if(!key)throw new Error('Missing Gemini key');
   const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
-  const body={contents:[{parts:[{text}]}],systemInstruction:{parts:[{text:systemPrompt()}]}};
-  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-  const j=await r.json();
-  return j.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('\n').trim()||'_لا استجابة._';
-}
-async function callGPT(text){
-  const key=localStorage.getItem('raiz_gpt_key');
-  if(!key)throw new Error('Missing GPT key');
-  const body={model:'gpt-4.1-mini',messages:[{role:'system',content:systemPrompt()},{role:'user',content:text}],temperature:.7};
-  const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':`Bearer ${key}`},body:JSON.stringify(body)});
-  const j=await r.json();
-  return j.choices?.[0]?.message?.content||'_لا استجابة._';
-}
+  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text}]}],systemInstruction:{parts:[{text:systemPrompt()}]}})});
+  const j=await r.json();return j.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('\n').trim()||'_لا استجابة._'}
+async function callGPT(text){const key=localStorage.getItem('raiz_gpt_key');if(!key)throw new Error('Missing GPT key');
+  const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${key}`},body:JSON.stringify({model:'gpt-4.1-mini',messages:[{role:'system',content:systemPrompt()},{role:'user',content:text}],temperature:.7})});
+  const j=await r.json();return j.choices?.[0]?.message?.content||'_لا استجابة._'}
 
-/* =================== VOICE INPUT (Gemini hears) =================== */
-function toggleMic(){ recording?stopMic():startMic(); }
-async function startMic(){
-  const key=localStorage.getItem('raiz_gemini_key');
-  if(!key){setState('idle','STANDING BY','الإدخال الصوتي يستخدم Gemini. احفظ مفتاح Gemini أولًا.');openSettings();return}
-  try{
-    if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-    if(audioCtx.state==='suspended')await audioCtx.resume();
-    stream=await navigator.mediaDevices.getUserMedia({audio:true});
-    analyser=audioCtx.createAnalyser(); analyser.fftSize=256;
-    audioCtx.createMediaStreamSource(stream).connect(analyser);
-    dataArray=new Uint8Array(analyser.frequencyBinCount);
-    chunks=[];
-    const opts=MediaRecorder.isTypeSupported('audio/webm')?{mimeType:'audio/webm'}:{};
-    recorder=new MediaRecorder(stream,opts);
-    recorder.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data)};
-    recorder.onstop=sendAudio; recorder.start(); recording=true;
-    micLive(true);
-    setState('listening','LISTENING','تحدّث الآن. RAIZ يلتقط الموجة.');
-  }catch(e){console.error(e);setState('idle','STANDING BY','تعذّر استدعاء المايك. تحقق من صلاحيات المتصفح.')}
-}
-function stopMic(){
-  if(!recorder||recorder.state==='inactive')return;
-  recorder.stop(); recording=false; micLive(false);
-  if(stream)stream.getTracks().forEach(t=>t.stop());
-  setState('processing','PROCESSING','جاري تحويل الصوت وإرساله إلى Gemini...');
-}
-function micLive(on){
-  $('mic-btn').classList.toggle('live',on); $('show-mic-btn').classList.toggle('live',on);
-  $('mic-btn').textContent=on?'■ إيقاف وإرسال':'🎙 تحدّث';
-  $('show-mic-btn').textContent=on?'■ إيقاف وإرسال':'🎙 تحدّث إلى RAIZ';
-}
+/* =============== VOICE IN (Gemini hears) =============== */
+function toggleMic(){recording?stopMic():startMic()}
+async function startMic(){const key=localStorage.getItem('raiz_gemini_key');if(!key){setState('idle','SYSTEM LIVE','الصوت يستخدم Gemini. أدخل المفتاح.');openSettings();return}
+  try{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')await audioCtx.resume();
+    stream=await navigator.mediaDevices.getUserMedia({audio:true});analyser=audioCtx.createAnalyser();analyser.fftSize=256;
+    audioCtx.createMediaStreamSource(stream).connect(analyser);dataArray=new Uint8Array(analyser.frequencyBinCount);chunks=[];
+    const opts=MediaRecorder.isTypeSupported('audio/webm')?{mimeType:'audio/webm'}:{};recorder=new MediaRecorder(stream,opts);
+    recorder.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data)};recorder.onstop=sendAudio;recorder.start();recording=true;
+    micLive(true);setState('listening','LISTENING','تحدّث الآن. RAIZ يلتقط.')}
+  catch(e){console.error('[RAIZ]',e&&e.message);setState('idle','SYSTEM LIVE','تعذّر استدعاء المايك.')}}
+function stopMic(){if(!recorder||recorder.state==='inactive')return;recorder.stop();recording=false;micLive(false);if(stream)stream.getTracks().forEach(t=>t.stop());setState('processing','PROCESSING','تحويل الصوت إلى Gemini...')}
+function micLive(on){$('mic-btn').classList.toggle('live',on);$('show-mic-btn').classList.toggle('live',on)}
 function blob64(b){return new Promise((res,rej)=>{const r=new FileReader();r.onloadend=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(b)})}
-async function sendAudio(){
-  try{
-    const blob=new Blob(chunks,{type:'audio/webm'}), audio=await blob64(blob);
-    const key=localStorage.getItem('raiz_gemini_key');
-    const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
-    const body={contents:[{parts:[{inlineData:{mimeType:'audio/webm',data:audio}},
-      {text:'افهم الأمر الصوتي وأجب بإخراج إبداعي منظم بصيغة Markdown.'}]}],
-      systemInstruction:{parts:[{text:systemPrompt()}]}};
-    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-    const j=await r.json();
-    deliver(j.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('\n').trim()||'_لم ألتقط أمرًا واضحًا._');
-  }catch(e){ fail(e); }
-}
+async function sendAudio(){try{const blob=new Blob(chunks,{type:'audio/webm'}),audio=await blob64(blob),key=localStorage.getItem('raiz_gemini_key');
+  const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
+  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{inlineData:{mimeType:'audio/webm',data:audio}},{text:'افهم الأمر الصوتي وأجب بإخراج إبداعي منظم بصيغة Markdown.'}]}],systemInstruction:{parts:[{text:systemPrompt()}]}})});
+  const j=await r.json();deliver(j.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('\n').trim()||'_لم ألتقط أمرًا واضحًا._')}catch(e){fail(e)}}
 
-/* =================== VOICE OUTPUT (Web Speech API) =================== */
-function toggleVoice(){
-  RAIZ.voiceEnabled=!RAIZ.voiceEnabled;
-  localStorage.setItem('raiz_voice',RAIZ.voiceEnabled?'on':'off');
-  if(!RAIZ.voiceEnabled && window.speechSynthesis)speechSynthesis.cancel();
-  reflectVoice();
-}
-function reflectVoice(){
-  $('kd-voice').classList.toggle('ok',RAIZ.voiceEnabled);
-  $('voice-state').textContent=RAIZ.voiceEnabled?'مُفعّل':'صامت';
-}
-function speak(md,done){
-  if(!RAIZ.voiceEnabled||!('speechSynthesis' in window)){done&&done();return}
-  speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(plainText(md).slice(0,600));
-  u.lang='ar'; u.rate=.98; u.pitch=1;
-  const ar=speechSynthesis.getVoices().find(v=>/ar/i.test(v.lang));
-  if(ar)u.voice=ar;
-  u.onend=()=>done&&done();
-  speechSynthesis.speak(u);
-}
+/* =============== VOICE OUT =============== */
+function speak(md,done){if(!RAIZ.voiceEnabled||!('speechSynthesis'in window)){done&&done();return}
+  speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(plainText(md).slice(0,600));u.lang='ar';u.rate=.98;
+  const ar=speechSynthesis.getVoices().find(v=>/ar/i.test(v.lang));if(ar)u.voice=ar;u.onend=()=>done&&done();speechSynthesis.speak(u)}
 
-/* =================== OUTPUT (Markdown is source of truth) =================== */
-function renderMarkdown(md){ $('md-out').innerHTML=mdToHtml(md); $('md-out').scrollTop=0; }
-function clearOutput(){ RAIZ.lastMarkdown=''; $('md-out').innerHTML=''; }
-async function copyMarkdown(){
-  if(!RAIZ.lastMarkdown)return;
-  try{await navigator.clipboard.writeText(RAIZ.lastMarkdown);
-    $('orb-msg').textContent='تم نسخ الـ Markdown.';}catch(e){}
-}
-function exportMarkdown(){
-  if(!RAIZ.lastMarkdown)return;
-  const name=($('ctx-name').value.trim()||'raiz-decision').replace(/\s+/g,'-');
-  const blob=new Blob([RAIZ.lastMarkdown],{type:'text/markdown'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob); a.download=name+'.md'; a.click();
-  URL.revokeObjectURL(a.href);
-}
-
-/* ---- minimal, dependency-free Markdown renderer ---- */
+/* =============== OUTPUT =============== */
+function renderMarkdown(md){$('md-out').innerHTML=mdToHtml(md);$('md-out').scrollTop=0}
+function clearOutput(){RAIZ.lastMarkdown='';$('md-out').innerHTML=''}
+async function copyMarkdown(){if(!RAIZ.lastMarkdown)return;try{await navigator.clipboard.writeText(RAIZ.lastMarkdown);$('orb-sub').textContent='تم نسخ الـ Markdown.'}catch(e){}}
+function exportMarkdown(){if(!RAIZ.lastMarkdown)return;const name=($('ctx-name').value.trim()||'raiz-decision').replace(/\s+/g,'-');const b=new Blob([RAIZ.lastMarkdown],{type:'text/markdown'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name+'.md';a.click();URL.revokeObjectURL(a.href)}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function inline(s){
-  return esc(s)
-    .replace(/`([^`]+)`/g,'<code>$1</code>')
-    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
-    .replace(/\*([^*]+)\*/g,'<em>$1</em>')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
-}
-function mdToHtml(md){
-  const lines=(md||'').split('\n'); let html='',list=null,inCode=false,code='';
-  const closeList=()=>{if(list){html+=`</${list}>`;list=null}};
-  for(let raw of lines){
-    if(/^```/.test(raw)){
-      if(inCode){html+=`<pre><code>${esc(code)}</code></pre>`;code='';inCode=false}
-      else{closeList();inCode=true} continue;
-    }
-    if(inCode){code+=raw+'\n';continue}
-    const line=raw.trimEnd();
-    if(!line.trim()){closeList();continue}
-    let m;
-    if(m=line.match(/^(#{1,3})\s+(.*)/)){closeList();const n=m[1].length;html+=`<h${n}>${inline(m[2])}</h${n}>`;continue}
-    if(/^(\-\-\-|\*\*\*|___)\s*$/.test(line)){closeList();html+='<hr>';continue}
-    if(m=line.match(/^>\s?(.*)/)){closeList();html+=`<blockquote>${inline(m[1])}</blockquote>`;continue}
-    if(m=line.match(/^\s*[-*+]\s+(.*)/)){if(list!=='ul'){closeList();html+='<ul>';list='ul'}html+=`<li>${inline(m[1])}</li>`;continue}
-    if(m=line.match(/^\s*\d+\.\s+(.*)/)){if(list!=='ol'){closeList();html+='<ol>';list='ol'}html+=`<li>${inline(m[1])}</li>`;continue}
-    closeList(); html+=`<p>${inline(line)}</p>`;
-  }
-  if(inCode)html+=`<pre><code>${esc(code)}</code></pre>`;
-  closeList(); return html;
-}
-function plainText(md){
-  return (md||'').replace(/```[\s\S]*?```/g,' ').replace(/[#>*_`\-]/g,' ')
-    .replace(/\[([^\]]+)\]\([^)]+\)/g,'$1').replace(/\s+/g,' ').trim();
+function inl(s){return esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\*([^*]+)\*/g,'<em>$1</em>').replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>')}
+function mdToHtml(md){const lines=(md||'').split('\n');let h='',list=null,inC=false,code='';const cl=()=>{if(list){h+=`</${list}>`;list=null}};
+  for(let raw of lines){if(/^```/.test(raw)){if(inC){h+=`<pre><code>${esc(code)}</code></pre>`;code='';inC=false}else{cl();inC=true}continue}
+    if(inC){code+=raw+'\n';continue}const line=raw.trimEnd();if(!line.trim()){cl();continue}let m;
+    if(m=line.match(/^(#{1,3})\s+(.*)/)){cl();const n=m[1].length;h+=`<h${n}>${inl(m[2])}</h${n}>`;continue}
+    if(/^(\-\-\-|\*\*\*|___)\s*$/.test(line)){cl();h+='<hr>';continue}
+    if(m=line.match(/^>\s?(.*)/)){cl();h+=`<blockquote>${inl(m[1])}</blockquote>`;continue}
+    if(m=line.match(/^\s*[-*+]\s+(.*)/)){if(list!=='ul'){cl();h+='<ul>';list='ul'}h+=`<li>${inl(m[1])}</li>`;continue}
+    if(m=line.match(/^\s*\d+\.\s+(.*)/)){if(list!=='ol'){cl();h+='<ol>';list='ol'}h+=`<li>${inl(m[1])}</li>`;continue}
+    cl();h+=`<p>${inl(line)}</p>`}
+  if(inC)h+=`<pre><code>${esc(code)}</code></pre>`;cl();return h}
+function plainText(md){return(md||'').replace(/```[\s\S]*?```/g,' ').replace(/[#>*_`\-]/g,' ').replace(/\[([^\]]+)\]\([^)]+\)/g,'$1').replace(/\s+/g,' ').trim()}
+
+/* =============== STATE =============== */
+const TARGET={idle:14,listening:82,processing:48,speaking:66,error:30};
+function setState(mode,label,sub){RAIZ.mode=mode;RAIZ.orb.target=TARGET[mode]??14;
+  $('orb-state').textContent=label;if(sub)$('orb-sub').textContent=sub;
+  $('clk-meta').textContent='RAIZ · '+label+' · SYNC'}
+function stateColor(m){return m==='listening'||m==='error'?[255,90,90]:m==='speaking'?[226,184,103]:m==='processing'?[143,196,255]:[143,196,255]}
+function stateAccent(m){return m==='speaking'?[226,184,103]:[143,196,255]}
+
+/* =============== CANVAS PLUMBING =============== */
+const bg=$('bg'),bgx=bg.getContext('2d');
+const orb=$('orb'),ox=orb.getContext('2d');
+const wave=$('wave'),wx=wave.getContext('2d');
+const radar=$('radar'),rx=radar.getContext('2d');
+let DPR=Math.min(window.devicePixelRatio||1,2);
+function fit(cv,c){const r=cv.getBoundingClientRect();cv.width=Math.max(1,r.width*DPR);cv.height=Math.max(1,r.height*DPR);c.setTransform(DPR,0,0,DPR,0,0)}
+function fitAll(){DPR=Math.min(window.devicePixelRatio||1,2);bg.width=innerWidth*DPR;bg.height=innerHeight*DPR;bgx.setTransform(DPR,0,0,DPR,0,0);fit(orb,ox);fit(wave,wx);fit(radar,rx);buildField();buildSphere()}
+
+/* background field */
+let stars=[];
+function buildField(){stars=[];const n=Math.round(innerWidth*innerHeight/14000);for(let i=0;i<n;i++)stars.push({x:Math.random(),y:Math.random(),z:Math.random()*.8+.2,s:Math.random()*1.4+.3})}
+function drawBg(t){const W=innerWidth,H=innerHeight;bgx.clearRect(0,0,W,H);
+  mouse.x+=(mouse.tx-mouse.x)*.05;mouse.y+=(mouse.ty-mouse.y)*.05;
+  const px=(mouse.x-.5),py=(mouse.y-.5);
+  // grid with parallax
+  bgx.strokeStyle='rgba(96,150,225,.07)';bgx.lineWidth=1;const gap=58;
+  const ox2=-(px*40)+((t*.006)%gap),oy2=-(py*40)+((t*.004)%gap);
+  for(let x=-gap;x<W+gap;x+=gap){bgx.beginPath();bgx.moveTo(x+ox2,0);bgx.lineTo(x+ox2,H);bgx.stroke()}
+  for(let y=-gap;y<H+gap;y+=gap){bgx.beginPath();bgx.moveTo(0,y+oy2);bgx.lineTo(W,y+oy2);bgx.stroke()}
+  // drifting particles with parallax depth + mouse links
+  const mx=mouse.x*W,my=mouse.y*H;
+  for(const s of stars){const dx=px*60*s.z,dy=py*60*s.z;
+    const sx=s.x*W+dx,sy=(s.y*H+(t*.01*s.z))%H+dy;
+    const tw=.4+.6*Math.abs(Math.sin(t*.001+s.x*9));
+    bgx.fillStyle=`rgba(143,196,255,${.12+tw*.4*s.z})`;
+    bgx.fillRect(sx,(sy+H)%H,s.s,s.s);
+    const d=Math.hypot(sx-mx,(sy)-my);
+    if(d<120){bgx.strokeStyle=`rgba(143,196,255,${(1-d/120)*.18})`;bgx.beginPath();bgx.moveTo(sx,(sy+H)%H);bgx.lineTo(mx,my);bgx.stroke()}}
 }
 
-/* =================== STATE + STATUS =================== */
-const STATE_TARGET={idle:14,listening:80,processing:46,speaking:64,error:30};
-function setState(mode,label,msg){
-  RAIZ.mode=mode; RAIZ.orb.target=STATE_TARGET[mode]??14;
-  const c=orbColor(mode).dot;
-  $('dot').style.background=c; $('dot').style.boxShadow=`0 0 10px ${c}`;
-  if(label){$('status-label').textContent=label; $('orb-state').textContent=label}
-  if(msg){$('orb-msg').textContent=msg}
-}
-
-/* =================== ORB =================== */
-function resize(){
-  const dpr=window.devicePixelRatio||1, s=canvas.offsetWidth;
-  canvas.width=s*dpr; canvas.height=s*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
-}
-function orbColor(mode){
-  switch(mode){
-    case 'listening': return {stroke:'230,57,70', dot:'#e63946', warm:'rgba(230,57,70,'};
-    case 'processing':return {stroke:'127,176,214',dot:'#7fb0d6', warm:'rgba(127,176,214,'};
-    case 'speaking':  return {stroke:'226,184,103',dot:'#e2b867', warm:'rgba(226,184,103,'};
-    case 'error':     return {stroke:'230,57,70', dot:'#e63946', warm:'rgba(230,57,70,'};
-    default:          return {stroke:'226,184,103',dot:'#e2b867', warm:'rgba(226,184,103,'};
-  }
-}
-const PHASE_SPEED={idle:.010,listening:.05,processing:.024,speaking:.038,error:.07};
-function orbLoop(){
-  requestAnimationFrame(orbLoop);
-  // live frequency while listening, smoothed synthetic otherwise
-  if(recording && analyser){
-    analyser.getByteFrequencyData(dataArray);
-    RAIZ.orb.freq = dataArray.reduce((a,b)=>a+b,0)/dataArray.length;
-  }else{
-    const breathe = RAIZ.mode==='idle' ? Math.sin(RAIZ.orb.phase)*6 : 0;
-    RAIZ.orb.freq += ((RAIZ.orb.target+breathe) - RAIZ.orb.freq)*0.07;
-  }
-  RAIZ.orb.phase += PHASE_SPEED[RAIZ.mode]||.01;
-  paintOrb(RAIZ.orb.freq, RAIZ.orb.phase, RAIZ.mode);
-}
-function paintOrb(v,phase,mode){
-  const dpr=window.devicePixelRatio||1, w=canvas.width/dpr, h=canvas.height/dpr, x=w/2, y=h/2;
-  const col=orbColor(mode), R=Math.min(w,h)*.17, base=R + v*.42;
-  ctx.clearRect(0,0,w,h);
+/* particle sphere orb */
+let sphere=[];
+function buildSphere(){sphere=[];const n=620;const off=2/n,inc=Math.PI*(3-Math.sqrt(5));
+  for(let i=0;i<n;i++){const y=i*off-1+off/2,r=Math.sqrt(1-y*y),phi=i*inc;sphere.push({x:Math.cos(phi)*r,y,z:Math.sin(phi)*r,n:Math.random()})}}
+function drawOrb(t){const W=orb.clientWidth,H=orb.clientHeight,cx=W/2,cy=H/2;ox.clearRect(0,0,W,H);
+  const v=RAIZ.orb.freq;RAIZ.orb.rot+=.0016+(RAIZ.mode==='listening'?.004:RAIZ.mode==='processing'?.0026:0);
+  const a=RAIZ.orb.rot,ca=Math.cos(a),sa=Math.sin(a);
+  const tilt=(mouse.y-.5)*.6,ct=Math.cos(tilt),st=Math.sin(tilt);
+  const R=Math.min(W,H)*.34*(1+v*.0016),persp=Math.min(W,H)*1.5;
+  const col=stateColor(RAIZ.mode),acc=stateAccent(RAIZ.mode);
   // outer aura
-  const aura=ctx.createRadialGradient(x,y,base*.6,x,y,base*2.1);
-  aura.addColorStop(0, col.warm+(.10+Math.min(v/255,.18))+')');
-  aura.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=aura; ctx.fillRect(0,0,w,h);
-  // organic membrane
-  ctx.beginPath();
-  for(let a=0;a<Math.PI*2;a+=.05){
-    const off=Math.sin(a*6+phase)*(v*.16)+Math.cos(a*3-phase*1.3)*(v*.08);
-    const r=base+off, px=x+Math.cos(a)*r, py=y+Math.sin(a)*r;
-    a===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
-  }
-  ctx.closePath();
-  ctx.lineWidth=1.6;
-  ctx.strokeStyle=`rgba(${col.stroke},${.28+Math.min(v/255,.5)})`;
-  ctx.stroke();
-  const g=ctx.createRadialGradient(x,y,base*.2,x,y,base);
-  g.addColorStop(0,'rgba(20,20,22,.85)');
-  g.addColorStop(.55,'rgba(26,29,36,.5)');
-  g.addColorStop(1, col.warm+(.06+v*.0012)+')');
-  ctx.fillStyle=g; ctx.fill();
-  // inner core
-  ctx.beginPath(); ctx.arc(x,y,base*.18+v*.05,0,Math.PI*2);
-  ctx.fillStyle=col.warm+(.10+Math.min(v/255,.22))+')'; ctx.fill();
+  const aura=ox.createRadialGradient(cx,cy,R*.3,cx,cy,R*1.7);
+  aura.addColorStop(0,`rgba(${col[0]},${col[1]},${col[2]},${.10+Math.min(v/255,.16)})`);aura.addColorStop(1,'rgba(0,0,0,0)');
+  ox.fillStyle=aura;ox.fillRect(0,0,W,H);
+  // rotating HUD rings
+  ox.save();ox.translate(cx,cy);
+  for(let k=0;k<2;k++){ox.rotate(a*(k?-.6:.9)+k);ox.strokeStyle=`rgba(${acc[0]},${acc[1]},${acc[2]},${.22-k*.08})`;ox.lineWidth=1;
+    ox.beginPath();ox.ellipse(0,0,R*(1.28+k*.16),R*(1.28+k*.16)*.34,0,k*.6,k*.6+Math.PI*1.5);ox.stroke();}
+  ox.restore();
+  // sphere points
+  const turb=v*.004;
+  const pts=[];
+  for(const p of sphere){let x=p.x,y=p.y,z=p.z;
+    let x1=x*ca-z*sa,z1=x*sa+z*ca;             // rotate Y
+    let y1=y*ct-z1*st,z2=y*st+z1*ct;           // tilt X
+    const rad=1+Math.sin(t*.004+p.n*6)*turb;   // voice turbulence
+    const sc=persp/(persp-z2*R*rad);
+    pts.push({sx:cx+x1*R*rad*sc,sy:cy+y1*R*rad*sc,z:z2,sc,n:p.n})}
+  pts.sort((a,b)=>a.z-b.z);
+  for(const p of pts){const depth=(p.z+1)/2;const al=.15+depth*.85;const sz=(.6+depth*1.8)*p.sc;
+    const useAmber=p.n>.86&&(RAIZ.mode==='speaking'||RAIZ.mode==='idle');
+    const c=useAmber?acc:col;
+    ox.fillStyle=`rgba(${c[0]},${c[1]},${c[2]},${al})`;
+    ox.beginPath();ox.arc(p.sx,p.sy,sz,0,6.283);ox.fill();}
+  // core
+  const core=ox.createRadialGradient(cx,cy,0,cx,cy,R*.5);
+  core.addColorStop(0,`rgba(${acc[0]},${acc[1]},${acc[2]},${.5+Math.min(v/255,.4)})`);
+  core.addColorStop(.4,`rgba(${col[0]},${col[1]},${col[2]},.12)`);core.addColorStop(1,'rgba(0,0,0,0)');
+  ox.fillStyle=core;ox.beginPath();ox.arc(cx,cy,R*.5,0,6.283);ox.fill();
 }
-// some browsers populate the voices list asynchronously
-if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=()=>{};
+
+/* waveform */
+function drawWave(t){const W=wave.clientWidth,H=wave.clientHeight,mid=H/2;wx.clearRect(0,0,W,H);
+  const col=stateColor(RAIZ.mode);wx.strokeStyle=`rgba(${col[0]},${col[1]},${col[2]},.8)`;wx.lineWidth=1.4;wx.beginPath();
+  const live=recording&&analyser;if(live)analyser.getByteTimeDomainData(dataArray);
+  const n=64;for(let i=0;i<n;i++){const x=i/(n-1)*W;let amp;
+    if(live){amp=((dataArray[Math.floor(i/n*dataArray.length)]-128)/128)*mid*.9}
+    else{amp=Math.sin(i*.4+t*.004)*Math.sin(i*.13-t*.002)*(mid*.3)*(RAIZ.mode==='speaking'?1.6:.5)}
+    i?wx.lineTo(x,mid+amp):wx.moveTo(x,mid+amp)}wx.stroke();
+  wx.strokeStyle='rgba(143,196,255,.08)';wx.beginPath();wx.moveTo(0,mid);wx.lineTo(W,mid);wx.stroke()}
+
+/* radar */
+function drawRadar(t){const W=radar.clientWidth,H=radar.clientHeight,cx=W/2,cy=H/2,R=Math.min(W,H)*.46;rx.clearRect(0,0,W,H);
+  rx.strokeStyle='rgba(143,196,255,.18)';rx.lineWidth=1;for(let k=1;k<=3;k++){rx.beginPath();rx.arc(cx,cy,R*k/3,0,6.283);rx.stroke()}
+  rx.beginPath();rx.moveTo(cx-R,cy);rx.lineTo(cx+R,cy);rx.moveTo(cx,cy-R);rx.lineTo(cx,cy+R);rx.stroke();
+  const a=t*.0014;const g=rx.createRadialGradient(cx,cy,0,cx,cy,R);g.addColorStop(0,'rgba(143,196,255,.28)');g.addColorStop(1,'rgba(143,196,255,0)');
+  rx.save();rx.translate(cx,cy);rx.rotate(a);rx.fillStyle=g;rx.beginPath();rx.moveTo(0,0);rx.arc(0,0,R,-.5,0);rx.closePath();rx.fill();rx.restore();
+  for(let i=0;i<3;i++){const ba=i*2.1+t*.0006,br=R*(.4+i*.18);const bx=cx+Math.cos(ba)*br,by=cy+Math.sin(ba)*br;
+    const blip=(Math.sin(t*.003+i)*.5+.5);rx.fillStyle=`rgba(226,184,103,${.3+blip*.5})`;rx.beginPath();rx.arc(bx,by,1.6,0,6.283);rx.fill()}}
+
+/* vitals + logs (decorative, alive) */
+const VITALS=['NEURAL CORE','MEMORY','LATENCY','SIGNAL','THERMAL','THROUGHPUT'];
+function buildVitals(){$('vitals').innerHTML=VITALS.map((v,i)=>`<div class="vital"><span>${v}</span><div class="bar"><i id="vb${i}"></i></div><b id="vv${i}">--</b></div>`).join('')}
+function stepVitals(){const boost=RAIZ.mode==='processing'||RAIZ.mode==='listening'?22:RAIZ.mode==='speaking'?14:0;
+  VITALS.forEach((v,i)=>{const base=[58,64,12,88,33,46][i];const val=Math.max(4,Math.min(99,base+boost*Math.random()+(Math.random()*16-8)));
+    const el=$('vb'+i),lab=$('vv'+i);if(el)el.style.width=val+'%';if(lab)lab.textContent=(i===2?val.toFixed(0)+'ms':i===4?val.toFixed(0)+'°':val.toFixed(0)+(i===5?'k':'%'))})}
+const LOGWORDS=['signal.trace buffer clear','fusion.merge mask applied','context.load via resync','neural.inference queued','sensor.poll vfx routed','audio.stream buffer clear','tokenizer.run stable','codes.dictionary indexed','aura.recall quantized','directive.lock engaged'];
+let logLines=[];
+function stepLog(){const ts=new Date().toTimeString().slice(0,8);logLines.unshift(`${ts}  ${LOGWORDS[Math.floor(Math.random()*LOGWORDS.length)]}`);logLines=logLines.slice(0,10)}
+
+/* clock */
+function clockTick(){const d=new Date();$('clk-time').textContent=d.toTimeString().slice(0,8);}
+
+/* =============== MASTER LOOP =============== */
+function frame(t){requestAnimationFrame(frame);
+  if(recording&&analyser){analyser.getByteFrequencyData(dataArray);RAIZ.orb.freq=dataArray.reduce((a,b)=>a+b,0)/dataArray.length}
+  else{const breathe=RAIZ.mode==='idle'?Math.sin(t*.001)*6:0;RAIZ.orb.freq+=((RAIZ.orb.target+breathe)-RAIZ.orb.freq)*.07}
+  drawBg(t);drawOrb(t);drawWave(t);drawRadar(t)}
+if('speechSynthesis'in window)speechSynthesis.onvoiceschanged=()=>{};
 </script>
 </body>
 </html>
