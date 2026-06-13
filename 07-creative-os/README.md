@@ -14,6 +14,20 @@ Voice → Thought → Visual Intelligence → AI APIs → Local Production Syste
 
 ---
 
+## Start Here
+
+The sovereign document for this layer is:
+
+```text
+BLUEPRINT.md
+```
+
+Read it first.
+
+It defines the philosophy, interface behavior, dual-engine API core, and future local automation path.
+
+---
+
 ## Core Identity
 
 ```text
@@ -21,6 +35,20 @@ Name: RAIZ Creative OS
 Interface Language: Neural Expressive UI
 Current Mode: Browser-only
 Future Mode: Browser + Local Server + Automated Production Control
+API Direction: Gemini + GPT / OpenAI
+```
+
+---
+
+## Current Files
+
+```text
+07-creative-os/
+├── README.md
+├── BLUEPRINT.md                 ← sovereign blueprint
+├── ARCHITECTURE.md              ← system architecture path
+├── SECURITY-NOTES.md            ← browser/local key boundary
+└── creative-os-browser.html     ← first browser kernel
 ```
 
 ---
