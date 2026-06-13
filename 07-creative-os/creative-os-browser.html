@@ -5,41 +5,659 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>RAIZ Creative OS — Neural Expressive UI</title>
 <style>
-:root{--bg:#0d0d0e;--panel:#141416;--text:#e5e5eb;--dim:#8a8a93;--amber:#e2b867;--cold:#1a1d24;--border:#222226;--red:#e63946}*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif}body{background:radial-gradient(circle at top,#1a1d24 0,#0d0d0e 42%,#070708 100%);color:var(--text);min-height:100vh;display:flex;flex-direction:column;justify-content:space-between;align-items:center;overflow:hidden;padding:2rem}header,footer{width:100%;max-width:1200px;display:flex;justify-content:space-between;align-items:center;border-color:var(--border);z-index:10}header{border-bottom:1px solid var(--border);padding-bottom:1.5rem}.system-title{font-size:.8rem;letter-spacing:1px;text-transform:uppercase;font-weight:700}.status{font-size:.75rem;color:var(--dim);display:flex;align-items:center;gap:.5rem}.dot{width:6px;height:6px;background:var(--amber);border-radius:50%;box-shadow:0 0 8px var(--amber);animation:pulse 2s infinite}.stage{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%;position:relative}.canvas-box{position:relative;width:390px;height:390px;display:flex;align-items:center;justify-content:center}canvas{position:absolute;inset:0;width:100%;height:100%}.caption{margin-top:2rem;font-size:.92rem;color:var(--dim);text-align:center;max-width:540px;line-height:1.8;letter-spacing:.2px}.panel{width:100%;max-width:760px;background:rgba(20,20,22,.92);border:1px solid var(--border);border-radius:14px;padding:1.4rem;display:flex;flex-direction:column;gap:1rem;z-index:10}.row{display:flex;gap:1rem;width:100%}.row>*{flex:1}input,select,textarea{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.78rem 1rem;border-radius:8px;font-size:.86rem;outline:none}textarea{min-height:84px;resize:vertical}input:focus,textarea:focus,select:focus{border-color:var(--amber)}button{background:var(--text);color:var(--bg);border:0;padding:.8rem 1.3rem;border-radius:8px;font-size:.86rem;font-weight:700;cursor:pointer;transition:.25s}button:hover{background:var(--amber);box-shadow:0 0 15px rgba(226,184,103,.28)}button.active{background:var(--red);color:white}button:disabled{background:#222226;color:#555;cursor:not-allowed;box-shadow:none}.small{font-size:.75rem;color:var(--dim);line-height:1.7}.response{display:none;background:#0b0b0c;border:1px solid var(--border);border-radius:10px;padding:1rem;color:var(--text);font-size:.86rem;line-height:1.8;white-space:pre-wrap;max-height:180px;overflow:auto}footer{justify-content:center;border-top:1px solid var(--border);padding-top:1.5rem;margin-top:1rem;font-size:.75rem;color:var(--dim);letter-spacing:1px}@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}@media(max-width:720px){body{padding:1rem;overflow:auto}.row{flex-direction:column}.canvas-box{width:300px;height:300px}header{align-items:flex-start;gap:1rem;flex-direction:column}}
+:root{
+  --bg:#0d0d0e; --bg-deep:#070708; --panel:#141416; --panel-glass:rgba(18,19,22,.62);
+  --text:#e5e5eb; --dim:#8a8a93; --faint:#55565d;
+  --amber:#e2b867; --amber-soft:rgba(226,184,103,.14);
+  --cold:#1a1d24; --cold-line:#2a2e38; --border:#1e1f24;
+  --red:#e63946; --ice:#7fb0d6;
+  --space:clamp(.8rem,2vw,1.4rem);
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif}
+html,body{height:100%}
+body{
+  background:
+    radial-gradient(1200px 700px at 50% -10%, #1a1d24 0, transparent 60%),
+    radial-gradient(900px 900px at 85% 110%, #14161c 0, transparent 55%),
+    radial-gradient(circle at 50% 40%, #0f1013 0, var(--bg) 45%, var(--bg-deep) 100%);
+  color:var(--text); overflow:hidden;
+}
+/* faint star/grid field behind everything */
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; opacity:.5; z-index:0;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(229,229,235,.20) 50%, transparent),
+    radial-gradient(1px 1px at 70% 65%, rgba(229,229,235,.14) 50%, transparent),
+    radial-gradient(1px 1px at 40% 80%, rgba(229,229,235,.10) 50%, transparent),
+    radial-gradient(1px 1px at 85% 20%, rgba(229,229,235,.16) 50%, transparent),
+    linear-gradient(rgba(42,46,56,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(42,46,56,.05) 1px, transparent 1px);
+  background-size:auto,auto,auto,auto,60px 60px,60px 60px;
+}
+
+/* ===== Spatial grid: top / [left · stage · right] / bottom ===== */
+.os{
+  position:relative; z-index:1; height:100vh; width:100%;
+  display:grid; gap:var(--space); padding:var(--space);
+  grid-template-columns:300px 1fr 300px;
+  grid-template-rows:auto 1fr auto;
+  grid-template-areas:
+    "top    top    top"
+    "left   stage  right"
+    "bottom bottom bottom";
+  transition:.5s ease;
+}
+
+/* ----- TOP BAR ----- */
+.top{
+  grid-area:top; display:flex; align-items:center; justify-content:space-between;
+  gap:1rem; padding:.5rem .2rem; border-bottom:1px solid var(--border);
+}
+.brand{display:flex;align-items:baseline;gap:.7rem}
+.brand b{font-size:.82rem;letter-spacing:2px;text-transform:uppercase;font-weight:800}
+.brand span{font-size:.66rem;letter-spacing:1.5px;color:var(--faint);text-transform:uppercase}
+.top-mid{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;justify-content:center}
+.chip{
+  font-size:.66rem;letter-spacing:1px;text-transform:uppercase;color:var(--dim);
+  border:1px solid var(--cold-line); background:rgba(26,29,36,.5);
+  padding:.42rem .8rem; border-radius:999px; cursor:pointer; transition:.25s; white-space:nowrap;
+}
+.chip:hover{border-color:var(--amber);color:var(--text)}
+.chip.on{border-color:var(--amber);color:#0d0d0e;background:var(--amber);font-weight:700}
+.chip .k{color:var(--faint)}
+.chip.on .k{color:rgba(13,13,14,.6)}
+.status{display:flex;align-items:center;gap:.55rem;font-size:.7rem;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 10px var(--amber);animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+
+/* ----- SIDE PANELS (must not dominate the orb) ----- */
+.side{
+  display:flex; flex-direction:column; gap:.8rem; min-height:0;
+  background:var(--panel-glass); border:1px solid var(--border); border-radius:16px;
+  padding:1.1rem; backdrop-filter:blur(7px);
+}
+.side.left{grid-area:left}
+.side.right{grid-area:right}
+.side h3{
+  font-size:.64rem;letter-spacing:2px;text-transform:uppercase;color:var(--amber);
+  font-weight:700;display:flex;align-items:center;gap:.5rem;
+}
+.side h3::before{content:"";width:14px;height:1px;background:var(--amber);opacity:.6}
+.field{display:flex;flex-direction:column;gap:.3rem}
+.field label{font-size:.6rem;letter-spacing:1px;text-transform:uppercase;color:var(--faint)}
+input,textarea,select{
+  background:rgba(8,8,9,.7); border:1px solid var(--cold-line); color:var(--text);
+  padding:.6rem .75rem; border-radius:9px; font-size:.8rem; outline:none; width:100%;
+  transition:.2s;
+}
+textarea{resize:none}
+input:focus,textarea:focus,select:focus{border-color:var(--amber);background:rgba(8,8,9,.95)}
+.ctx-scroll{overflow-y:auto;display:flex;flex-direction:column;gap:.7rem;padding-left:.2rem}
+
+/* RIGHT — markdown decision panel */
+.right .md-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.md-actions{display:flex;gap:.4rem}
+.icon-btn{
+  font-size:.6rem;letter-spacing:1px;text-transform:uppercase;color:var(--dim);
+  background:transparent;border:1px solid var(--cold-line);padding:.35rem .55rem;
+  border-radius:7px;cursor:pointer;transition:.2s;
+}
+.icon-btn:hover{border-color:var(--amber);color:var(--text)}
+.markdown{
+  flex:1; min-height:0; overflow-y:auto; font-size:.82rem; line-height:1.85;
+  color:var(--text); padding-left:.3rem;
+}
+.markdown:empty::after{
+  content:"بانتظار أول قرار. تحدّث إلى RAIZ أو اكتب أمرًا — سيظهر القرار هنا بصيغة Markdown.";
+  color:var(--faint); font-size:.76rem; line-height:1.9; display:block;
+}
+.markdown h1,.markdown h2,.markdown h3{color:var(--amber);font-weight:700;margin:1rem 0 .4rem;line-height:1.4}
+.markdown h1{font-size:1.05rem} .markdown h2{font-size:.95rem} .markdown h3{font-size:.85rem;color:#d8c79c}
+.markdown p{margin:.5rem 0}
+.markdown ul,.markdown ol{margin:.5rem 1.2rem .5rem 0;padding:0}
+.markdown li{margin:.25rem 0}
+.markdown code{background:rgba(127,176,214,.12);color:var(--ice);padding:.1rem .35rem;border-radius:5px;font-size:.78rem}
+.markdown pre{background:rgba(8,8,9,.8);border:1px solid var(--cold-line);border-radius:9px;padding:.8rem;overflow-x:auto;margin:.6rem 0}
+.markdown pre code{background:none;color:var(--text)}
+.markdown strong{color:#f0e6cf}
+.markdown hr{border:0;border-top:1px solid var(--border);margin:.9rem 0}
+.markdown blockquote{border-right:2px solid var(--amber);padding-right:.8rem;color:var(--dim);margin:.6rem 0}
+
+/* ----- CENTER STAGE / ORB ----- */
+.stage{grid-area:stage;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0}
+.orb-wrap{position:relative;flex:1;width:100%;display:flex;align-items:center;justify-content:center;min-height:0}
+canvas#orb{position:relative;width:min(62vh,560px);height:min(62vh,560px);max-width:100%}
+.orb-status{
+  position:absolute;bottom:6%;left:50%;transform:translateX(-50%);text-align:center;
+  pointer-events:none;width:90%;
+}
+.orb-status .label{font-size:.72rem;letter-spacing:4px;text-transform:uppercase;color:var(--dim)}
+.orb-status .msg{margin-top:.7rem;font-size:.86rem;color:var(--dim);max-width:520px;margin-inline:auto;line-height:1.8}
+
+/* ----- BOTTOM RAIL ----- */
+.bottom{
+  grid-area:bottom; display:flex; flex-direction:column; gap:.75rem;
+  border-top:1px solid var(--border); padding-top:.85rem;
+}
+.modes{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center}
+.mode-btn{
+  font-size:.66rem;letter-spacing:.5px;color:var(--dim);background:rgba(26,29,36,.45);
+  border:1px solid var(--cold-line);padding:.5rem .9rem;border-radius:999px;cursor:pointer;transition:.22s;
+}
+.mode-btn:hover{color:var(--text);border-color:var(--amber)}
+.mode-btn.on{color:var(--amber);border-color:var(--amber);background:var(--amber-soft);font-weight:700}
+.deck{display:flex;gap:.7rem;align-items:stretch}
+.deck textarea{flex:1;min-height:52px;max-height:120px;height:52px}
+.deck-btns{display:flex;gap:.5rem}
+button.act{
+  background:var(--text);color:var(--bg);border:0;padding:0 1.3rem;border-radius:10px;
+  font-size:.78rem;font-weight:700;cursor:pointer;transition:.25s;letter-spacing:.5px;white-space:nowrap;
+}
+button.act:hover{background:var(--amber);box-shadow:0 0 18px rgba(226,184,103,.3)}
+button.act.mic{background:transparent;color:var(--text);border:1px solid var(--cold-line)}
+button.act.mic:hover{border-color:var(--amber);background:transparent;box-shadow:none}
+button.act.mic.live{background:var(--red);color:#fff;border-color:var(--red);animation:pulse 1.3s infinite}
+button.act:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+.keys-row{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;justify-content:center;font-size:.62rem;color:var(--faint)}
+.keys-row .keystat{display:flex;align-items:center;gap:.35rem;letter-spacing:1px;text-transform:uppercase}
+.keys-row .kdot{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 6px var(--red)}
+.keys-row .kdot.ok{background:#5fae6a;box-shadow:0 0 6px #5fae6a}
+
+/* persistent brand credit (preserved across both modes) */
+.credit{
+  position:fixed; bottom:.55rem; left:1rem; z-index:6;
+  font-size:.6rem; letter-spacing:1.5px; color:var(--faint); pointer-events:auto;
+}
+.credit a{color:var(--faint);text-decoration:none}
+.credit a:hover{color:var(--amber)}
+
+/* ===== SHOW MODE — cinematic, technical controls hidden ===== */
+body.show .os{grid-template-columns:0 1fr 0;grid-template-rows:auto 1fr auto}
+body.show .side.left,
+body.show .deck,
+body.show .keys-row,
+body.show .modes{display:none}
+body.show .side.right{
+  position:fixed; top:50%; left:var(--space); transform:translateY(-50%);
+  width:min(340px,32vw); max-height:74vh; z-index:5;
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+}
+body.show .side.right:has(.markdown:empty){display:none}
+body.show .bottom{border-top:0;align-items:center}
+body.show .bottom::after{
+  content:"اضغط مفتاح المسافة للتحدث إلى RAIZ"; color:var(--faint);
+  font-size:.66rem;letter-spacing:2px;text-transform:uppercase;
+}
+body.show canvas#orb{width:min(72vh,720px);height:min(72vh,720px)}
+.show-mic{display:none}
+body.show .show-mic{display:flex;align-items:center;justify-content:center;gap:.6rem;margin:0 auto}
+
+/* settings overlay (keys) */
+.overlay{
+  position:fixed;inset:0;z-index:40;background:rgba(5,5,6,.78);backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;
+}
+.overlay.open{display:flex}
+.modal{
+  width:min(440px,92vw);background:var(--panel);border:1px solid var(--cold-line);
+  border-radius:18px;padding:1.6rem;display:flex;flex-direction:column;gap:1rem;
+}
+.modal h3{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--amber)}
+.modal .note{font-size:.68rem;color:var(--faint);line-height:1.7}
+.modal .row{display:flex;gap:.6rem;justify-content:flex-end}
+
+@media(max-width:900px){
+  body{overflow:auto}
+  .os{grid-template-columns:1fr;grid-template-rows:auto auto auto auto auto;
+      grid-template-areas:"top" "stage" "right" "left" "bottom";height:auto;min-height:100vh}
+  canvas#orb{width:min(70vw,360px);height:min(70vw,360px)}
+  .side{max-height:none}
+  .credit{position:static;margin:.6rem auto 0;text-align:center}
+}
 </style>
 </head>
-<body>
-<header><div class="system-title">RAIZ Creative OS // Neural Expressive UI</div><div class="status"><div class="dot" id="status-dot"></div><span id="status-text">STANDING BY</span></div></header>
-<section class="stage"><div class="canvas-box"><canvas id="orb"></canvas></div><div class="caption" id="msg">النظام جاهز. أدخل مفاتيح Gemini و GPT محليًا داخل المتصفح فقط، ثم اختر المحرك وابدأ.</div></section>
-<section class="panel">
-<div class="row"><input type="password" id="gemini-key" placeholder="Gemini API Key — يُحفظ محليًا داخل هذا المتصفح فقط"><input type="password" id="gpt-key" placeholder="GPT / OpenAI API Key — يُحفظ محليًا داخل هذا المتصفح فقط"></div>
-<div class="row"><select id="engine"><option value="gemini">Gemini</option><option value="gpt">GPT / OpenAI</option></select><button onclick="saveKeys()">حفظ المفاتيح محليًا</button></div>
-<textarea id="command" placeholder="اكتب أمرًا إبداعيًا هنا، أو استخدم المايك لاحقًا: حوّل شيفرة 48 إلى اتجاه حملة لعطر فاخر..."></textarea>
-<div class="row"><button id="send-btn" onclick="sendTextCommand()">إرسال الأمر النصي</button><button id="mic-btn" onclick="handleMicToggle()">اضغط للتحدث</button></div>
-<div class="small">المفاتيح لا تُكتب داخل المستودع. هذه النسخة تعمل من المتصفح فقط. لاحقًا يمكن نقل المفاتيح إلى سيرفر محلي على جهازك للتحكم في المونتاج والأنظمة.</div>
-<div class="response" id="response-box"></div>
-</section>
-<footer>© 2025 Nabil88 | nabil88.art</footer>
+<body class="">
+<div class="os">
+
+  <!-- TOP : project · engine · status -->
+  <header class="top">
+    <div class="brand"><b>RAIZ</b><span>Creative OS // Neural Expressive UI</span></div>
+    <div class="top-mid">
+      <div class="chip" id="proj-chip" title="المشروع الحالي">PROJECT — <span id="proj-name">بدون مشروع</span></div>
+      <div class="chip on" id="eng-gemini" onclick="selectEngine('gemini')">GEMINI <span class="k">يسمع</span></div>
+      <div class="chip" id="eng-gpt" onclick="selectEngine('gpt')">GPT <span class="k">يكتب</span></div>
+      <div class="chip" id="show-toggle" onclick="toggleDisplay()">SHOW MODE</div>
+      <div class="chip" onclick="openSettings()">⚙ KEYS</div>
+    </div>
+    <div class="status"><span class="dot" id="dot"></span><span id="status-label">STANDING BY</span></div>
+  </header>
+
+  <!-- LEFT : project context (local memory) -->
+  <aside class="side left">
+    <h3>Project Context</h3>
+    <div class="ctx-scroll">
+      <div class="field"><label>اسم المشروع</label><input id="ctx-name" placeholder="مثال: إطلاق عطر فاخر"></div>
+      <div class="field"><label>العميل</label><input id="ctx-client" placeholder="الجهة / البراند"></div>
+      <div class="field"><label>الهدف</label><textarea id="ctx-objective" rows="2" placeholder="ما القرار الذي نريد الوصول إليه؟"></textarea></div>
+      <div class="field"><label>الشيفرة البصرية</label><input id="ctx-code" placeholder="مثال: شيفرة 48 — الانطفاء اللامع"></div>
+      <div class="field"><label>النبرة</label><input id="ctx-tone" placeholder="هدوء ثابت / سلطة صامتة"></div>
+      <div class="field"><label>المنصّة</label><input id="ctx-platform" placeholder="Instagram / TVC / OOH"></div>
+    </div>
+  </aside>
+
+  <!-- CENTER : the orb -->
+  <main class="stage">
+    <div class="orb-wrap"><canvas id="orb"></canvas></div>
+    <div class="orb-status">
+      <div class="label" id="orb-state">STANDING BY</div>
+      <div class="msg" id="orb-msg">النظام جاهز. احفظ مفاتيح Gemini و GPT محليًا، اختر المحرك، ثم تحدّث أو اكتب.</div>
+    </div>
+  </main>
+
+  <!-- RIGHT : markdown decision (source of truth) -->
+  <aside class="side right">
+    <div class="md-head">
+      <h3>Markdown Decision</h3>
+      <div class="md-actions">
+        <button class="icon-btn" onclick="copyMarkdown()">Copy</button>
+        <button class="icon-btn" onclick="exportMarkdown()">.md</button>
+        <button class="icon-btn" onclick="clearOutput()">Clear</button>
+      </div>
+    </div>
+    <div class="markdown" id="md-out"></div>
+  </aside>
+
+  <!-- BOTTOM : creative modes · command deck · memory -->
+  <footer class="bottom">
+    <div class="modes" id="modes"></div>
+    <div class="deck">
+      <textarea id="command" placeholder="اكتب أمرًا إبداعيًا: حوّل الشيفرة 48 إلى اتجاه حملة لعطر فاخر بنبرة الهدوء الثابت..."></textarea>
+      <div class="deck-btns">
+        <button class="act" id="send-btn" onclick="sendText()">إرسال</button>
+        <button class="act mic" id="mic-btn" onclick="toggleMic()">🎙 تحدّث</button>
+      </div>
+    </div>
+    <button class="act mic show-mic" id="show-mic-btn" onclick="toggleMic()">🎙 تحدّث إلى RAIZ</button>
+    <div class="keys-row">
+      <span class="keystat"><span class="kdot" id="kd-gemini"></span> Gemini</span>
+      <span class="keystat"><span class="kdot" id="kd-gpt"></span> GPT</span>
+      <span class="keystat" onclick="toggleVoice()" style="cursor:pointer"><span class="kdot ok" id="kd-voice"></span> الصوت <span id="voice-state">مُفعّل</span></span>
+      <span>المفاتيح محلية في هذا المتصفح فقط — لا تُرفع ولا تُحفظ في المستودع.</span>
+    </div>
+  </footer>
+</div>
+
+<!-- KEYS overlay -->
+<div class="overlay" id="settings">
+  <div class="modal">
+    <h3>API Keys — محلية فقط</h3>
+    <div class="field"><label>Gemini API Key</label><input type="password" id="gemini-key" placeholder="يُحفظ في localStorage على هذا المتصفح"></div>
+    <div class="field"><label>GPT / OpenAI API Key</label><input type="password" id="gpt-key" placeholder="يُحفظ في localStorage على هذا المتصفح"></div>
+    <div class="note">مفاتيحك تبقى داخل هذا المتصفح فقط. لا backend، لا قاعدة بيانات، ولا مشاركة. يمكنك رؤيتها في أدوات المطوّر — هذا تصميم متعمّد للنسخة المتصفّحية.</div>
+    <div class="row">
+      <button class="act mic" onclick="closeSettings()">إغلاق</button>
+      <button class="act" onclick="saveKeys()">حفظ المفاتيح</button>
+    </div>
+  </div>
+</div>
+
+<!-- Nabil88 footer (preserved) -->
+<footer class="credit">© 2025 Nabil88 | <a href="https://nabil88.art" target="_blank" rel="noopener">nabil88.art</a></footer>
+
 <script>
-const canvas=document.getElementById('orb'),ctx=canvas.getContext('2d'),msg=document.getElementById('msg'),statusText=document.getElementById('status-text'),statusDot=document.getElementById('status-dot'),micBtn=document.getElementById('mic-btn'),responseBox=document.getElementById('response-box');
-let audioCtx,analyser,dataArray,stream,recorder,chunks=[],recording=false,playing=false,phase=0;
-function resize(){const dpr=window.devicePixelRatio||1;canvas.width=canvas.offsetWidth*dpr;canvas.height=canvas.offsetHeight*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}window.addEventListener('resize',resize);resize();
-window.onload=()=>{document.getElementById('gemini-key').value=localStorage.getItem('raiz_gemini_key')||'';document.getElementById('gpt-key').value=localStorage.getItem('raiz_gpt_key')||'';drawIdle()};
-function saveKeys(){const g=document.getElementById('gemini-key').value.trim(),o=document.getElementById('gpt-key').value.trim();if(g)localStorage.setItem('raiz_gemini_key',g);if(o)localStorage.setItem('raiz_gpt_key',o);msg.innerText='تم حفظ المفاتيح محليًا داخل هذا المتصفح فقط.'}
-function systemPrompt(){return 'أنت RAIZ Creative OS، وكيل إبداعي للمخرج نبيل Nabil88. تعمل بأسلوب الهدوء الثابت، تفهم قاموس الشيفرات البصرية، وتحوّل الفوضى إلى اتجاه بصري، حملة، برومبت، VO، أو قرار إنتاجي. كن موجزًا، دقيقًا، بصريًا، ولا تستخدم لغة إعلانية رخيصة.'}
-async function sendTextCommand(){const text=document.getElementById('command').value.trim();if(!text){msg.innerText='اكتب أمرًا أولًا.';return}setState('PROCESSING','#e2b867','جاري معالجة الأمر عبر المحرك المختار...');try{const engine=document.getElementById('engine').value;const out=engine==='gemini'?await callGeminiText(text):await callOpenAIText(text);showResponse(out);setState('STANDING BY','var(--amber)','تمت المعالجة. النظام في وضع السكون.')}catch(e){console.error(e);showResponse('فشل الاتصال بالمحرك. راجع المفتاح أو صلاحيات المتصفح أو CORS.');setState('STANDING BY','var(--amber)','انكسرت الموجة. راجع المفتاح أو جرّب محركًا آخر.')}}
-async function callGeminiText(text){const key=localStorage.getItem('raiz_gemini_key');if(!key)throw new Error('Missing Gemini key');const endpoint=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;const payload={contents:[{parts:[{text}]}],systemInstruction:{parts:[{text:systemPrompt()}]}};const r=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const j=await r.json();return j.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('\n').trim()||JSON.stringify(j,null,2)}
-async function callOpenAIText(text){const key=localStorage.getItem('raiz_gpt_key');if(!key)throw new Error('Missing GPT key');const payload={model:'gpt-4.1-mini',messages:[{role:'system',content:systemPrompt()},{role:'user',content:text}],temperature:.7};const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${key}`},body:JSON.stringify(payload)});const j=await r.json();return j.choices?.[0]?.message?.content||JSON.stringify(j,null,2)}
-function showResponse(t){responseBox.style.display='block';responseBox.textContent=t}
-function setState(label,color,text){statusText.innerText=label;statusDot.style.backgroundColor=color;statusDot.style.boxShadow=`0 0 12px ${color}`;msg.innerText=text}
-async function handleMicToggle(){if(playing)return;if(recording)stopRecording();else startRecording()}
-async function startRecording(){const key=localStorage.getItem('raiz_gemini_key');if(!key){msg.innerText='الصوت الحالي يستخدم Gemini. احفظ مفتاح Gemini أولًا.';return}try{if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')await audioCtx.resume();stream=await navigator.mediaDevices.getUserMedia({audio:true});analyser=audioCtx.createAnalyser();analyser.fftSize=256;audioCtx.createMediaStreamSource(stream).connect(analyser);dataArray=new Uint8Array(analyser.frequencyBinCount);chunks=[];const opts=MediaRecorder.isTypeSupported('audio/webm')?{mimeType:'audio/webm'}:{};recorder=new MediaRecorder(stream,opts);recorder.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data)};recorder.onstop=sendAudioToGemini;recorder.start();recording=true;micBtn.innerText='إيقاف وإرسال';micBtn.classList.add('active');setState('LISTENING','#e63946','تحدث الآن. النظام يلتقط الموجة.');drawActive()}catch(e){console.error(e);msg.innerText='فشل استدعاء المايك. تحقق من صلاحيات المتصفح.'}}
-function stopRecording(){if(!recorder||recorder.state==='inactive')return;recorder.stop();recording=false;micBtn.innerText='اضغط للتحدث';micBtn.classList.remove('active');if(stream)stream.getTracks().forEach(t=>t.stop());setState('PROCESSING','#e2b867','جاري تحويل الصوت وإرساله إلى Gemini...')}
-function blob64(blob){return new Promise((res,rej)=>{const rd=new FileReader();rd.onloadend=()=>res(rd.result.split(',')[1]);rd.onerror=rej;rd.readAsDataURL(blob)})}
-async function sendAudioToGemini(){try{const b=new Blob(chunks,{type:'audio/webm'}),audio=await blob64(b),key=localStorage.getItem('raiz_gemini_key'),endpoint=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;const payload={contents:[{parts:[{inlineData:{mimeType:'audio/webm',data:audio}},{text:'افهم الأمر الصوتي وأجب نصيًا بإخراج إبداعي منظم.'}]}],systemInstruction:{parts:[{text:systemPrompt()}]}};const r=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const j=await r.json();const out=j.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('\n').trim()||JSON.stringify(j,null,2);showResponse(out);setState('STANDING BY','var(--amber)','تم تحليل الصوت. النظام في وضع السكون.')}catch(e){console.error(e);showResponse('فشل تحليل الصوت.');setState('STANDING BY','var(--amber)','فشل تحليل الصوت.')}}
-function drawActive(){if(!recording&&!playing)return;requestAnimationFrame(drawActive);if(!analyser)return;analyser.getByteFrequencyData(dataArray);paint(dataArray.reduce((a,b)=>a+b,0)/dataArray.length)}
-function drawIdle(){if(recording||playing)return requestAnimationFrame(drawIdle);paint(18+Math.sin(phase)*8);phase+=.015;requestAnimationFrame(drawIdle)}
-function paint(v){const w=canvas.width/(window.devicePixelRatio||1),h=canvas.height/(window.devicePixelRatio||1),x=w/2,y=h/2;base=80+v*.45;ctx.fillStyle='rgba(13,13,14,.24)';ctx.fillRect(0,0,w,h);ctx.beginPath();phase+=.035;for(let a=0;a<Math.PI*2;a+=.055){const off=Math.sin(a*6+phase)*(v*.18)+Math.cos(a*3-phase)*(v*.09),r=base+off,px=x+Math.cos(a)*r,py=y+Math.sin(a)*r;if(a===0)ctx.moveTo(px,py);else ctx.lineTo(px,py)}ctx.closePath();ctx.lineWidth=2;ctx.strokeStyle=`rgba(226,184,103,${.25+Math.min(v/255,.55)})`;ctx.stroke();const g=ctx.createRadialGradient(x,y,base*.2,x,y,base);g.addColorStop(0,'rgba(20,20,22,.75)');g.addColorStop(.6,'rgba(26,29,36,.45)');g.addColorStop(1,`rgba(226,184,103,${.05+v*.001})`);ctx.fillStyle=g;ctx.fill()}
+/* ============================================================
+   RAIZ Creative OS v0.1 — single-file, browser-only
+   Gemini hears · GPT writes · RAIZ routes
+   ============================================================ */
+const RAIZ = {
+  mode:'idle',            // idle | listening | processing | speaking | error
+  engine:'gemini',
+  creativeMode:'campaign',
+  displayMode:'director', // director | show
+  voiceEnabled:true,
+  lastMarkdown:'',
+  orb:{ phase:0, freq:0, target:14 }
+};
+
+/* ---- Creative Modes : each rewrites the system prompt ---- */
+const MODES = {
+  campaign:{ label:'Campaign Director', prompt:'بصفتك مخرج حملات: حوّل الأمر إلى اتجاه حملة متكامل — الفكرة المركزية، الزاوية العاطفية، الشيفرة البصرية، والمخرجات. أعطِ قرارًا قابلًا للتنفيذ.' },
+  prompt:{ label:'Prompt Architect', prompt:'بصفتك مهندس برومبت: حوّل الأمر إلى برومبت بصري دقيق متعدد العوالم، جاهز للنسخ، مع وصف الإضاءة والعدسة والمزاج واللون.' },
+  vo:{ label:'VO Director', prompt:'بصفتك مخرج تعليق صوتي: اكتب نص VO قصيرًا مؤثرًا بنبرة الهدوء الثابت، مع توجيه الأداء والإيقاع والوقفات.' },
+  visual:{ label:'Visual Code Analyst', prompt:'بصفتك محلل شيفرات بصرية: فكّك الأمر إلى شيفراته البصرية، اربطه بقاموس الشيفرات، واشرح لماذا يعمل بصريًا وعاطفيًا.' },
+  production:{ label:'Production Planner', prompt:'بصفتك مخطط إنتاج: حوّل الأمر إلى خطة إنتاج عملية — اللقطات، المعدات، خطوات المونتاج، والأصول المطلوبة بترتيب تنفيذي.' },
+  diagnosis:{ label:'Performance Diagnoser', prompt:'بصفتك مشخّص أداء: اقرأ الأمر كحالة أداء محتوى، شخّص نقاط القوة والضعف الإبداعية، واقترح قرار الحملة القادمة.' }
+};
+
+/* ---- DOM refs ---- */
+const canvas=document.getElementById('orb'), ctx=canvas.getContext('2d');
+const $=id=>document.getElementById(id);
+let audioCtx,analyser,dataArray,stream,recorder,chunks=[],recording=false;
+
+/* =================== BOOT =================== */
+window.addEventListener('load',()=>{
+  loadKeys(); loadProject(); buildModes();
+  RAIZ.voiceEnabled = localStorage.getItem('raiz_voice')!=='off';
+  reflectVoice();
+  ['ctx-name','ctx-client','ctx-objective','ctx-code','ctx-tone','ctx-platform']
+    .forEach(id=>$(id).addEventListener('input',saveProject));
+  resize(); orbLoop();
+});
+window.addEventListener('resize',resize);
+window.addEventListener('keydown',e=>{
+  if(e.code==='Space' && RAIZ.displayMode==='show' && document.activeElement.tagName!=='TEXTAREA' && document.activeElement.tagName!=='INPUT'){
+    e.preventDefault(); toggleMic();
+  }
+});
+
+/* =================== KEYS =================== */
+function openSettings(){$('settings').classList.add('open')}
+function closeSettings(){$('settings').classList.remove('open')}
+function saveKeys(){
+  const g=$('gemini-key').value.trim(), o=$('gpt-key').value.trim();
+  if(g)localStorage.setItem('raiz_gemini_key',g);
+  if(o)localStorage.setItem('raiz_gpt_key',o);
+  reflectKeys(); closeSettings();
+  setState('idle','STANDING BY','تم حفظ المفاتيح محليًا داخل هذا المتصفح فقط.');
+}
+function loadKeys(){
+  $('gemini-key').value=localStorage.getItem('raiz_gemini_key')||'';
+  $('gpt-key').value=localStorage.getItem('raiz_gpt_key')||'';
+  reflectKeys();
+}
+function reflectKeys(){
+  $('kd-gemini').classList.toggle('ok',!!localStorage.getItem('raiz_gemini_key'));
+  $('kd-gpt').classList.toggle('ok',!!localStorage.getItem('raiz_gpt_key'));
+}
+
+/* =================== PROJECT CONTEXT =================== */
+function saveProject(){
+  const p={name:$('ctx-name').value,client:$('ctx-client').value,objective:$('ctx-objective').value,
+           code:$('ctx-code').value,tone:$('ctx-tone').value,platform:$('ctx-platform').value};
+  localStorage.setItem('raiz_project',JSON.stringify(p));
+  $('proj-name').textContent=p.name?p.name:'بدون مشروع';
+}
+function loadProject(){
+  let p={}; try{p=JSON.parse(localStorage.getItem('raiz_project')||'{}')}catch(e){}
+  $('ctx-name').value=p.name||''; $('ctx-client').value=p.client||'';
+  $('ctx-objective').value=p.objective||''; $('ctx-code').value=p.code||'';
+  $('ctx-tone').value=p.tone||''; $('ctx-platform').value=p.platform||'';
+  $('proj-name').textContent=p.name?p.name:'بدون مشروع';
+}
+function projectBlock(){
+  const p=[['المشروع',$('ctx-name').value],['العميل',$('ctx-client').value],['الهدف',$('ctx-objective').value],
+           ['الشيفرة البصرية',$('ctx-code').value],['النبرة',$('ctx-tone').value],['المنصّة',$('ctx-platform').value]]
+    .filter(x=>x[1].trim()).map(x=>`- ${x[0]}: ${x[1]}`).join('\n');
+  return p?`\n\nسياق المشروع الحالي:\n${p}`:'';
+}
+
+/* =================== ENGINE + MODES =================== */
+function selectEngine(e){
+  RAIZ.engine=e;
+  $('eng-gemini').classList.toggle('on',e==='gemini');
+  $('eng-gpt').classList.toggle('on',e==='gpt');
+}
+function buildModes(){
+  const wrap=$('modes'); wrap.innerHTML='';
+  Object.entries(MODES).forEach(([k,v])=>{
+    const b=document.createElement('button');
+    b.className='mode-btn'+(k===RAIZ.creativeMode?' on':'');
+    b.textContent=v.label; b.onclick=()=>selectMode(k);
+    wrap.appendChild(b);
+  });
+}
+function selectMode(k){
+  RAIZ.creativeMode=k;
+  [...$('modes').children].forEach((b,i)=>b.classList.toggle('on',Object.keys(MODES)[i]===k));
+}
+function systemPrompt(){
+  const base='أنت RAIZ Creative OS، وكيل إبداعي للمخرج نبيل Nabil88. تعمل بأسلوب الهدوء الثابت، تفهم قاموس الشيفرات البصرية، وتحوّل الفوضى إلى اتجاه بصري واضح. كن موجزًا، دقيقًا، بصريًا، ولا تستخدم لغة إعلانية رخيصة. أخرِج دائمًا بصيغة Markdown منظمة بعناوين ونقاط.';
+  return base+'\n\n'+MODES[RAIZ.creativeMode].prompt+projectBlock();
+}
+
+/* =================== DISPLAY MODE =================== */
+function toggleDisplay(){
+  RAIZ.displayMode = RAIZ.displayMode==='show'?'director':'show';
+  document.body.classList.toggle('show',RAIZ.displayMode==='show');
+  $('show-toggle').classList.toggle('on',RAIZ.displayMode==='show');
+  $('show-toggle').textContent = RAIZ.displayMode==='show'?'DIRECTOR MODE':'SHOW MODE';
+}
+
+/* =================== COMMAND ROUTING =================== */
+async function sendText(){
+  const text=$('command').value.trim();
+  if(!text){setState('idle','STANDING BY','اكتب أمرًا أولًا.');return}
+  setState('processing','PROCESSING','جاري معالجة الأمر عبر '+(RAIZ.engine==='gemini'?'Gemini':'GPT')+'...');
+  try{
+    const out = RAIZ.engine==='gemini' ? await callGemini(text) : await callGPT(text);
+    deliver(out);
+  }catch(e){ fail(e); }
+}
+/* Markdown is memory, Voice is presence — every response goes through deliver() */
+function deliver(md){
+  RAIZ.lastMarkdown=md;
+  renderMarkdown(md);
+  setState('speaking','SPEAKING','RAIZ يرد. القرار محفوظ على اليمين بصيغة Markdown.');
+  speak(md, ()=>setState('idle','STANDING BY','جاهز للأمر التالي.'));
+}
+function fail(e){
+  console.error(e);
+  renderMarkdown('**انكسرت الموجة.** راجع المفتاح، صلاحيات المتصفح، أو جرّب محركًا آخر.\n\n`'+(e&&e.message||e)+'`');
+  setState('error','SIGNAL LOST','تعذّر الاتصال بالمحرك. راجع المفاتيح أو الشبكة.');
+  setTimeout(()=>setState('idle','STANDING BY','جاهز للمحاولة من جديد.'),2600);
+}
+
+/* =================== API CALLS =================== */
+async function callGemini(text){
+  const key=localStorage.getItem('raiz_gemini_key');
+  if(!key)throw new Error('Missing Gemini key');
+  const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
+  const body={contents:[{parts:[{text}]}],systemInstruction:{parts:[{text:systemPrompt()}]}};
+  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const j=await r.json();
+  return j.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('\n').trim()||'_لا استجابة._';
+}
+async function callGPT(text){
+  const key=localStorage.getItem('raiz_gpt_key');
+  if(!key)throw new Error('Missing GPT key');
+  const body={model:'gpt-4.1-mini',messages:[{role:'system',content:systemPrompt()},{role:'user',content:text}],temperature:.7};
+  const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':`Bearer ${key}`},body:JSON.stringify(body)});
+  const j=await r.json();
+  return j.choices?.[0]?.message?.content||'_لا استجابة._';
+}
+
+/* =================== VOICE INPUT (Gemini hears) =================== */
+function toggleMic(){ recording?stopMic():startMic(); }
+async function startMic(){
+  const key=localStorage.getItem('raiz_gemini_key');
+  if(!key){setState('idle','STANDING BY','الإدخال الصوتي يستخدم Gemini. احفظ مفتاح Gemini أولًا.');openSettings();return}
+  try{
+    if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==='suspended')await audioCtx.resume();
+    stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    analyser=audioCtx.createAnalyser(); analyser.fftSize=256;
+    audioCtx.createMediaStreamSource(stream).connect(analyser);
+    dataArray=new Uint8Array(analyser.frequencyBinCount);
+    chunks=[];
+    const opts=MediaRecorder.isTypeSupported('audio/webm')?{mimeType:'audio/webm'}:{};
+    recorder=new MediaRecorder(stream,opts);
+    recorder.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data)};
+    recorder.onstop=sendAudio; recorder.start(); recording=true;
+    micLive(true);
+    setState('listening','LISTENING','تحدّث الآن. RAIZ يلتقط الموجة.');
+  }catch(e){console.error(e);setState('idle','STANDING BY','تعذّر استدعاء المايك. تحقق من صلاحيات المتصفح.')}
+}
+function stopMic(){
+  if(!recorder||recorder.state==='inactive')return;
+  recorder.stop(); recording=false; micLive(false);
+  if(stream)stream.getTracks().forEach(t=>t.stop());
+  setState('processing','PROCESSING','جاري تحويل الصوت وإرساله إلى Gemini...');
+}
+function micLive(on){
+  $('mic-btn').classList.toggle('live',on); $('show-mic-btn').classList.toggle('live',on);
+  $('mic-btn').textContent=on?'■ إيقاف وإرسال':'🎙 تحدّث';
+  $('show-mic-btn').textContent=on?'■ إيقاف وإرسال':'🎙 تحدّث إلى RAIZ';
+}
+function blob64(b){return new Promise((res,rej)=>{const r=new FileReader();r.onloadend=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(b)})}
+async function sendAudio(){
+  try{
+    const blob=new Blob(chunks,{type:'audio/webm'}), audio=await blob64(blob);
+    const key=localStorage.getItem('raiz_gemini_key');
+    const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
+    const body={contents:[{parts:[{inlineData:{mimeType:'audio/webm',data:audio}},
+      {text:'افهم الأمر الصوتي وأجب بإخراج إبداعي منظم بصيغة Markdown.'}]}],
+      systemInstruction:{parts:[{text:systemPrompt()}]}};
+    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const j=await r.json();
+    deliver(j.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('\n').trim()||'_لم ألتقط أمرًا واضحًا._');
+  }catch(e){ fail(e); }
+}
+
+/* =================== VOICE OUTPUT (Web Speech API) =================== */
+function toggleVoice(){
+  RAIZ.voiceEnabled=!RAIZ.voiceEnabled;
+  localStorage.setItem('raiz_voice',RAIZ.voiceEnabled?'on':'off');
+  if(!RAIZ.voiceEnabled && window.speechSynthesis)speechSynthesis.cancel();
+  reflectVoice();
+}
+function reflectVoice(){
+  $('kd-voice').classList.toggle('ok',RAIZ.voiceEnabled);
+  $('voice-state').textContent=RAIZ.voiceEnabled?'مُفعّل':'صامت';
+}
+function speak(md,done){
+  if(!RAIZ.voiceEnabled||!('speechSynthesis' in window)){done&&done();return}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(plainText(md).slice(0,600));
+  u.lang='ar'; u.rate=.98; u.pitch=1;
+  const ar=speechSynthesis.getVoices().find(v=>/ar/i.test(v.lang));
+  if(ar)u.voice=ar;
+  u.onend=()=>done&&done();
+  speechSynthesis.speak(u);
+}
+
+/* =================== OUTPUT (Markdown is source of truth) =================== */
+function renderMarkdown(md){ $('md-out').innerHTML=mdToHtml(md); $('md-out').scrollTop=0; }
+function clearOutput(){ RAIZ.lastMarkdown=''; $('md-out').innerHTML=''; }
+async function copyMarkdown(){
+  if(!RAIZ.lastMarkdown)return;
+  try{await navigator.clipboard.writeText(RAIZ.lastMarkdown);
+    $('orb-msg').textContent='تم نسخ الـ Markdown.';}catch(e){}
+}
+function exportMarkdown(){
+  if(!RAIZ.lastMarkdown)return;
+  const name=($('ctx-name').value.trim()||'raiz-decision').replace(/\s+/g,'-');
+  const blob=new Blob([RAIZ.lastMarkdown],{type:'text/markdown'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=name+'.md'; a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* ---- minimal, dependency-free Markdown renderer ---- */
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function inline(s){
+  return esc(s)
+    .replace(/`([^`]+)`/g,'<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g,'<em>$1</em>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+}
+function mdToHtml(md){
+  const lines=(md||'').split('\n'); let html='',list=null,inCode=false,code='';
+  const closeList=()=>{if(list){html+=`</${list}>`;list=null}};
+  for(let raw of lines){
+    if(/^```/.test(raw)){
+      if(inCode){html+=`<pre><code>${esc(code)}</code></pre>`;code='';inCode=false}
+      else{closeList();inCode=true} continue;
+    }
+    if(inCode){code+=raw+'\n';continue}
+    const line=raw.trimEnd();
+    if(!line.trim()){closeList();continue}
+    let m;
+    if(m=line.match(/^(#{1,3})\s+(.*)/)){closeList();const n=m[1].length;html+=`<h${n}>${inline(m[2])}</h${n}>`;continue}
+    if(/^(\-\-\-|\*\*\*|___)\s*$/.test(line)){closeList();html+='<hr>';continue}
+    if(m=line.match(/^>\s?(.*)/)){closeList();html+=`<blockquote>${inline(m[1])}</blockquote>`;continue}
+    if(m=line.match(/^\s*[-*+]\s+(.*)/)){if(list!=='ul'){closeList();html+='<ul>';list='ul'}html+=`<li>${inline(m[1])}</li>`;continue}
+    if(m=line.match(/^\s*\d+\.\s+(.*)/)){if(list!=='ol'){closeList();html+='<ol>';list='ol'}html+=`<li>${inline(m[1])}</li>`;continue}
+    closeList(); html+=`<p>${inline(line)}</p>`;
+  }
+  if(inCode)html+=`<pre><code>${esc(code)}</code></pre>`;
+  closeList(); return html;
+}
+function plainText(md){
+  return (md||'').replace(/```[\s\S]*?```/g,' ').replace(/[#>*_`\-]/g,' ')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g,'$1').replace(/\s+/g,' ').trim();
+}
+
+/* =================== STATE + STATUS =================== */
+const STATE_TARGET={idle:14,listening:80,processing:46,speaking:64,error:30};
+function setState(mode,label,msg){
+  RAIZ.mode=mode; RAIZ.orb.target=STATE_TARGET[mode]??14;
+  const c=orbColor(mode).dot;
+  $('dot').style.background=c; $('dot').style.boxShadow=`0 0 10px ${c}`;
+  if(label){$('status-label').textContent=label; $('orb-state').textContent=label}
+  if(msg){$('orb-msg').textContent=msg}
+}
+
+/* =================== ORB =================== */
+function resize(){
+  const dpr=window.devicePixelRatio||1, s=canvas.offsetWidth;
+  canvas.width=s*dpr; canvas.height=s*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+function orbColor(mode){
+  switch(mode){
+    case 'listening': return {stroke:'230,57,70', dot:'#e63946', warm:'rgba(230,57,70,'};
+    case 'processing':return {stroke:'127,176,214',dot:'#7fb0d6', warm:'rgba(127,176,214,'};
+    case 'speaking':  return {stroke:'226,184,103',dot:'#e2b867', warm:'rgba(226,184,103,'};
+    case 'error':     return {stroke:'230,57,70', dot:'#e63946', warm:'rgba(230,57,70,'};
+    default:          return {stroke:'226,184,103',dot:'#e2b867', warm:'rgba(226,184,103,'};
+  }
+}
+const PHASE_SPEED={idle:.010,listening:.05,processing:.024,speaking:.038,error:.07};
+function orbLoop(){
+  requestAnimationFrame(orbLoop);
+  // live frequency while listening, smoothed synthetic otherwise
+  if(recording && analyser){
+    analyser.getByteFrequencyData(dataArray);
+    RAIZ.orb.freq = dataArray.reduce((a,b)=>a+b,0)/dataArray.length;
+  }else{
+    const breathe = RAIZ.mode==='idle' ? Math.sin(RAIZ.orb.phase)*6 : 0;
+    RAIZ.orb.freq += ((RAIZ.orb.target+breathe) - RAIZ.orb.freq)*0.07;
+  }
+  RAIZ.orb.phase += PHASE_SPEED[RAIZ.mode]||.01;
+  paintOrb(RAIZ.orb.freq, RAIZ.orb.phase, RAIZ.mode);
+}
+function paintOrb(v,phase,mode){
+  const dpr=window.devicePixelRatio||1, w=canvas.width/dpr, h=canvas.height/dpr, x=w/2, y=h/2;
+  const col=orbColor(mode), R=Math.min(w,h)*.17, base=R + v*.42;
+  ctx.clearRect(0,0,w,h);
+  // outer aura
+  const aura=ctx.createRadialGradient(x,y,base*.6,x,y,base*2.1);
+  aura.addColorStop(0, col.warm+(.10+Math.min(v/255,.18))+')');
+  aura.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=aura; ctx.fillRect(0,0,w,h);
+  // organic membrane
+  ctx.beginPath();
+  for(let a=0;a<Math.PI*2;a+=.05){
+    const off=Math.sin(a*6+phase)*(v*.16)+Math.cos(a*3-phase*1.3)*(v*.08);
+    const r=base+off, px=x+Math.cos(a)*r, py=y+Math.sin(a)*r;
+    a===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+  }
+  ctx.closePath();
+  ctx.lineWidth=1.6;
+  ctx.strokeStyle=`rgba(${col.stroke},${.28+Math.min(v/255,.5)})`;
+  ctx.stroke();
+  const g=ctx.createRadialGradient(x,y,base*.2,x,y,base);
+  g.addColorStop(0,'rgba(20,20,22,.85)');
+  g.addColorStop(.55,'rgba(26,29,36,.5)');
+  g.addColorStop(1, col.warm+(.06+v*.0012)+')');
+  ctx.fillStyle=g; ctx.fill();
+  // inner core
+  ctx.beginPath(); ctx.arc(x,y,base*.18+v*.05,0,Math.PI*2);
+  ctx.fillStyle=col.warm+(.10+Math.min(v/255,.22))+')'; ctx.fill();
+}
+// some browsers populate the voices list asynchronously
+if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=()=>{};
 </script>
 </body>
 </html>
