@@ -465,8 +465,8 @@ async function playGeminiAudio(b64,mime){
 async function speakDual(md,done){
   if(!RAIZ.voiceEnabled){done&&done();return;}
   const spoken=plainText(md).slice(0,900);
-  // Build a conversational spoken version — brief, direct, Nabil-partner style
-  const ttsPrompt=`تحدّث مباشرةً كـ RAIZ إلى نبيل بالعربية، كشريك إبداعي مقرّب. لخّص جوهر هذا القرار في جملتين أو ثلاث بأسلوب مباشر وصادق:\n\n${spoken}`;
+  // Show Mode: one sharp sentence — live show context (reach, minutes left, etc.)
+  const ttsPrompt=`أنت RAIZ. ردّ على نبيل بجملة واحدة قصيرة ومباشرة بالعربية، كما يُجيب مقدّم برنامج مباشر. لا توضيحات، لا مقدمات. فقط الجوهر:\n\n${spoken}`;
   try{
     const audio=await callGeminiTTS(ttsPrompt);
     if(audio){await playGeminiAudio(audio.data,audio.mime);done&&done();return;}
