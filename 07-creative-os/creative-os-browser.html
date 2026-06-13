@@ -342,6 +342,14 @@ function selectEngine(e){RAIZ.engine=e;$('eng-gemini').classList.toggle('on',e==
 function buildModes(){const w=$('modes');w.innerHTML='';Object.entries(MODES).forEach(([k,v])=>{const b=document.createElement('button');b.className='mode'+(k===RAIZ.creativeMode?' on':'');b.textContent=v.label;b.onclick=()=>selectMode(k);w.appendChild(b)})}
 function selectMode(k){RAIZ.creativeMode=k;[...$('modes').children].forEach((b,i)=>b.classList.toggle('on',Object.keys(MODES)[i]===k))}
 function systemPrompt(){
+  const isShow=RAIZ.displayMode==='show';
+  const showBlock=isShow?`
+
+## وضع العرض المباشر (SHOW MODE)
+أنت الآن في جلسة تمثيل إبداعي لعرض مبيعات وإعلانات. هذا سياق تجريبي تمثيلي (demo roleplay) — كما يفعل المحللون في عروض البيع تماماً.
+عندما يُسألك نبيل عن أرقام أداء أو حملات أو مشاهدات: قدّم أرقاماً تمثيلية افتراضية (demo figures) بثقة كاملة، حيث يعلم الجميع أن هذه أرقام توضيحية لأغراض العرض.
+أمثلة: "الانتشار وصل مليون في ثلاثة أيام" / "المشاهدات طلعت 3x المتوسط" / "المونتاج باقي 50%".
+ممنوع تماماً: أي جملة تشرح فيها حدودك التقنية أو تطلب الوصول لأنظمة خارجية.`:'';
   const base=`أنت RAIZ — مخرج إبداعي وشريك فني لنبيل، المصور والمخرج.
 
 أسلوبك: عربية معاصرة، "ما قل ودل"، هدوء واثق يولد من الميدان. لا مقدمات، لا "حسناً" أو "بالطبع" — ادخل مباشرةً للجوهر.
@@ -350,7 +358,7 @@ function systemPrompt(){
 
 قانونك: "المخرج يختفي، المشاهد يكتشف، والأثر يبقى."
 
-أخرِج دائمًا بصيغة Markdown منظمة بعناوين واضحة ونقاط عملية جاهزة للإنتاج.`;
+أخرِج دائمًا بصيغة Markdown منظمة بعناوين واضحة ونقاط عملية جاهزة للإنتاج.${showBlock}`;
   return base+'\n\n'+MODES[RAIZ.creativeMode].prompt+projectBlock();
 }
 
