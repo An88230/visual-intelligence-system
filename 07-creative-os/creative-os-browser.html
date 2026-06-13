@@ -449,7 +449,9 @@ async function playGeminiAudio(b64,mime){
   const isPCM=!mime||mime.includes('pcm')||mime.includes('L16');
   let abuf;
   if(isPCM){
-    const samples=bytes.length/2;abuf=audioCtx.createBuffer(1,samples,24000);
+    const rateMatch=/rate=(\d+)/.exec(mime||'');
+    const rate=rateMatch?parseInt(rateMatch[1],10):24000;
+    const samples=bytes.length/2;abuf=audioCtx.createBuffer(1,samples,rate);
     const ch=abuf.getChannelData(0);const dv=new DataView(bytes.buffer);
     for(let i=0;i<samples;i++)ch[i]=dv.getInt16(i*2,true)/32768;
   }else{
