@@ -176,7 +176,10 @@ body.show .os{grid-template-columns:0 1fr 0;grid-template-rows:auto 1fr auto}
 body.show .side.left,
 body.show .deck,
 body.show .keys-row,
-body.show .modes{display:none}
+body.show .modes,
+body.show #eng-gemini,
+body.show #eng-gpt,
+body.show #keys-chip{display:none}
 body.show .side.right{
   position:fixed; top:50%; left:var(--space); transform:translateY(-50%);
   width:min(340px,32vw); max-height:74vh; z-index:5;
@@ -227,7 +230,7 @@ body.show .show-mic{display:flex;align-items:center;justify-content:center;gap:.
       <div class="chip on" id="eng-gemini" onclick="selectEngine('gemini')">GEMINI <span class="k">يسمع</span></div>
       <div class="chip" id="eng-gpt" onclick="selectEngine('gpt')">GPT <span class="k">يكتب</span></div>
       <div class="chip" id="show-toggle" onclick="toggleDisplay()">SHOW MODE</div>
-      <div class="chip" onclick="openSettings()">⚙ KEYS</div>
+      <div class="chip" id="keys-chip" onclick="openSettings()">⚙ KEYS</div>
     </div>
     <div class="status"><span class="dot" id="dot"></span><span id="status-label">STANDING BY</span></div>
   </header>
