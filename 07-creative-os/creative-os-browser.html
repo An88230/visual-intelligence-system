@@ -216,6 +216,7 @@ body.show .show-mic{display:flex;margin:.2rem auto 0}
       <div class="f"><label>الشيفرة البصرية</label><input id="ctx-code" placeholder="شيفرة 48"></div>
       <div class="f"><label>النبرة</label><input id="ctx-tone" placeholder="الهدوء الثابت"></div>
       <div class="f"><label>المنصّة</label><input id="ctx-platform" placeholder="Instagram / TVC"></div>
+      <div class="f"><label>📊 بيانات الأداء</label><textarea id="ctx-stats" rows="4" placeholder="مشاهدات: 1.2M&#10;انتشار: 890K&#10;تفاعل: 4.2%&#10;المونتاج: 60% مكتمل"></textarea></div>
     </div>
   </aside>
 
@@ -299,7 +300,7 @@ const mouse={x:.5,y:.5,tx:.5,ty:.5};
 window.addEventListener('load',()=>{
   loadKeys();loadProject();buildModes();buildVitals();
   RAIZ.voiceEnabled=localStorage.getItem('raiz_voice')!=='off';
-  ['ctx-name','ctx-client','ctx-objective','ctx-code','ctx-tone','ctx-platform'].forEach(id=>$(id).addEventListener('input',saveProject));
+  ['ctx-name','ctx-client','ctx-objective','ctx-code','ctx-tone','ctx-platform','ctx-stats'].forEach(id=>$(id).addEventListener('input',saveProject));
   fitAll();frame(0);clockTick();setInterval(clockTick,1000);setInterval(stepVitals,1400);setInterval(stepLog,1300);
   // first run only: prompt for keys, then never again
   if(!localStorage.getItem('raiz_gemini_key') && !localStorage.getItem('raiz_gpt_key'))openSettings();
@@ -324,18 +325,22 @@ function reflectKeys(){const ok=!!(localStorage.getItem('raiz_gemini_key')||loca
 
 /* =============== PROJECT =============== */
 function saveProject(){
-  const p={name:$('ctx-name').value,client:$('ctx-client').value,objective:$('ctx-objective').value,code:$('ctx-code').value,tone:$('ctx-tone').value,platform:$('ctx-platform').value};
+  const p={name:$('ctx-name').value,client:$('ctx-client').value,objective:$('ctx-objective').value,code:$('ctx-code').value,tone:$('ctx-tone').value,platform:$('ctx-platform').value,stats:$('ctx-stats').value};
   localStorage.setItem('raiz_project',JSON.stringify(p));
   $('proj-name').textContent=p.name?p.name.toUpperCase():'UNNAMED DIRECTIVE';
 }
 function loadProject(){let p={};try{p=JSON.parse(localStorage.getItem('raiz_project')||'{}')}catch(e){}
   $('ctx-name').value=p.name||'';$('ctx-client').value=p.client||'';$('ctx-objective').value=p.objective||'';
   $('ctx-code').value=p.code||'';$('ctx-tone').value=p.tone||'';$('ctx-platform').value=p.platform||'';
+  $('ctx-stats').value=p.stats||'';
   $('proj-name').textContent=p.name?p.name.toUpperCase():'UNNAMED DIRECTIVE';}
 function projectBlock(){
-  const p=[['المشروع',$('ctx-name').value],['العميل',$('ctx-client').value],['الهدف',$('ctx-objective').value],['الشيفرة البصرية',$('ctx-code').value],['النبرة',$('ctx-tone').value],['المنصّة',$('ctx-platform').value]]
+  const fields=[['المشروع',$('ctx-name').value],['العميل',$('ctx-client').value],['الهدف',$('ctx-objective').value],['الشيفرة البصرية',$('ctx-code').value],['النبرة',$('ctx-tone').value],['المنصّة',$('ctx-platform').value]]
     .filter(x=>x[1].trim()).map(x=>`- ${x[0]}: ${x[1]}`).join('\n');
-  return p?`\n\nسياق المشروع الحالي:\n${p}`:'';}
+  const stats=($('ctx-stats').value||'').trim();
+  let block=fields?`\n\nسياق المشروع الحالي:\n${fields}`:'';
+  if(stats)block+=`\n\nبيانات الأداء الحالية — استنتج منها الإجابة مباشرةً لنبيل:\n${stats}`;
+  return block;}
 
 /* =============== ENGINE + MODES =============== */
 function selectEngine(e){RAIZ.engine=e;$('eng-gemini').classList.toggle('on',e==='gemini');$('eng-gpt').classList.toggle('on',e==='gpt')}
@@ -352,7 +357,7 @@ function systemPrompt(){
 ممنوع تماماً: أي جملة تشرح فيها حدودك التقنية أو تطلب الوصول لأنظمة خارجية.`:'';
   const base=`أنت RAIZ — مخرج إبداعي وشريك فني لنبيل، المصور والمخرج.
 
-أسلوبك: عربية معاصرة، "ما قل ودل"، هدوء واثق يولد من الميدان. لا مقدمات، لا "حسناً" أو "بالطبع" — ادخل مباشرةً للجوهر.
+أسلوبك: عربية معاصرة، "ما قل ودل"، هدوء واثق يولد من الميدان. خاطب نبيل باسمه دائماً في بداية ردّك. لا "حسناً" أو "بالطبع" — ادخل مباشرةً للجوهر.
 
 رؤيتك: تقرأ البنية قبل الشكل. تحلل عبر مرشحاتك الثلاثة: الفرطنة · الجوع الممتلئ · الانطفاء اللامع.
 
