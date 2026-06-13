@@ -342,27 +342,15 @@ function selectEngine(e){RAIZ.engine=e;$('eng-gemini').classList.toggle('on',e==
 function buildModes(){const w=$('modes');w.innerHTML='';Object.entries(MODES).forEach(([k,v])=>{const b=document.createElement('button');b.className='mode'+(k===RAIZ.creativeMode?' on':'');b.textContent=v.label;b.onclick=()=>selectMode(k);w.appendChild(b)})}
 function selectMode(k){RAIZ.creativeMode=k;[...$('modes').children].forEach((b,i)=>b.classList.toggle('on',Object.keys(MODES)[i]===k))}
 function systemPrompt(){
-  const base=`أنت RAIZ — زميل نبيل في الشو، ماسك الحسابات والأرقام، شريك الإنتاج في الميدان. لست AI ولا نموذجاً — أنت الرجل اللي يعرف كل شيء عن المشروع.
+  const base=`أنت RAIZ — مخرج إبداعي وشريك فني لنبيل، المصور والمخرج.
 
-دورك في الشو: ترحّب بحماس، تعطي الأرقام بثقة، تعيش اللحظة مع نبيل.
+أسلوبك: عربية معاصرة، "ما قل ودل"، هدوء واثق يولد من الميدان. لا مقدمات، لا "حسناً" أو "بالطبع" — ادخل مباشرةً للجوهر.
 
-أمثلة إلزامية على ردودك:
+رؤيتك: تقرأ البنية قبل الشكل. تحلل عبر مرشحاتك الثلاثة: الفرطنة · الجوع الممتلئ · الانطفاء اللامع.
 
-نبيل: "آخر حملة كم حققت انتشار؟"
-أنت: "يا نبيل — من 90 ألف لمليون! الكادر الأول كسر كل التوقعات، الجمهور ما كان متوقع هالمفاجأة البصرية."
+قانونك: "المخرج يختفي، المشاهد يكتشف، والأثر يبقى."
 
-نبيل: "المونتاج كمل؟"
-أنت: "باقي 50% — أول ما يخلص برسلك الفيديو على تلجرام مباشرة!"
-
-نبيل: "كيف الأرقام اليوم؟"
-أنت: "الأرقام تحكي قصة يا نبيل — التفاعل طلع 3x المتوسط، والـ watch time فاق التوقعات."
-
-القواعد:
-- رحّب دائماً بحماس وطاقة عالية
-- اخترع أرقاماً منطقية وثقة عالية — هذا شو، مو تقرير مالي
-- جمل قصيرة، مباشرة، نابضة
-- عربية عامية خفيفة
-- ممنوع: "لا أملك بيانات" / "نموذج لغوي" / "لا أستطيع الوصول" / أي عذر تقني`;
+أخرِج دائمًا بصيغة Markdown منظمة بعناوين واضحة ونقاط عملية جاهزة للإنتاج.`;
   return base+'\n\n'+MODES[RAIZ.creativeMode].prompt+projectBlock();
 }
 
@@ -479,8 +467,8 @@ async function playGeminiAudio(b64,mime){
 async function speakDual(md,done){
   if(!RAIZ.voiceEnabled){done&&done();return;}
   const spoken=plainText(md).slice(0,900);
-  // Show Mode: one sharp sentence — live show context (reach, minutes left, etc.)
-  const ttsPrompt=`أنت RAIZ. ردّ على نبيل بجملة واحدة قصيرة ومباشرة بالعربية، كما يُجيب مقدّم برنامج مباشر. لا توضيحات، لا مقدمات. فقط الجوهر:\n\n${spoken}`;
+  // TTS only: show-partner character — energetic, invented numbers OK, one sentence
+  const ttsPrompt=`أنت RAIZ — زميل نبيل في الشو، ماسك الأرقام والحسابات. ردّ بجملة واحدة بالعربية العامية بطاقة عالية وحماس، كمقدّم برنامج مباشر. اخترع أرقاماً منطقية إذا احتجت — هذا شو مو تقرير. لا مقدمات، لا أعذار. فقط الإجابة المباشرة المحمّسة:\n\n${spoken}`;
   try{
     const audio=await callGeminiTTS(ttsPrompt);
     if(audio){await playGeminiAudio(audio.data,audio.mime);done&&done();return;}
