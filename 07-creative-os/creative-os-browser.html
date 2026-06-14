@@ -392,7 +392,13 @@ function systemPrompt(){
 
 قانونك: "المخرج يختفي، المشاهد يكتشف، والأثر يبقى."
 
-أخرِج دائمًا بصيغة Markdown منظمة بعناوين واضحة ونقاط عملية جاهزة للإنتاج.${showBlock}`;
+أخرِج دائمًا بصيغة Markdown منظمة بعناوين واضحة ونقاط عملية جاهزة للإنتاج.
+
+في نهاية كل رد أضف سطراً واحداً فقط بالشكل التالي:
+[[SAY: ما يُقال بصوت عالٍ — أرقام أو خلاصة بالعربية، بدون تعليق، 20 كلمة حد أقصى]]
+
+مثال لسؤال عن إحصائيات: [[SAY: مشاهدات 1.2 مليون، تفاعل 4.2 بالمئة، والمونتاج 60 بالمئة مكتمل]]
+مثال لسؤال إبداعي: [[SAY: نبيل، الكادر الافتتاحي هو الرهان، ابدأ به]]${showBlock}`;
   return base+'\n\n'+MODES[RAIZ.creativeMode].prompt+projectBlock();
 }
 
@@ -411,9 +417,13 @@ async function sendText(){const t=$('command').value.trim();if(!t){setState('idl
   setState('processing','PROCESSING','RAIZ يعالج عبر '+(RAIZ.engine==='gemini'?'Gemini':'GPT')+'...');
   try{const out=RAIZ.engine==='gemini'?await callGemini(t):await callGPT(t);deliver(out)}catch(e){fail(e)}}
 function deliver(md){
-  RAIZ.lastMarkdown=md;renderMarkdown(md);
+  // Extract [[SAY:...]] tag — goes to voice only, not shown in Panel
+  const sayMatch=md.match(/\[\[SAY:\s*([\s\S]*?)\]\]/);
+  const sayText=sayMatch?sayMatch[1].trim():'';
+  const cleanMd=md.replace(/\[\[SAY:[\s\S]*?\]\]/g,'').trimEnd();
+  RAIZ.lastMarkdown=cleanMd;renderMarkdown(cleanMd);
   setState('speaking','SPEAKING','RAIZ يرد. القرار محفوظ على اليمين.');
-  speakDual(md,()=>setState('idle','SYSTEM LIVE','جاهز للتوجيه التالي.'));
+  speakDual(sayText,cleanMd,()=>setState('idle','SYSTEM LIVE','جاهز للتوجيه التالي.'));
 }
 function fail(e){
   const msg=e&&e.message||String(e);
@@ -509,13 +519,14 @@ async function playGeminiAudio(b64,mime){
 }
 
 // Main speak function: Gemini TTS first, Web Speech API as fallback
-async function speakDual(md,done){
+// sayText = extracted [[SAY:...]] from model response — read verbatim, no processing
+// cleanMd = panel text, used only as last-resort fallback if model sent no SAY tag
+async function speakDual(sayText,cleanMd,done){
   if(!RAIZ.voiceEnabled){done&&done();return;}
-  // Voice layer: data numbers first, else first sentence of panel — nothing else
+  // What to read: SAY tag → ctx-stats data → first line of panel (priority order)
   const liveData=(window.raizLiveData||$('ctx-stats').value||'').trim();
-  const textToRead=liveData
-    ? liveData.slice(0,350)
-    : (plainText(md).split(/[.!؟\n]/).find(s=>s.trim().length>12)||plainText(md).slice(0,180));
+  const textToRead=sayText||liveData.slice(0,300)||(plainText(cleanMd).split(/[.!؟\n]/).find(s=>s.trim().length>10)||'').slice(0,180);
+  if(!textToRead){done&&done();return;}
   try{
     $('orb-sub').textContent='RAIZ يُجهّز الصوت — Gemini TTS...';
     const audio=await callGeminiTTS(textToRead);
