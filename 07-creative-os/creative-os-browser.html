@@ -467,12 +467,14 @@ async function sendAudio(){try{const blob=new Blob(chunks,{type:'audio/webm'}),a
 // Ask Gemini to respond as audio directly (responseModalities: AUDIO)
 // Model: gemini-2.5-flash-preview-tts (or update to newer TTS model here)
 const TTS_MODEL='gemini-2.5-flash-preview-tts';
-async function callGeminiTTS(spokenText){
+async function callGeminiTTS(textToRead){
   const key=localStorage.getItem('raiz_gemini_key');
   if(!key)return null;
   const url=`https://generativelanguage.googleapis.com/v1beta/models/${TTS_MODEL}:generateContent?key=${key}`;
   const body={
-    contents:[{parts:[{text:spokenText}]}],
+    // systemInstruction tells the model HOW to speak — not included in the audio output
+    system_instruction:{parts:[{text:'أنت مذيع. اقرأ النص المُعطى لك فقط بصوت واضح وطبيعي بالعربية. لا تضيف كلاماً.'}]},
+    contents:[{parts:[{text:textToRead}]}],
     generationConfig:{
       responseModalities:['AUDIO'],
       speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName:'Aoede'}}}
@@ -509,12 +511,14 @@ async function playGeminiAudio(b64,mime){
 // Main speak function: Gemini TTS first, Web Speech API as fallback
 async function speakDual(md,done){
   if(!RAIZ.voiceEnabled){done&&done();return;}
-  const spoken=plainText(md).slice(0,900);
-  // Voice derives from Panel text — no re-generation, no invented numbers
-  const ttsPrompt=`لخّص هذا القرار في جملة واحدة طبيعية بالعربية، بنبرة واثقة وهادئة. لا تغيّر أي أرقام، لا تضف معلومات جديدة. فقط جوهر ما يلي بالضبط:\n\n${spoken}`;
+  // Voice layer: data numbers first, else first sentence of panel — nothing else
+  const liveData=(window.raizLiveData||$('ctx-stats').value||'').trim();
+  const textToRead=liveData
+    ? liveData.slice(0,350)
+    : (plainText(md).split(/[.!؟\n]/).find(s=>s.trim().length>12)||plainText(md).slice(0,180));
   try{
     $('orb-sub').textContent='RAIZ يُجهّز الصوت — Gemini TTS...';
-    const audio=await callGeminiTTS(ttsPrompt);
+    const audio=await callGeminiTTS(textToRead);
     if(audio){
       $('orb-sub').textContent='RAIZ يتكلم — Gemini TTS ✓';
       await playGeminiAudio(audio.data,audio.mime);
@@ -529,7 +533,7 @@ async function speakDual(md,done){
   if(!('speechSynthesis'in window)){done&&done();return;}
   $('orb-sub').textContent='RAIZ يتكلم — Browser TTS';
   speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(spoken.slice(0,600));
+  const u=new SpeechSynthesisUtterance(textToRead.slice(0,500));
   u.lang='ar';u.rate=.95;
   const ar=speechSynthesis.getVoices().find(v=>/ar/i.test(v.lang));
   if(ar)u.voice=ar;u.onend=()=>done&&done();speechSynthesis.speak(u);
