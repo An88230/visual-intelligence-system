@@ -294,6 +294,9 @@ const MODES={
 };
 const $=id=>document.getElementById(id);
 let audioCtx,analyser,dataArray,stream,recorder,chunks=[],recording=false;
+// Live data feed — null = manual (ctx-stats). Local server writes here later:
+//   window.raizLiveData = "مشاهدات: 1.2M\nانتشار: 890K\nمونتاج: 60%"
+window.raizLiveData=null;
 const mouse={x:.5,y:.5,tx:.5,ty:.5};
 
 /* =============== BOOT =============== */
@@ -337,7 +340,8 @@ function loadProject(){let p={};try{p=JSON.parse(localStorage.getItem('raiz_proj
 function projectBlock(){
   const fields=[['المشروع',$('ctx-name').value],['العميل',$('ctx-client').value],['الهدف',$('ctx-objective').value],['الشيفرة البصرية',$('ctx-code').value],['النبرة',$('ctx-tone').value],['المنصّة',$('ctx-platform').value]]
     .filter(x=>x[1].trim()).map(x=>`- ${x[0]}: ${x[1]}`).join('\n');
-  const stats=($('ctx-stats').value||'').trim();
+  // Server writes to window.raizLiveData; manual fallback is ctx-stats
+  const stats=(window.raizLiveData||$('ctx-stats').value||'').trim();
   let block=fields?`\n\nسياق المشروع الحالي:\n${fields}`:'';
   if(stats)block+=`\n\nبيانات الأداء الحالية — استنتج منها الإجابة مباشرةً لنبيل:\n${stats}`;
   return block;}
@@ -480,8 +484,8 @@ async function playGeminiAudio(b64,mime){
 async function speakDual(md,done){
   if(!RAIZ.voiceEnabled){done&&done();return;}
   const spoken=plainText(md).slice(0,900);
-  // TTS only: show-partner character — energetic, invented numbers OK, one sentence
-  const ttsPrompt=`أنت RAIZ — زميل نبيل في الشو، ماسك الأرقام والحسابات. ردّ بجملة واحدة بالعربية العامية بطاقة عالية وحماس، كمقدّم برنامج مباشر. اخترع أرقاماً منطقية إذا احتجت — هذا شو مو تقرير. لا مقدمات، لا أعذار. فقط الإجابة المباشرة المحمّسة:\n\n${spoken}`;
+  // Voice derives from Panel text — no re-generation, no invented numbers
+  const ttsPrompt=`لخّص هذا القرار في جملة واحدة طبيعية بالعربية، بنبرة واثقة وهادئة. لا تغيّر أي أرقام، لا تضف معلومات جديدة. فقط جوهر ما يلي بالضبط:\n\n${spoken}`;
   try{
     const audio=await callGeminiTTS(ttsPrompt);
     if(audio){await playGeminiAudio(audio.data,audio.mime);done&&done();return;}
@@ -501,7 +505,8 @@ function clearOutput(){RAIZ.lastMarkdown='';$('md-out').innerHTML=''}
 async function copyMarkdown(){if(!RAIZ.lastMarkdown)return;try{await navigator.clipboard.writeText(RAIZ.lastMarkdown);$('orb-sub').textContent='تم نسخ الـ Markdown.'}catch(e){}}
 function exportMarkdown(){if(!RAIZ.lastMarkdown)return;const name=($('ctx-name').value.trim()||'raiz-decision').replace(/\s+/g,'-');const b=new Blob([RAIZ.lastMarkdown],{type:'text/markdown'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name+'.md';a.click();URL.revokeObjectURL(a.href)}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function inl(s){return esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\*([^*]+)\*/g,'<em>$1</em>').replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>')}
+function safeHref(u){return/^https?:|^mailto:/i.test(u.trim())?u.trim():'#'}
+function inl(s){return esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\*([^*]+)\*/g,'<em>$1</em>').replace(/\[([^\]]+)\]\(([^)]+)\)/g,(_,t,u)=>`<a href="${safeHref(u)}" target="_blank" rel="noopener">${t}</a>`)}
 function mdToHtml(md){const lines=(md||'').split('\n');let h='',list=null,inC=false,code='';const cl=()=>{if(list){h+=`</${list}>`;list=null}};
   for(let raw of lines){if(/^```/.test(raw)){if(inC){h+=`<pre><code>${esc(code)}</code></pre>`;code='';inC=false}else{cl();inC=true}continue}
     if(inC){code+=raw+'\n';continue}const line=raw.trimEnd();if(!line.trim()){cl();continue}let m;
