@@ -271,7 +271,12 @@ body.show .show-mic{display:flex;margin:.2rem auto 0}
     <div class="f"><label>Gemini API Key</label><input type="password" id="gemini-key" placeholder="يُحفظ في هذا المتصفح فقط"></div>
     <div class="f"><label>GPT / OpenAI API Key</label><input type="password" id="gpt-key" placeholder="يُحفظ في هذا المتصفح فقط"></div>
     <div class="note">المفاتيح تبقى داخل هذا المتصفح فقط. تُدخَل مرة واحدة وتبقى محفوظة — لا backend، لا مشاركة، لا رفع.</div>
-    <div class="row"><button class="mini" onclick="closeSettings()">إغلاق</button><button class="send" style="padding:.5rem 1.2rem" onclick="saveKeys()">تفعيل النظام</button></div>
+    <div id="voice-test-result" style="font-family:var(--mono);font-size:.6rem;color:var(--amber);min-height:1.2rem;line-height:1.8"></div>
+    <div class="row">
+      <button class="mini" onclick="closeSettings()">إغلاق</button>
+      <button class="mini" onclick="testVoice()">▶ اختبار الصوت</button>
+      <button class="send" style="padding:.5rem 1.2rem" onclick="saveKeys()">تفعيل النظام</button>
+    </div>
   </div>
 </div>
 
@@ -317,6 +322,26 @@ window.addEventListener('keydown',e=>{
 /* =============== KEYS =============== */
 function openSettings(){$('settings').classList.add('open')}
 function closeSettings(){$('settings').classList.remove('open')}
+async function testVoice(){
+  const res=$('voice-test-result');
+  res.textContent='⏳ جاري الاختبار...';
+  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==='suspended')await audioCtx.resume();
+  try{
+    const audio=await callGeminiTTS('مرحباً نبيل، صوت RAIZ يعمل بشكل مثالي.');
+    if(audio){
+      res.style.color='var(--ice)';
+      res.textContent='✓ Gemini TTS يعمل — الصوت جاهز';
+      await playGeminiAudio(audio.data,audio.mime);
+    } else {
+      res.style.color='var(--amber)';
+      res.textContent='⚠ TTS رجع فارغاً — لا صوت في الرد';
+    }
+  }catch(e){
+    res.style.color='var(--red)';
+    res.textContent='✗ '+((e&&e.message)||'خطأ غير معروف').slice(0,120);
+  }
+}
 function saveKeys(){
   const g=$('gemini-key').value.trim(),o=$('gpt-key').value.trim();
   if(g)localStorage.setItem('raiz_gemini_key',g);
