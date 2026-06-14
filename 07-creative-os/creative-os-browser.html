@@ -380,6 +380,9 @@ function toggleDisplay(){RAIZ.displayMode=RAIZ.displayMode==='show'?'director':'
 
 /* =============== ROUTING =============== */
 async function sendText(){const t=$('command').value.trim();if(!t){setState('idle','SYSTEM LIVE','اكتب أمرًا أولًا.');return}
+  // Unlock AudioContext on user gesture so TTS can play after async call
+  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==='suspended')audioCtx.resume();
   setState('processing','PROCESSING','RAIZ يعالج عبر '+(RAIZ.engine==='gemini'?'Gemini':'GPT')+'...');
   try{const out=RAIZ.engine==='gemini'?await callGemini(t):await callGPT(t);deliver(out)}catch(e){fail(e)}}
 function deliver(md){
@@ -450,13 +453,11 @@ async function callGeminiTTS(spokenText){
       speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName:'Aoede'}}}
     }
   };
-  try{
-    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-    const j=await r.json();
-    if(j.error)return null;
-    const part=j.candidates?.[0]?.content?.parts?.find(p=>p.inlineData?.mimeType?.includes('audio'));
-    return part?{data:part.inlineData.data,mime:part.inlineData.mimeType}:null;
-  }catch(e){return null;}
+  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const j=await r.json();
+  if(j.error)throw new Error(`TTS: ${j.error.message||JSON.stringify(j.error)}`);
+  const part=j.candidates?.[0]?.content?.parts?.find(p=>p.inlineData?.mimeType?.includes('audio'));
+  return part?{data:part.inlineData.data,mime:part.inlineData.mimeType}:null;
 }
 
 // Play raw PCM audio returned by Gemini TTS (16-bit, 24 kHz, mono)
@@ -487,11 +488,21 @@ async function speakDual(md,done){
   // Voice derives from Panel text — no re-generation, no invented numbers
   const ttsPrompt=`لخّص هذا القرار في جملة واحدة طبيعية بالعربية، بنبرة واثقة وهادئة. لا تغيّر أي أرقام، لا تضف معلومات جديدة. فقط جوهر ما يلي بالضبط:\n\n${spoken}`;
   try{
+    $('orb-sub').textContent='RAIZ يُجهّز الصوت — Gemini TTS...';
     const audio=await callGeminiTTS(ttsPrompt);
-    if(audio){await playGeminiAudio(audio.data,audio.mime);done&&done();return;}
-  }catch(e){}
+    if(audio){
+      $('orb-sub').textContent='RAIZ يتكلم — Gemini TTS ✓';
+      await playGeminiAudio(audio.data,audio.mime);
+      done&&done();return;
+    }
+  }catch(e){
+    // Surface TTS error so user can diagnose
+    console.warn('[RAIZ TTS]',e&&e.message);
+    $('orb-sub').textContent=`TTS: ${(e&&e.message||'فشل').slice(0,60)} — تحويل للمتصفح`;
+  }
   // Fallback: Web Speech API
   if(!('speechSynthesis'in window)){done&&done();return;}
+  $('orb-sub').textContent='RAIZ يتكلم — Browser TTS';
   speechSynthesis.cancel();
   const u=new SpeechSynthesisUtterance(spoken.slice(0,600));
   u.lang='ar';u.rate=.95;
