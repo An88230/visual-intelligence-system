@@ -13,7 +13,7 @@ This is a **visual thinking system** built over years of hands-on work in advert
 
 It contains:
 
-- **Visual Codes Dictionary** — 49 codes · a living archive
+- **Visual Codes Dictionary** — 50 codes · a living archive
 - **System Map** — the operating logic of the full repository
 - **Execution Layer** — translation templates from code to campaign, prompt, and VO
 - **Tool Layer** — local HTML tool for generating structured outputs
@@ -57,7 +57,8 @@ visual-intelligence-system/
 │
 ├── 01-visual-codes-dictionary/
 │   ├── README.md
-│   ├── visual-codes-dictionary.md    ← MASTER FILE (49 codes, bilingual)
+│   ├── visual-codes-dictionary.md    ← MASTER FILE (49 core codes, bilingual)
+│   ├── code-50-reinterpreting-behavior.md ← Code 50 standalone addition
 │   └── visual-codes-dictionary.jsx   ← Interactive React view
 │
 ├── 02-visual-ai-prompt-bible/
