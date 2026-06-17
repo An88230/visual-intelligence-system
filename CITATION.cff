@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+title: "Visual Intelligence System / قاموس الشيفرات البصرية"
+message: "If you use or reference this system, cite it as below."
+type: software
+authors:
+  - family-names: "Nabil"
+    given-names: "Ahmed"
+    alias: "Nabil88"
+url: "https://nabil88.art"
+repository-code: "https://github.com/An88230/visual-intelligence-system"
+abstract: "A creative visual intelligence framework by Nabil88, combining visual codes, Arabic poetics, prompt systems, execution templates, and creative operating logic for advertising and AI-assisted production."
+keywords:
+  - visual intelligence
+  - visual codes dictionary
+  - advertising direction
+  - Arabic creative systems
+  - AI prompt systems
+  - Nabil88
+version: "2.1.0-authorship-map"
+date-released: "2026-06-17"
