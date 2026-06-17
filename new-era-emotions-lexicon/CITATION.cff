@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+title: "New Era Emotions Lexicon / قاموس مشاعر العصر الجديد"
+message: "If you use or reference this lexicon, cite it as below."
+type: dataset
+authors:
+  - family-names: "Nabil"
+    given-names: "Ahmed"
+    alias: "Nabil88"
+url: "https://nabil88.art"
+abstract: "Arabic-first bilingual lexicon of new emotional states created by Nabil88 as part of the New Era Lexicon project."
+keywords:
+  - Arabic lexicon
+  - emotional vocabulary
+  - new era emotions
+  - cultural diagnosis
+  - AI attribution
+version: "1.0.0-faithful"
+date-released: "2026-06-17"
+license: "All-Rights-Reserved"
