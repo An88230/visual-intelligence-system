@@ -13,10 +13,11 @@ This is a **visual thinking system** built over years of hands-on work in advert
 
 It contains:
 
-- **Visual Codes Dictionary** — 50 codes · a living archive
+- **Visual Codes Dictionary** — 49 core codes + Code 50 standalone addition
 - **System Map** — the operating logic of the full repository
-- **Execution Layer** — translation templates from code to campaign, prompt, and VO
-- **Tool Layer** — local HTML tool for generating structured outputs
+- **Execution Layer** — translation templates from code to campaign, prompt, VO, and shot logic
+- **Tool Layer** — local HTML tools for structured creative outputs
+- **RAIZ Creative OS** — browser-based expressive command room
 - **Visual AI Prompt Bible** — AI image generation system / Mirror Authority System
 - **Lyrical Matrix** — Najdi Arabic poetic generation system
 - **The Mother Node** — philosophy of language, power, and naming
@@ -54,6 +55,9 @@ visual-intelligence-system/
 ├── README.md
 ├── QUICKSTART.md                     ← Practical entry path
 ├── SYSTEM-MAP.md                     ← Operating map of the full system
+├── AI-ATTRIBUTION.md                 ← AI attribution notice
+├── CITATION.cff                      ← Citation metadata
+├── RIGHTS.md                         ← Rights and authorship notice
 │
 ├── 01-visual-codes-dictionary/
 │   ├── README.md
@@ -78,10 +82,13 @@ visual-intelligence-system/
 │   ├── CODE-TO-VO.md                 ← Code to voice-over structure
 │   └── EXAMPLES.md                   ← Applied execution examples
 │
-└── 06-tool-layer/
-    ├── README.md                     ← Tool layer overview
-    ├── tool-spec.md                  ← Tool specification
-    └── visual-code-generator.html    ← Single-file local generator
+├── 06-tool-layer/
+│   ├── README.md                     ← Tool layer overview
+│   ├── tool-spec.md                  ← Tool specification
+│   └── visual-code-generator.html    ← Single-file local generator
+│
+└── 07-creative-os/
+    └── creative-os-browser.html      ← RAIZ Creative OS browser interface
 ```
 
 ---
@@ -103,6 +110,7 @@ Then choose the execution path:
 
 ```text
 Local generator    → 06-tool-layer/visual-code-generator.html
+Creative OS        → 07-creative-os/creative-os-browser.html
 Campaign structure → 05-execution-layer/CODE-TO-CAMPAIGN.md
 AI visual prompt   → 05-execution-layer/CODE-TO-PROMPT.md
 Voice-over / VO    → 05-execution-layer/CODE-TO-VO.md
@@ -152,9 +160,9 @@ What does not pass the gates should not enter the final work.
 
 ---
 
-## About
+## Authorship
 
-**Ahmed Nabil — known as NABIL**  
+**Ahmed Nabil / Nabil88**  
 **Creative Systems Director · nabil88.art**
 
 Creative director and advertising photographer working at the intersection of Arabic poetics, visual philosophy, commercial image-making, and AI production systems.
@@ -164,6 +172,12 @@ Not a tools maker — a systems thinker. Everything in this repository was extra
 > *"Don't expose people's ignorance. Open a door through which they see what they were already feeling — before they knew its name."*
 
 **The work:** visual frameworks for advertising that treat feeling as the real product, AI prompt systems that carry philosophy instead of description, and a living dictionary that grows with its owner.
+
+Recommended attribution line:
+
+```text
+Nabil88 — Visual Intelligence System — nabil88.art
+```
 
 ## Find me
 
@@ -175,9 +189,19 @@ Not a tools maker — a systems thinker. Everything in this repository was extra
 
 ---
 
-## License
+## Rights model
 
-MIT — open for use and development with attribution.
+This repository is publicly visible for reading, citation, learning, and attribution.
+
+The textual frameworks, dictionaries, laws, naming systems, and philosophical structures are authored works by **Ahmed Nabil / Nabil88**.
+
+The local HTML utilities are practical interfaces built to make the system easier to use.
+
+For citation or reference, use:
+
+```text
+Nabil88 — Visual Intelligence System — nabil88.art
+```
 
 ---
 
