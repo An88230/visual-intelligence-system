@@ -21,10 +21,10 @@ cd visual-intelligence-system
 cat SYSTEM-MAP.md
 ```
 
-The map explains how the four parts connect:
+The map explains how the seven layers connect:
 
 ```text
-Visual Codes Dictionary → Visual AI Prompt Bible → Lyrical Matrix → Mother Node
+Visual Codes Dictionary → Prompt Bible → Lyrical Matrix → Mother Node → Execution Layer → Tool Layer → RAIZ Creative OS
 ```
 
 Read it before editing or extending the system.
@@ -37,9 +37,15 @@ Read it before editing or extending the system.
 cat 01-visual-codes-dictionary/visual-codes-dictionary.md
 ```
 
-This is the master archive: **49 visual codes** extracted from lived moments, memory, sound, advertising, language, and human observation.
+This is the master archive: **49 core visual codes** extracted from lived moments, memory, sound, advertising, language, and human observation.
 
-Use it like this:
+Then read the standalone addition:
+
+```bash
+cat 01-visual-codes-dictionary/code-50-reinterpreting-behavior.md
+```
+
+Use the dictionary like this:
 
 1. Pick one code.
 2. Identify its emotional law.
@@ -55,6 +61,7 @@ Recommended starting codes:
 - `43 — 6 Law`
 - `48 — The Law of Inevitable Recognition`
 - `49 — The Mask's Decay`
+- `50 — Reinterpreting Behavior`
 
 ---
 
@@ -78,13 +85,78 @@ Paste the final prompt into:
 - DALL·E
 - Adobe Firefly
 - Stable Diffusion
+- Flux
 - Any cinematic AI image workflow
 
 Do not start with visual decoration. Start with the hidden human structure.
 
 ---
 
-## 5. Use the Lyrical Matrix
+## 5. Use the Execution Layer
+
+```bash
+cat 05-execution-layer/README.md
+```
+
+Use this folder when you need to convert a code into work:
+
+```text
+Code → Human State → Creative Structure → Campaign / Prompt / VO / Shot
+```
+
+Main templates:
+
+```text
+05-execution-layer/CODE-TO-CAMPAIGN.md
+05-execution-layer/CODE-TO-PROMPT.md
+05-execution-layer/CODE-TO-VO.md
+05-execution-layer/EXAMPLES.md
+```
+
+---
+
+## 6. Use the Tool Layer
+
+Open the local generator directly in a browser:
+
+```text
+06-tool-layer/visual-code-generator.html
+```
+
+Use it for fast structured drafts:
+
+```text
+Input → Code Logic → Campaign / Prompt / VO Output
+```
+
+The tool does not replace the dictionary.
+
+The dictionary is the source. The tool is the handle.
+
+---
+
+## 7. Use RAIZ Creative OS
+
+Open:
+
+```text
+07-creative-os/creative-os-browser.html
+```
+
+Use it as a browser-based creative command room when you need:
+
+- spatial creative direction
+- Arabic-first interface
+- decision framing
+- campaign thinking
+- show-mode pressure
+- visual operating atmosphere
+
+RAIZ Creative OS is the room where the system can be staged.
+
+---
+
+## 8. Use the Lyrical Matrix
 
 ```bash
 cat 03-lyrical-matrix/lyrical-matrix.md
@@ -100,7 +172,7 @@ What is the emotional state before it becomes language?
 
 ---
 
-## 6. Read The Mother Node
+## 9. Read The Mother Node
 
 ```bash
 cat 04-philosophy/mother-node.md
@@ -112,7 +184,7 @@ Read it when the work needs deeper positioning, not just better output.
 
 ---
 
-## 7. First practical exercise
+## 10. First practical exercise
 
 Choose one product, person, place, or campaign.
 
@@ -130,6 +202,22 @@ Then build one execution:
 
 ```text
 Code → Insight → Visual Direction → Prompt → Shot / Poster / Caption / VO
+```
+
+---
+
+## Authorship
+
+This system is authored by:
+
+```text
+Ahmed Nabil / Nabil88 — nabil88.art
+```
+
+Recommended attribution:
+
+```text
+Nabil88 — Visual Intelligence System — nabil88.art
 ```
 
 ---
