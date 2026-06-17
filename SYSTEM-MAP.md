@@ -9,18 +9,21 @@ It does not begin with tools.
 It begins with perception.
 
 ```text
-Human Feeling → Visual Code → Prompt System → Voice / Image / Campaign → Impact
+Human Feeling → Visual Code → Structure → Tool / Prompt / Voice / Campaign → Impact
 ```
 
 ---
 
-## The Four Main Layers
+## The Seven Main Layers
 
 ```text
 01 — Visual Codes Dictionary
 02 — Visual AI Prompt Bible
 03 — Lyrical Matrix
 04 — The Mother Node
+05 — Execution Layer
+06 — Tool Layer
+07 — RAIZ Creative OS
 ```
 
 Each layer has a different function. Together, they convert raw feeling into structured creative output.
@@ -33,7 +36,13 @@ Each layer has a different function. Together, they convert raw feeling into str
 
 The dictionary is the living archive.
 
-It contains **49 visual codes** extracted from memory, street sound, human behavior, advertising, language, silence, and lived observation.
+It contains **49 core visual codes** extracted from memory, street sound, human behavior, advertising, language, silence, and lived observation.
+
+**Code 50** exists as a standalone addition:
+
+```text
+01-visual-codes-dictionary/code-50-reinterpreting-behavior.md
+```
 
 Its role:
 
@@ -60,6 +69,7 @@ Core codes for system operation:
 43 — 6 Law
 48 — The Law of Inevitable Recognition
 49 — The Mask's Decay
+50 — Reinterpreting Behavior
 ```
 
 ---
@@ -157,6 +167,92 @@ It is the root file to return to when the work loses its center.
 
 ---
 
+## 05 — Execution Layer
+
+**Path:** `05-execution-layer/`
+
+The Execution Layer translates the system into usable creative outputs.
+
+Its role:
+
+```text
+Convert a code into campaign, prompt, VO, shot logic, or brief structure.
+```
+
+Use it when you need:
+
+- campaign concepts
+- visual directions
+- AI image prompts
+- voice-over scripts
+- shot lists
+- captions
+- presentation logic
+- creative briefs
+
+The original codes remain untouched. Execution is translation, not decoration.
+
+```text
+Visual Code → Human State → Creative Structure → Output
+```
+
+---
+
+## 06 — Tool Layer
+
+**Path:** `06-tool-layer/`
+
+The Tool Layer turns the system into local usable tools.
+
+Current tool:
+
+```text
+06-tool-layer/visual-code-generator.html
+```
+
+Its role:
+
+```text
+Make the system easier to use without replacing the system.
+```
+
+Use it when you need a fast structured draft for:
+
+- campaign
+- AI image prompt
+- voice-over
+
+The dictionary is the source. The tool is the handle.
+
+---
+
+## 07 — RAIZ Creative OS
+
+**Path:** `07-creative-os/creative-os-browser.html`
+
+RAIZ Creative OS is a browser-based expressive command room.
+
+Its role:
+
+```text
+Turn the system into an interface for live creative direction, decision, and show-mode thinking.
+```
+
+Use it when you need:
+
+- a spatial command room
+- Arabic-first creative interface
+- decision framing
+- campaign thinking
+- show-mode pressure
+- visual operating atmosphere
+
+It is not the whole system.
+
+It is the room where the system can be staged.
+
+---
+
 ## Operating Chain
 
 The system works best in this order:
@@ -165,7 +261,7 @@ The system works best in this order:
 1. Read the human state.
 2. Identify the visual code.
 3. Select the build chain.
-4. Convert the code into image, voice, or campaign structure.
+4. Convert the code into image, voice, campaign, tool, or OS structure.
 5. Remove decoration.
 6. Test the output against impact.
 ```
@@ -173,7 +269,7 @@ The system works best in this order:
 In practical form:
 
 ```text
-Feeling → Code → Structure → Prompt / Script / Shot → Execution → Impact Test
+Feeling → Code → Structure → Prompt / Script / Shot / Tool → Execution → Impact Test
 ```
 
 ---
@@ -212,22 +308,29 @@ What does not pass the gates should not enter the final work.
 ## Repository Logic
 
 ```text
-Dictionary = source of laws
-Prompt Bible = image execution engine
-Lyrical Matrix = voice execution engine
-Mother Node = philosophical root
-Quick Start = entry path
-System Map = navigation layer
+Dictionary      = source of laws
+Prompt Bible    = image execution engine
+Lyrical Matrix  = voice execution engine
+Mother Node     = philosophical root
+Execution Layer = translation layer
+Tool Layer      = local usable handle
+RAIZ Creative OS = expressive command room
+Quick Start     = entry path
+System Map      = navigation layer
 ```
 
 ---
 
-## Final Rule
+## Authorship Anchor
 
-Do not build from surface.
-
-Build from the inner structure.
+This system is authored and maintained by:
 
 ```text
-What is built from within cannot collapse from without.
+Ahmed Nabil / Nabil88 — nabil88.art
+```
+
+Recommended attribution:
+
+```text
+Nabil88 — Visual Intelligence System — nabil88.art
 ```
