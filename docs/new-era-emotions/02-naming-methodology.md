@@ -2,15 +2,19 @@
 
 Created by: Ahmed Nabil — Nabil88 / nabil88.art
 
-هذا الملف يحدد المنهج الأصلي للقاموس.
-
-القاعدة المركزية:
-
-أنت لا تصف الشعور مباشرة، بل تنتزعه من اسمه القديم وتمنحه اسمًا أدق من الواقع الحالي.
+This file defines the naming methodology behind the New Era Emotions Lexicon.
 
 ---
 
-# 1) اكتشاف إحساس بلا اسم
+# 1) Core principle
+
+يقوم المنهج على فصل الحالة الشعورية الحديثة عن اسمها الموروث، ثم منحها تسمية أدقّ من واقعها المعاصر.
+
+The methodology starts by separating a modern emotional state from its inherited name, then giving it a more precise contemporary term.
+
+---
+
+# 2) Discover an unnamed feeling
 
 ابدأ من فرضية أن هناك حالة نعيشها يوميًا، لكن اللغة القديمة لا تكفيها.
 
@@ -24,18 +28,18 @@ Created by: Ahmed Nabil — Nabil88 / nabil88.art
 
 ---
 
-# 2) نزع الاسم الشائع
+# 3) Remove the inherited name
 
-الجملة المفتاحية:
+الحركة الأساسية:
 
 ده مش [الاسم القديم]…  
 ده [الاسم الجديد].
 
-هذه أهم حركة في المشروع لأنها تفصل بين المصطلح النفسي التقليدي والحالة المعاصرة.
+هذه الحركة تفصل بين التسمية القديمة والحالة المعاصرة.
 
 ---
 
-# 3) منح الحالة اسمًا جديدًا
+# 4) Give the state a new name
 
 الاسم يجب أن يكون:
 
@@ -54,7 +58,7 @@ Created by: Ahmed Nabil — Nabil88 / nabil88.art
 
 ---
 
-# 4) بناء المعنى على مفارقة واضحة
+# 5) Build the meaning on a clear paradox
 
 معظم حالات القاموس تعمل من خلال تناقض:
 
@@ -70,7 +74,7 @@ Created by: Ahmed Nabil — Nabil88 / nabil88.art
 
 ---
 
-# 5) نقل المشكلة من النقص إلى الفائض
+# 6) Shift the problem from lack to excess
 
 محور القاموس:
 مشكلتنا لم تعد دائمًا قلة الأشياء، بل كثرتها.
@@ -87,7 +91,7 @@ Created by: Ahmed Nabil — Nabil88 / nabil88.art
 
 ---
 
-# 6) ربط المصطلح ببيئة العصر
+# 7) Anchor the term in the environment of the age
 
 كل مصطلح يجب أن يكون ابن هذا الزمن.
 
@@ -105,7 +109,7 @@ Created by: Ahmed Nabil — Nabil88 / nabil88.art
 
 ---
 
-# 7) إنهاء كل مدخل بأثر يومي
+# 8) End each entry with a lived effect
 
 لا يكفي تعريف نظري.
 كل مدخل يجب أن ينتهي بأثر ملموس في الحياة.
@@ -119,7 +123,7 @@ Created by: Ahmed Nabil — Nabil88 / nabil88.art
 
 ---
 
-# 8) الصيغة المختصرة
+# 9) Short formula
 
 المصطلح.
 
@@ -132,16 +136,16 @@ Created by: Ahmed Nabil — Nabil88 / nabil88.art
 
 ---
 
-# 9) معيار المنهج
+# 10) Approval standard
 
 لا يعتمد أي مصطلح إذا كان مجرد وصف جميل.
 
 يعتمد فقط إذا فعل أربع حركات:
 
 1. كشف إحساسًا لا اسم له.
-2. نزع اسمًا قديمًا غير كافٍ.
-3. منح اسمًا جديدًا قابلًا للتداول.
-4. ربط الحالة بأثر يومي واضح.
+2. فصل الحالة عن اسم قديم غير كافٍ.
+3. منحها اسمًا جديدًا قابلًا للتداول.
+4. ربطها بأثر يومي واضح.
 
 ---
 
