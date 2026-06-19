@@ -3,21 +3,30 @@
 
 Created by: Ahmed Nabil — Nabil88 / nabil88.art
 
-هذا المجلد هو طبقة القاموس والمنهج.
-الكروسيل ليس هو القاموس؛ الكروسيل تطبيق نشر مشتق منه.
+This directory contains the canonical lexicon layer, the naming methodology, term-entry structure, authorship notes, and quality criteria.
 
-## الملفات
+Applications derived from the lexicon are organized under `applications/`.
 
-- 01-new-era-emotions-lexicon.md — القاموس الأم.
-- 02-naming-methodology.md — منهج تسمية المشاعر الحديثة.
-- 03-term-entry-template.md — قالب المدخل القاموسي.
-- 04-authorship-and-citation.md — الملكية وطريقة الاستشهاد.
-- 05-lexicon-quality-gate.md — اختبار جودة المصطلح.
-- applications/carousel/ — تطبيق الكروسيل البصري.
+## Core files
 
-## قانون الفصل
+- `01-new-era-emotions-lexicon.md` — core lexicon.
+- `02-naming-methodology.md` — naming methodology.
+- `03-term-entry-template.md` — term-entry structure.
+- `04-authorship-and-citation.md` — authorship and citation notes.
+- `05-lexicon-quality-gate.md` — lexicon quality criteria.
 
-القاموس هو الأصل.
-وسائط النشر مثل الكروسيل والمقال والبودكاست والفيديو تطبيقات مشتقة من القاموس.
+## Applications
+
+Current applications:
+
+- `applications/carousel/`
+
+Future applications may include:
+
+- `applications/book/`
+- `applications/podcast/`
+- `applications/web/`
+- `applications/video/`
+- `applications/editorial/`
 
 © 2025 Nabil88 | nabil88.art
