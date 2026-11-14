@@ -191,7 +191,9 @@ Nabil88 — Visual Intelligence System — nabil88.art
 
 ## Rights model
 
-This repository is publicly visible for reading, citation, learning, and attribution.
+**All Rights Reserved / جميع الحقوق محفوظة.** See [LICENSE](LICENSE).
+
+This repository is publicly visible for reading, study, and short attributed quotation only. It is **not** open source: no part of it — text, dictionaries, prompts, tools, or code — may be copied, adapted, translated, resold, repackaged into courses, prompt packs, skills or plugins, or used as AI training data without written permission.
 
 The textual frameworks, dictionaries, laws, naming systems, and philosophical structures are authored works by **Ahmed Nabil / Nabil88**.
 

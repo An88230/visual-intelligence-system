@@ -15,6 +15,12 @@
 
 ---
 
+## Rights of contributions
+
+By opening a Pull Request you confirm the contribution is your own work and you grant Ahmed Nabil / Nabil88 a perpetual, irrevocable right to use, edit, publish and commercialise it as part of this system. The repository remains All Rights Reserved — see [LICENSE](LICENSE).
+
+---
+
 ## How to contribute
 
 ```bash
